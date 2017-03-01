@@ -35,6 +35,7 @@ exports.update = function (req, res) {
   good.price = req.body.price;
   good.details = req.body.details;
   good.type = req.body.type;
+  console.log(req.user);
 
   good.save(function (err) {
     if (err) {

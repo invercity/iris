@@ -40,3 +40,13 @@ a:hover .header-profile-image {
   margin-top: 10px;
   margin-right: 15px;
 }
+
+.add-btn {
+  text-decoration: none;
+}
+
+@media screen and (max-width: 699px) {
+  .page-header {
+    margin-left: 10px;
+  }
+}
