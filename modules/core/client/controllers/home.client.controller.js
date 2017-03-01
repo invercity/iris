@@ -11,6 +11,15 @@ angular.module('core').controller('HomeController', ['$scope', '$q', 'Authentica
       .then(function () {
         $scope.tabs = [
           {
+            icon: 'shopping-cart',
+            title: 'Новые заказы',
+            state: 'orders.list',
+            actionTitle: 'Добавить заказ',
+            actionState: 'orders.create',
+            actionIcon: 'plus',
+            count: 5,
+          },
+          {
             icon: 'apple',
             title: 'Товары',
             state: 'goods.list',
@@ -18,7 +27,7 @@ angular.module('core').controller('HomeController', ['$scope', '$q', 'Authentica
             actionState: 'goods.create',
             actionIcon: 'plus',
             count: goods.length,
-          }
+          },
         ];
       });
   }
