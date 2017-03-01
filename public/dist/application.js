@@ -120,7 +120,7 @@ ApplicationConfiguration.registerModule('core.admin.routes', ['ui.router']);
 
 'use strict';
 
-ApplicationConfiguration.registerModule('goods');
+ApplicationConfiguration.registerModule('data');
 
 'use strict';
 
@@ -128,19 +128,6 @@ ApplicationConfiguration.registerModule('goods');
 ApplicationConfiguration.registerModule('users', ['core']);
 ApplicationConfiguration.registerModule('users.admin', ['core.admin']);
 ApplicationConfiguration.registerModule('users.admin.routes', ['core.admin.routes']);
-
-'use strict';
-
-angular.module('core.admin').run(['Menus',
-  function (Menus) {
-    Menus.addMenuItem('topbar', {
-      title: 'Admin',
-      state: 'admin',
-      type: 'dropdown',
-      roles: ['admin']
-    });
-  }
-]);
 
 'use strict';
 
@@ -228,10 +215,36 @@ angular.module('core').controller('HeaderController', ['$scope', '$state', 'Auth
 
 'use strict';
 
-angular.module('core').controller('HomeController', ['$scope', 'Authentication',
-  function ($scope, Authentication) {
+angular.module('core').controller('HomeController', ['$scope', '$q', 'Authentication', 'Goods',
+  function ($scope, $q, Authentication, Goods) {
     // This provides Authentication context.
     $scope.authentication = Authentication;
+
+    var goods = Goods.query();
+
+    $q.all([goods.$promise])
+      .then(function () {
+        $scope.tabs = [
+          {
+            icon: 'shopping-cart',
+            title: 'Новые заказы',
+            state: 'orders.list',
+            actionTitle: 'Добавить заказ',
+            actionState: 'orders.create',
+            actionIcon: 'plus',
+            count: 5,
+          },
+          {
+            icon: 'apple',
+            title: 'Товары',
+            state: 'goods.list',
+            actionTitle: 'Добавить товар',
+            actionState: 'goods.create',
+            actionIcon: 'plus',
+            count: goods.length,
+          },
+        ];
+      });
   }
 ]);
 
@@ -551,8 +564,7 @@ angular.module('core').service('Socket', ['Authentication', '$state', '$timeout'
 
 'use strict';
 
-// Configuring the Articles module
-angular.module('goods').run(['Menus',
+angular.module('data').run(['Menus',
   function (Menus) {
     // Add the articles dropdown item
     Menus.addMenuItem('topbar', {
@@ -566,7 +578,7 @@ angular.module('goods').run(['Menus',
 'use strict';
 
 // Setting up route
-angular.module('goods').config(['$stateProvider',
+angular.module('data').config(['$stateProvider',
   function ($stateProvider) {
     $stateProvider
       .state('goods', {
@@ -576,22 +588,22 @@ angular.module('goods').config(['$stateProvider',
       })
       .state('goods.list', {
         url: '',
-        templateUrl: 'modules/goods/client/views/list.client.view.html'
+        templateUrl: 'modules/data/client/views/list.client.view.html'
       })
       .state('goods.create', {
         url: '/create',
-        templateUrl: 'modules/goods/client/views/edit.client.view.html',
+        templateUrl: 'modules/data/client/views/edit.client.view.html',
         data: {
           roles: ['user', 'admin']
         }
       })
       .state('goods.view', {
         url: '/:goodId',
-        templateUrl: 'modules/goods/client/views/view.client.view.html'
+        templateUrl: 'modules/data/client/views/view.client.view.html'
       })
       .state('goods.edit', {
         url: '/:goodId/edit',
-        templateUrl: 'modules/goods/client/views/edit.client.view.html',
+        templateUrl: 'modules/data/client/views/edit.client.view.html',
         data: {
           roles: ['user', 'admin']
         }
@@ -602,7 +614,7 @@ angular.module('goods').config(['$stateProvider',
 'use strict';
 
 // Articles controller
-angular.module('goods').controller('GoodsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Goods',
+angular.module('data').controller('GoodsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Goods',
   function ($scope, $stateParams, $location, Authentication, Goods) {
     $scope.authentication = Authentication;
 
@@ -631,11 +643,9 @@ angular.module('goods').controller('GoodsController', ['$scope', '$stateParams',
         return false;
       }
 
-      var good;
+      var good = $scope.good;
 
-      if ($scope.good) {
-        good = $scope.good;
-
+      if ($scope.good._id) {
         good.$update(function () {
           $location.path('goods');
         }, function (errorResponse) {
@@ -644,14 +654,6 @@ angular.module('goods').controller('GoodsController', ['$scope', '$stateParams',
       }
 
       else {
-        good = new Goods({
-          name: this.name,
-          count: this.count,
-          price: this.price,
-          details: this.details,
-          type: this.type
-        });
-
         good.$save(function () {
           $location.path('goods');
         }, function (errorResponse) {
@@ -669,10 +671,14 @@ angular.module('goods').controller('GoodsController', ['$scope', '$stateParams',
         $scope.good = Goods.get({
           goodId: $stateParams.goodId
         });
+        $scope.title = 'Редактирование товара';
       }
       else {
-        $scope.price = 0.01;
-        $scope.count = 1;
+        $scope.good = new Goods({
+          price: 1,
+          count: 1
+        });
+        $scope.title = 'Новый товар';
       }
     };
   }
@@ -680,7 +686,7 @@ angular.module('goods').controller('GoodsController', ['$scope', '$stateParams',
 
 'use strict';
 
-angular.module('goods').factory('Goods', ['$resource',
+angular.module('data').factory('Goods', ['$resource',
   function ($resource) {
     return $resource('api/goods/:goodId', {
       goodId: '@_id'
@@ -688,18 +694,6 @@ angular.module('goods').factory('Goods', ['$resource',
       update: {
         method: 'PUT'
       }
-    });
-  }
-]);
-
-'use strict';
-
-// Configuring the Articles module
-angular.module('users.admin').run(['Menus',
-  function (Menus) {
-    Menus.addSubMenuItem('topbar', 'admin', {
-      title: 'Manage Users',
-      state: 'admin.users'
     });
   }
 ]);
