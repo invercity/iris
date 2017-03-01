@@ -1,7 +1,7 @@
 'use strict';
 
 // Articles controller
-angular.module('goods').controller('GoodsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Goods',
+angular.module('data').controller('GoodsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Goods',
   function ($scope, $stateParams, $location, Authentication, Goods) {
     $scope.authentication = Authentication;
 
@@ -32,7 +32,7 @@ angular.module('goods').controller('GoodsController', ['$scope', '$stateParams',
 
       var good = $scope.good;
 
-      if ($scope.good.id) {
+      if ($scope.good._id) {
         good.$update(function () {
           $location.path('goods');
         }, function (errorResponse) {

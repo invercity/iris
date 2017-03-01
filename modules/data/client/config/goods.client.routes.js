@@ -1,7 +1,7 @@
 'use strict';
 
 // Setting up route
-angular.module('goods').config(['$stateProvider',
+angular.module('data').config(['$stateProvider',
   function ($stateProvider) {
     $stateProvider
       .state('goods', {
@@ -11,22 +11,22 @@ angular.module('goods').config(['$stateProvider',
       })
       .state('goods.list', {
         url: '',
-        templateUrl: 'modules/goods/client/views/list.client.view.html'
+        templateUrl: 'modules/data/client/views/list.client.view.html'
       })
       .state('goods.create', {
         url: '/create',
-        templateUrl: 'modules/goods/client/views/edit.client.view.html',
+        templateUrl: 'modules/data/client/views/edit.client.view.html',
         data: {
           roles: ['user', 'admin']
         }
       })
       .state('goods.view', {
         url: '/:goodId',
-        templateUrl: 'modules/goods/client/views/view.client.view.html'
+        templateUrl: 'modules/data/client/views/view.client.view.html'
       })
       .state('goods.edit', {
         url: '/:goodId/edit',
-        templateUrl: 'modules/goods/client/views/edit.client.view.html',
+        templateUrl: 'modules/data/client/views/edit.client.view.html',
         data: {
           roles: ['user', 'admin']
         }
