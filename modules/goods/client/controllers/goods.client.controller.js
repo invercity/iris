@@ -30,11 +30,9 @@ angular.module('goods').controller('GoodsController', ['$scope', '$stateParams',
         return false;
       }
 
-      var good;
+      var good = $scope.good;
 
-      if ($scope.good) {
-        good = $scope.good;
-
+      if ($scope.good.id) {
         good.$update(function () {
           $location.path('goods');
         }, function (errorResponse) {
@@ -43,14 +41,6 @@ angular.module('goods').controller('GoodsController', ['$scope', '$stateParams',
       }
 
       else {
-        good = new Goods({
-          name: this.name,
-          count: this.count,
-          price: this.price,
-          details: this.details,
-          type: this.type
-        });
-
         good.$save(function () {
           $location.path('goods');
         }, function (errorResponse) {
@@ -68,10 +58,14 @@ angular.module('goods').controller('GoodsController', ['$scope', '$stateParams',
         $scope.good = Goods.get({
           goodId: $stateParams.goodId
         });
+        $scope.title = 'Редактирование товара';
       }
       else {
-        $scope.price = 0.01;
-        $scope.count = 1;
+        $scope.good = new Goods({
+          price: 1,
+          count: 1
+        });
+        $scope.title = 'Новый товар';
       }
     };
   }

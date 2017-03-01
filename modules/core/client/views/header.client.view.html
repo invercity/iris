@@ -36,6 +36,9 @@
           <span ng-bind="authentication.user.displayName"></span> <b class="caret"></b>
         </a>
         <ul class="dropdown-menu" role="menu">
+          <li ui-sref-active="active" ng-show="authentication.user.roles.includes('admin')">
+            <a ui-sref="admin.users">Администрирование</a>
+          </li>
           <li ui-sref-active="active">
             <a ui-sref="settings.profile">Редактировать профиль</a>
           </li>
