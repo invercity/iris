@@ -1,0 +1,78 @@
+<section ng-controller="GoodsController" ng-init="findOne()">
+  <div class="page-header">
+    <h3>Новый товар</h3>
+  </div>
+  <div class="col-md-8">
+    <form name="articleForm" class="form-horizontal" ng-submit="update(articleForm.$valid)" novalidate>
+      <fieldset>
+        <div class="form-group" show-errors>
+          <label for="name">Название *</label>
+          <input name="name"
+                 type="text"
+                 ng-model="name"
+                 id="name"
+                 class="form-control"
+                 placeholder="Название"
+                 required>
+          <div ng-messages="articleForm.name.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Название обязательно.</p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="details">Описание</label>
+          <textarea name="content"
+                    ng-model="details"
+                    id="details"
+                    class="form-control"
+                    cols="30" rows="10"
+                    placeholder="Описание">
+          </textarea>
+        </div>
+        <div class="form-group" show-errors>
+          <label for="price">Цена *</label>
+          <input name="price"
+                 type="number"
+                 step="0.01"
+                 min="o.o1"
+                 ng-model="price"
+                 id="price"
+                 class="form-control"
+                 placeholder="Цена"
+                 required>
+          <div ng-messages="articleForm.price.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Цена обзательна</p>
+          </div>
+        </div>
+        <div class="form-group" show-errors>
+          <label for="count">Колличество *</label>
+          <input name="count"
+                 type="number"
+                 step="1"
+                 min="1"
+                 ng-model="count"
+                 id="count"
+                 class="form-control"
+                 placeholder="Колличество"
+                 required>
+          <div ng-messages="articleForm.count.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Колличество обзательно</p>
+          </div>
+        </div>
+        <div class="form-group" show-errors>
+          <label for="type">Тип</label>
+          <input name="type"
+                 type="text"
+                 ng-model="type"
+                 id="type"
+                 class="form-control"
+                 placeholder="Тип">
+        <div class="form-group">
+          <input type="submit" class="btn btn-default save-btn pull-right" value="Сохранить">
+        </div>
+        <div ng-show="error" class="text-danger">
+          <strong ng-bind="error"></strong>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</section>
