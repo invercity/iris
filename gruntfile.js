@@ -175,46 +175,6 @@ module.exports = function (grunt) {
         }
       }
     },
-    mochaTest: {
-      src: testAssets.tests.server,
-      options: {
-        reporter: 'spec',
-        timeout: 10000
-      }
-    },
-    mocha_istanbul: {
-      coverage: {
-        src: testAssets.tests.server,
-        options: {
-          print: 'detail',
-          coverage: true,
-          require: 'test.js',
-          coverageFolder: 'coverage/server',
-          reportFormats: ['cobertura','lcovonly'],
-          check: {
-            lines: 40,
-            statements: 40
-          }
-        }
-      }
-    },
-    karma: {
-      unit: {
-        configFile: 'karma.conf.js'
-      }
-    },
-    protractor: {
-      options: {
-        configFile: 'protractor.conf.js',
-        noColor: false,
-        webdriverManagerUpdate: true
-      },
-      e2e: {
-        options: {
-          args: {} // Target-specific arguments
-        }
-      }
-    },
     copy: {
       localConfig: {
         src: 'config/env/local.example.js',
