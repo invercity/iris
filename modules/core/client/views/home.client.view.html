@@ -1,3 +1,21 @@
 <section ng-controller="HomeController">
-
+  <div class="row">
+    <div ng-repeat="tab in tabs" class="col-sm-4" style="margin-top: 20px">
+      <div class="hero-widget well well-sm">
+        <div class="icon" ui-sref="{{tab.state}}">
+          <i class="glyphicon glyphicon-{{tab.icon}}"></i>
+        </div>
+        <div class="text" ui-sref="{{tab.state}}">
+          <var>{{tab.count}}</var>
+          <label class="text-muted">{{tab.title}}</label>
+        </div>
+        <div class="options">
+          <a ui-sref="{{tab.actionState}}"
+             class="btn btn-primary btn-lg">
+            <i class="glyphicon glyphicon-{{tab.actionIcon}}"></i>{{tab.actionTitle}}
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
