@@ -1,18 +1,13 @@
-'use strict';
-
-/**
- * Module dependencies.
- */
-var path = require('path'),
+const path = require('path'),
   mongoose = require('mongoose'),
   Good = mongoose.model('Good'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
 
-exports.create = function (req, res) {
-  var good = new Good(req.body);
+exports.create = (req, res) => {
+  const good = new Good(req.body);
   good.user = req.user;
 
-  good.save(function (err) {
+  good.save((err) => {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -23,12 +18,12 @@ exports.create = function (req, res) {
   });
 };
 
-exports.read = function (req, res) {
+exports.read = (req, res) => {
   res.json(req.good);
 };
 
-exports.update = function (req, res) {
-  var good = req.good;
+exports.update = (req, res) => {
+  const { good } = req;
 
   good.name = req.body.name;
   good.count = req.body.count;
@@ -37,7 +32,7 @@ exports.update = function (req, res) {
   good.type = req.body.type;
   console.log(req.user);
 
-  good.save(function (err) {
+  good.save((err) => {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -48,8 +43,8 @@ exports.update = function (req, res) {
   });
 };
 
-exports.delete = function (req, res) {
-  var good = req.good;
+exports.delete = (req, res) => {
+  const { good } = req;
 
   good.remove(function (err) {
     if (err) {
@@ -62,8 +57,8 @@ exports.delete = function (req, res) {
   });
 };
 
-exports.list = function (req, res) {
-  Good.find().sort('-created').populate('user', 'displayName').exec(function (err, goods) {
+exports.list = (req, res) => {
+  Good.find().sort('-created').populate('user', 'displayName').exec((err, goods) => {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
@@ -74,7 +69,7 @@ exports.list = function (req, res) {
   });
 };
 
-exports.goodByID = function (req, res, next, id) {
+exports.goodByID = (req, res, next, id) => {
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).send({
@@ -82,7 +77,7 @@ exports.goodByID = function (req, res, next, id) {
     });
   }
 
-  Good.findById(id).populate('user', 'displayName').exec(function (err, good) {
+  Good.findById(id).populate('user', 'displayName').exec((err, good) => {
     if (err) {
       return next(err);
     } else if (!good) {

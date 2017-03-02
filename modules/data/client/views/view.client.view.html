@@ -2,7 +2,8 @@
   <div class="page-header">
     <h3 ng-bind="good.name"></h3>
   </div>
-  <div class="pull-right" ng-show="authentication.user._id == good.user._id">
+  <div class="pull-right"
+       ng-show="authentication.user._id == good.user._id || authentication.user.roles.includes('admin')">
     <a class="btn btn-primary" ui-sref="goods.edit({goodId: good._id})">
       <i class="glyphicon glyphicon-edit"></i>
     </a>
