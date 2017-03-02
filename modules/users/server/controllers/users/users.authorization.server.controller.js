@@ -1,16 +1,11 @@
-'use strict';
-
-/**
- * Module dependencies.
- */
-var _ = require('lodash'),
+const _ = require('lodash'),
   mongoose = require('mongoose'),
   User = mongoose.model('User');
 
 /**
  * User middleware
  */
-exports.userByID = function (req, res, next, id) {
+exports.userByID = (req, res, next, id) => {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).send({
       message: 'User is invalid'
@@ -19,7 +14,7 @@ exports.userByID = function (req, res, next, id) {
 
   User.findOne({
     _id: id
-  }).exec(function (err, user) {
+  }).exec((err, user) => {
     if (err) {
       return next(err);
     } else if (!user) {

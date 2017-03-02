@@ -1,9 +1,4 @@
-'use strict';
-
-/**
- * Module dependencies.
- */
-var mongoose = require('mongoose'),
+const mongoose = require('mongoose'),
   Schema = mongoose.Schema,
   crypto = require('crypto'),
   validator = require('validator'),
@@ -13,21 +8,21 @@ var mongoose = require('mongoose'),
 /**
  * A Validation function for local strategy properties
  */
-var validateLocalStrategyProperty = function (property) {
+const validateLocalStrategyProperty = function (property) {
   return ((this.provider !== 'local' && !this.updated) || property.length);
 };
 
 /**
  * A Validation function for local strategy email
  */
-var validateLocalStrategyEmail = function (email) {
+const validateLocalStrategyEmail = function (email) {
   return ((this.provider !== 'local' && !this.updated) || validator.isEmail(email));
 };
 
 /**
  * User Schema
  */
-var UserSchema = new Schema({
+const UserSchema = new Schema({
   firstName: {
     type: String,
     trim: true,
@@ -149,17 +144,16 @@ UserSchema.methods.authenticate = function (password) {
  * Find possible not used username
  */
 UserSchema.statics.findUniqueUsername = function (username, suffix, callback) {
-  var _this = this;
-  var possibleUsername = username.toLowerCase() + (suffix || '');
+  const possibleUsername = username.toLowerCase() + (suffix || '');
 
-  _this.findOne({
+  this.findOne({
     username: possibleUsername
   }, function (err, user) {
     if (!err) {
       if (!user) {
         callback(possibleUsername);
       } else {
-        return _this.findUniqueUsername(username, (suffix || 0) + 1, callback);
+        return this.findUniqueUsername(username, (suffix || 0) + 1, callback);
       }
     } else {
       callback(null);
@@ -174,8 +168,8 @@ UserSchema.statics.findUniqueUsername = function (username, suffix, callback) {
 */
 UserSchema.statics.generateRandomPassphrase = function () {
   return new Promise(function (resolve, reject) {
-    var password = '';
-    var repeatingCharacters = new RegExp('(.)\\1{2,}', 'g');
+    let password = '';
+    const repeatingCharacters = new RegExp('(.)\\1{2,}', 'g');
 
     // iterate until the we have a valid passphrase. 
     // NOTE: Should rarely iterate more than once, but we need this to ensure no repeating characters are present.

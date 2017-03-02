@@ -1,23 +1,18 @@
-'use strict';
-
-/**
- * Module dependencies.
- */
-var passport = require('passport'),
+const passport = require('passport'),
   LocalStrategy = require('passport-local').Strategy,
   User = require('mongoose').model('User');
 
-module.exports = function () {
+module.exports = () => {
   // Use local strategy
   passport.use(
     new LocalStrategy({
       usernameField: 'username',
       passwordField: 'password'
     },
-    function (username, password, done) {
+    (username, password, done) => {
       User.findOne({
         username: username.toLowerCase()
-      }, function (err, user) {
+      }, (err, user) => {
         if (err) {
           return done(err);
         }
