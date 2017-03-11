@@ -9,6 +9,8 @@ var mongoose = require('mongoose'),
 
 autoIncrement.initialize(mongoose);
 
+const modelGood = 'Good';
+
 /**
  * Good Schema
  */
@@ -55,10 +57,10 @@ var GoodSchema = new Schema({
 });
 
 GoodSchema.plugin(autoIncrement.plugin, {
-  model: 'Good',
+  model: modelGood,
   field: 'code',
   startAt: 1,
   incrementBy: 1
 });
 
-mongoose.model('Good', GoodSchema);
+mongoose.model(modelGood, GoodSchema);
