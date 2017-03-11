@@ -14,7 +14,7 @@ const modelGood = 'Good';
 /**
  * Good Schema
  */
-var GoodSchema = new Schema({
+const GoodSchema = new Schema({
   created: {
     type: Date,
     default: Date.now
