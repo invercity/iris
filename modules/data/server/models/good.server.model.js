@@ -1,19 +1,11 @@
-'use strict';
-
-/**
- * Module dependencies.
- */
-var mongoose = require('mongoose'),
-  Schema = mongoose.Schema,
+const mongoose = require('mongoose'),
+  { Schema } = mongoose,
   autoIncrement = require('mongoose-auto-increment');
 
 autoIncrement.initialize(mongoose);
 
 const modelGood = 'Good';
 
-/**
- * Good Schema
- */
 const GoodSchema = new Schema({
   created: {
     type: Date,
@@ -33,17 +25,23 @@ const GoodSchema = new Schema({
   code: {
     type: Number,
     default: 1,
-    trim: true
   },
   count: {
     type: Number,
     default: 1,
-    trim: true
   },
   price: {
     type: Number,
     default: 1,
-    trim: true
+  },
+  weight: {
+    type: Number,
+    default: 1,
+  },
+  country: {
+    type: String,
+    default: '',
+    trim: true,
   },
   type: {
     type: String,
