@@ -31,10 +31,9 @@ const OrderSchema = new Schema({
     type: Number,
     default: 1,
   },
-  address: {
-    type: String,
-    default: '',
-    trim: true,
+  place: {
+    type: Schema.ObjectId,
+    ref: 'Place'
   },
   date: {
     type: Date

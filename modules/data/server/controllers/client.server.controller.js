@@ -1,90 +1,87 @@
 const path = require('path'),
   mongoose = require('mongoose'),
-  Good = mongoose.model('Good'),
+  Client = mongoose.model('Client'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
 
 exports.create = (req, res) => {
-  const good = new Good(req.body);
-  good.user = req.user;
+  const client = new Client(req.body);
 
-  good.save((err) => {
+  client.save((err) => {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      res.json(good);
+      res.json(client);
     }
   });
 };
 
 exports.read = (req, res) => {
-  res.json(req.good);
+  res.json(req.client);
 };
 
 exports.update = (req, res) => {
-  const { good } = req;
+  const { client } = req;
 
-  good.name = req.body.name;
-  good.count = req.body.count;
-  good.price = req.body.price;
-  good.details = req.body.details;
-  good.type = req.body.type;
+  client.firstName = req.body.firstName;
+  client.lastName = req.body.lastName;
+  // TODO: default address
 
-  good.save((err) => {
+  client.save((err) => {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      res.json(good);
+      res.json(client);
     }
   });
 };
 
 exports.delete = (req, res) => {
-  const { good } = req;
+  const { client } = req;
 
-  good.remove(function (err) {
+  client.remove(function (err) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      res.json(good);
+      res.json(client);
     }
   });
 };
 
 exports.list = (req, res) => {
-  Good.find().sort('-created').populate('user', 'displayName').exec((err, goods) => {
+  Client.find().exec((err, clients) => {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      res.json(goods);
+      res.json(clients);
     }
   });
 };
 
-exports.goodByID = (req, res, next, id) => {
+exports.clientByID = (req, res, next, id) => {
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).send({
-      message: 'Good is invalid'
+      message: 'Client is invalid'
     });
   }
 
-  Good.findById(id).populate('user', 'displayName').exec((err, good) => {
+  Client.findById(id).exec((err, client) => {
     if (err) {
       return next(err);
-    } else if (!good) {
+    } else if (!client) {
       return res.status(404).send({
-        message: 'No good with that identifier has been found'
+        message: 'No client with that identifier has been found'
       });
     }
-    req.good = good;
+    req.client = client;
     next();
   });
 };
