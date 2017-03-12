@@ -1,0 +1,14 @@
+<section ng-controller="OrdersController" ng-init="find()">
+  <div class="page-header row">
+    <h1>
+      Заказы
+      <a ui-sref="orders.create" class="add-btn">+</a>
+    </h1>
+  </div>
+  <div class="list-group">
+    <div ng-repeat="order in orders" ui-sref="orders.view({orderId: order._id})" class="list-group-item">
+      <h4 class="list-group-item-heading" ng-bind="order.code"></h4>
+      <p class="list-group-item-text" ng-bind="order.client.lastName"></p>
+    </div>
+  </div>
+</section>

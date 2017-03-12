@@ -60,12 +60,6 @@ exports.read = (req, res) => {
 exports.update = (req, res) => {
   const { order } = req;
 
-  const orderData = {
-    items: req.body.items,
-    place: req.body.place,
-    date: req.body.date,
-  };
-
   order.items = req.body.items;
   order.place = req.body.place;
   order.date = req.body.date;
@@ -124,7 +118,7 @@ exports.orderByID = (req, res, next, id) => {
   Order.findById(id)
     .populate('user', 'displayName')
     .populate('client')
-    .populate('items')
+    .populate('items.good')
     .populate('place')
     .exec((err, order) => {
       if (err) {

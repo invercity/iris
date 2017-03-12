@@ -1,0 +1,21 @@
+<section ng-controller="OrdersController" ng-init="findOne()">
+  <div class="page-header">
+    <h3 ng-bind="order.code"></h3>
+  </div>
+  <div class="pull-right"
+       ng-show="authentication.user._id == order.user._id || authentication.user.roles.includes('admin')">
+    <a class="btn btn-primary" ui-sref="orders.edit({orderId: order._id})">
+      <i class="glyphicon glyphicon-edit"></i>
+    </a>
+    <a class="btn btn-primary" ng-click="remove();">
+      <i class="glyphicon glyphicon-trash"></i>
+    </a>
+  </div>
+  <small>
+    <p class="lead" ng-bind="order.details"></p>
+    <em class="text-muted">
+      Добавлено
+      <span ng-bind="order.created | date:'mediumDate'"></span>
+    </em>
+  </small>
+</section>

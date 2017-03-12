@@ -18,6 +18,11 @@ const ClientSchema = new Schema({
     default: '',
     trim: true,
   },
+  phone: {
+    type: String,
+    default: '',
+    trim: true,
+  },
   defaultAddress: {
     type: String,
     default: '',

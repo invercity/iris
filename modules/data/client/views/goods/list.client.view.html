@@ -1,0 +1,27 @@
+<section ng-controller="GoodsController" ng-init="find()">
+  <div class="page-header row">
+    <h1>
+      Товары
+      <a ui-sref="goods.create" class="add-btn">+</a>
+    </h1>
+  </div>
+  <div class="list-group">
+    <div ng-repeat="good in goods" ui-sref="goods.edit({goodId: good._id})" class="list-group-item" style="margin-bottom: 10px">
+      <div>
+        <h4 ng-bind="good.name"></h4>
+      </div>
+      <div class="pull-right"
+           ng-show="authentication.user._id == good.user._id || authentication.user.roles.includes('admin')">
+        <a class="btn btn-primary" ng-click="remove();">
+          <i class="glyphicon glyphicon-trash"></i>
+        </a>
+      </div>
+      <small>
+        <p class="lead">Осталось: {{good.count}}</p>
+        <em class="text-muted">
+          <span>Цена: {{good.price}} UAH</span>
+        </em>
+      </small>
+    </div>
+  </div>
+</section>

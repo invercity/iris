@@ -11,22 +11,22 @@ angular.module('data').config(['$stateProvider',
       })
       .state('goods.list', {
         url: '',
-        templateUrl: 'modules/data/client/views/list.client.view.html'
+        templateUrl: 'modules/data/client/views/goods/list.client.view.html'
       })
       .state('goods.create', {
         url: '/create',
-        templateUrl: 'modules/data/client/views/edit.client.view.html',
+        templateUrl: 'modules/data/client/views/goods/edit.client.view.html',
         data: {
           roles: ['user', 'admin']
         }
       })
       .state('goods.view', {
         url: '/:goodId',
-        templateUrl: 'modules/data/client/views/view.client.view.html'
+        templateUrl: 'modules/data/client/views/goods/view.client.view.html'
       })
       .state('goods.edit', {
         url: '/:goodId/edit',
-        templateUrl: 'modules/data/client/views/edit.client.view.html',
+        templateUrl: 'modules/data/client/views/goods/edit.client.view.html',
         data: {
           roles: ['user', 'admin']
         }
