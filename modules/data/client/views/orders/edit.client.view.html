@@ -11,6 +11,7 @@
             <select id="name"
                     class="form-control"
                     ng-model="order.client"
+                    ng-disabled="order._id"
                     ng-options="client.lastName + ' ' + client.phone for client in clients track by client._id">
             </select>
           </div>
@@ -104,6 +105,7 @@
 
         <div class="form-group">
           <input type="submit" class="btn btn-default save-btn pull-right" value="Сохранить">
+          <input type="button" class="btn btn-default save-btn pull-right" ng-click="cancel()" value="Отмена">
         </div>
         <div ng-show="error" class="text-danger">
           <strong ng-bind="error"></strong>

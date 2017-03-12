@@ -6,9 +6,22 @@
     </h1>
   </div>
   <div class="list-group">
-    <div ng-repeat="order in orders" ui-sref="orders.view({orderId: order._id})" class="list-group-item">
-      <h4 class="list-group-item-heading" ng-bind="order.code"></h4>
-      <p class="list-group-item-text" ng-bind="order.client.lastName"></p>
+    <div ng-repeat="order in orders" ui-sref="orders.edit({orderId: order._id})" class="list-group-item" style="margin-bottom: 10px">
+      <div>
+        <h4>Заказ #{{order.code}}</h4>
+      </div>
+      <div class="pull-right"
+           ng-show="authentication.user._id == order.user._id || authentication.user.roles.includes('admin')">
+        <a class="btn btn-primary" ng-click="remove();">
+          <i class="glyphicon glyphicon-trash"></i>
+        </a>
+      </div>
+      <small>
+        <p class="lead">Клиент: {{order.client.firstName}} {{order.client.lastName}}</p>
+        <em class="text-muted">
+          <span></span>
+        </em>
+      </small>
     </div>
   </div>
 </section>

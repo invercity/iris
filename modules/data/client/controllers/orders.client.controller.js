@@ -116,6 +116,6 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
           $scope.order.items.splice(i, 1);
         }
       }
-    }
+    };
   }
 ]);
