@@ -1,12 +1,7 @@
-'use strict';
-
-/**
- * Module dependencies.
- */
-var goodsPolicy = require('../policies/goods.server.policy'),
+const goodsPolicy = require('../policies/goods.server.policy'),
   goods = require('../controllers/goods.server.controller');
 
-module.exports = function (app) {
+module.exports = (app) => {
 
   app.route('/api/goods').all(goodsPolicy.isAllowed)
     .get(goods.list)

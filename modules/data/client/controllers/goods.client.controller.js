@@ -1,6 +1,6 @@
 'use strict';
 
-// Articles controller
+// Goods controller
 angular.module('data').controller('GoodsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Goods',
   function ($scope, $stateParams, $location, Authentication, Goods) {
     $scope.authentication = Authentication;
@@ -67,6 +67,10 @@ angular.module('data').controller('GoodsController', ['$scope', '$stateParams', 
         });
         $scope.title = 'Новый товар';
       }
+    };
+
+    $scope.cancel = function () {
+      $location.path('goods');
     };
   }
 ]);

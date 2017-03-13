@@ -4,6 +4,8 @@ const mongoose = require('mongoose'),
 
 autoIncrement.initialize(mongoose);
 
+const modelGood = 'Good';
+
 const GoodSchema = new Schema({
   created: {
     type: Date,
@@ -53,10 +55,10 @@ const GoodSchema = new Schema({
 });
 
 GoodSchema.plugin(autoIncrement.plugin, {
-  model: 'Good',
+  model: modelGood,
   field: 'code',
   startAt: 1,
   incrementBy: 1
 });
 
-mongoose.model('Good', GoodSchema);
+mongoose.model(modelGood, GoodSchema);

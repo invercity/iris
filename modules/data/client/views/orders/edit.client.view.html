@@ -1,0 +1,116 @@
+<section ng-controller="OrdersController" ng-init="findOne()">
+  <div class="page-header">
+    <h3>{{title}}</h3>
+  </div>
+  <div class="col-md-8">
+    <form name="orderForm" class="form-horizontal" ng-submit="update(orderForm.$valid)" novalidate>
+      <fieldset>
+        <div class="form-group">
+          <label for="name">Клиент (создать нового если не выбрано)</label>
+          <div>
+            <select id="name"
+                    class="form-control"
+                    ng-model="order.client"
+                    ng-disabled="order._id"
+                    ng-options="client.lastName + ' ' + client.phone for client in clients track by client._id">
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group" show-errors>
+          <label for="firstName">Имя *</label>
+          <input name="firstName"
+                 type="text"
+                 ng-model="order.client.firstName"
+                 id="firstName"
+                 class="form-control"
+                 placeholder="Имя"
+                 ng-disabled="order.client._id"
+                 required>
+          <div ng-messages="orderForm.firstName.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Имя</p>
+          </div>
+        </div>
+
+        <div class="form-group" show-errors>
+          <label for="firstName">Фамилия *</label>
+          <input name="lastName"
+                 type="text"
+                 ng-model="order.client.lastName"
+                 id="lastName"
+                 class="form-control"
+                 placeholder="Фамилия"
+                 ng-disabled="order.client._id"
+                 required>
+          <div ng-messages="orderForm.lastName.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Фамилия</p>
+          </div>
+        </div>
+
+        <div class="form-group" show-errors>
+          <label for="firstName">Телефон *</label>
+          <input name="count"
+                 type="tel"
+                 ng-model="order.client.phone"
+                 id="phone"
+                 class="form-control"
+                 placeholder="Телефон"
+                 ng-disabled="order.client._id"
+                 required>
+          <div ng-messages="orderForm.phone.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Телефон</p>
+          </div>
+        </div>
+
+        <table class="table table-striped table-responsive">
+          <thead>
+            <tr>
+              <td class="col-md-6">Название</td>
+              <td class="col-md-1">Колличество</td>
+              <td class="col-md-2">Сумма</td>
+              <td class="col-md-2"></td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="item in order.items">
+              <td class="col-md-6">
+                <select class="form-control"
+                        ng-model="item.good"
+                        ng-options="good.name + ' (' + good.count + ' единиц)' for good in calcArray(item.good) track by good._id">
+                </select>
+              </td>
+              <td class="col-md-1">
+                <input class="form-control" type="number" min="1" max="good.count" step="1" ng-model="item.count">
+              </td>
+              <td class="col-md-2">
+                <label style="margin: 5px">{{calculate(item.good.price, item.count)}}</label>
+              </td>
+              <td class="col-md-2">
+                <button type="button"
+                        class="btn btn-info"
+                        ng-click="removeItem(item)"
+                        ng-disabled="order.items.length < 2">
+                  X
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <button type="button" class="btn btn-info" ng-click="addItem()" ng-disabled="!calcArray().length">Добавить</button>
+
+        <div class="row">
+          <h4>Общая сумма: {{calculateTotal()}}</h4>
+        </div>
+
+        <div class="form-group">
+          <input type="submit" class="btn btn-default save-btn pull-right" value="Сохранить">
+          <input type="button" class="btn btn-default save-btn pull-right" ng-click="cancel()" value="Отмена">
+        </div>
+        <div ng-show="error" class="text-danger">
+          <strong ng-bind="error"></strong>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</section>

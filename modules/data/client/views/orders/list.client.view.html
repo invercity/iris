@@ -1,0 +1,27 @@
+<section ng-controller="OrdersController" ng-init="find()">
+  <div class="page-header row">
+    <h1>
+      Заказы
+      <a ui-sref="orders.create" class="add-btn">+</a>
+    </h1>
+  </div>
+  <div class="list-group">
+    <div ng-repeat="order in orders" ui-sref="orders.edit({orderId: order._id})" class="list-group-item" style="margin-bottom: 10px">
+      <div>
+        <h4>Заказ #{{order.code}}</h4>
+      </div>
+      <div class="pull-right"
+           ng-show="authentication.user._id == order.user._id || authentication.user.roles.includes('admin')">
+        <a class="btn btn-primary" ng-click="remove();">
+          <i class="glyphicon glyphicon-trash"></i>
+        </a>
+      </div>
+      <small>
+        <p class="lead">Клиент: {{order.client.firstName}} {{order.client.lastName}}</p>
+        <em class="text-muted">
+          <span></span>
+        </em>
+      </small>
+    </div>
+  </div>
+</section>

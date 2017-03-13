@@ -1,90 +1,86 @@
 const path = require('path'),
   mongoose = require('mongoose'),
-  Good = mongoose.model('Good'),
+  Place = mongoose.model('Place'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
 
 exports.create = (req, res) => {
-  const good = new Good(req.body);
-  good.user = req.user;
+  const place = new Place(req.body);
 
-  good.save((err) => {
+  place.save((err) => {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      res.json(good);
+      res.json(place);
     }
   });
 };
 
 exports.read = (req, res) => {
-  res.json(req.good);
+  res.json(req.place);
 };
 
 exports.update = (req, res) => {
-  const { good } = req;
+  const { place } = req;
 
-  good.name = req.body.name;
-  good.count = req.body.count;
-  good.price = req.body.price;
-  good.details = req.body.details;
-  good.type = req.body.type;
+  place.name = req.body.name;
+  place.address = req.body.address;
 
-  good.save((err) => {
+  place.save((err) => {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      res.json(good);
+      res.json(place);
     }
   });
 };
 
 exports.delete = (req, res) => {
-  const { good } = req;
+  const { place } = req;
 
-  good.remove(function (err) {
+  place.remove(function (err) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      res.json(good);
+      res.json(place);
     }
   });
 };
 
 exports.list = (req, res) => {
-  Good.find().sort('-created').populate('user', 'displayName').exec((err, goods) => {
+  Place.find().exec((err, places) => {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      res.json(goods);
+      res.json(places);
     }
   });
 };
 
-exports.goodByID = (req, res, next, id) => {
+exports.placeByID = (req, res, next, id) => {
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).send({
-      message: 'Good is invalid'
+      message: 'Place is invalid'
     });
   }
 
-  Good.findById(id).populate('user', 'displayName').exec((err, good) => {
+  Place.findById(id).exec((err, place) => {
     if (err) {
       return next(err);
-    } else if (!good) {
+    } else if (!place) {
       return res.status(404).send({
-        message: 'No good with that identifier has been found'
+        message: 'No place with that identifier has been found'
       });
     }
-    req.good = good;
+    req.place = place;
     next();
   });
 };
