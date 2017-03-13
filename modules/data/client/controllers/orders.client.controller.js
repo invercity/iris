@@ -134,17 +134,16 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
     };
 
     $scope.disableSave = function () {
-      console.log('called!', $scope.order)
       // if ($scope.order.$promise) return false;
       if (!$scope.order || !$scope.order.items || $scope.order.items.length) return true;
       var disable = false;
       $scope.order.items.forEach(function (item) {
         if (!item.good || !item.count || item.count === 0 || item.count > item.good.count) {
-          disable = true
+          disable = true;
         }
       });
 
       return disable;
-    }
+    };
   }
 ]);
