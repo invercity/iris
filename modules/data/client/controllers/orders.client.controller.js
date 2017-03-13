@@ -85,7 +85,7 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
         count: 1,
       };
       if ($scope.goods && $scope.goods.length) {
-        defaultItem.good = $scope.goods[0];
+        // defaultItem.good = $scope.goods[0];
       }
       if (!$scope.order.items) {
         $scope.order.items = [];
@@ -117,5 +117,34 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
         }
       }
     };
+
+    $scope.calcArray = function (good) {
+      var items = [];
+      if (good) {
+        items.push(good);
+      }
+      $scope.goods.forEach(function (g) {
+        if (!_.find($scope.order.items, function (item) {
+          return item.good && item.good._id === g._id;
+        })) {
+          items.push(g);
+        }
+      });
+      return items;
+    };
+
+    $scope.disableSave = function () {
+      console.log('called!', $scope.order)
+      // if ($scope.order.$promise) return false;
+      if (!$scope.order || !$scope.order.items || $scope.order.items.length) return true;
+      var disable = false;
+      $scope.order.items.forEach(function (item) {
+        if (!item.good || !item.count || item.count === 0 || item.count > item.good.count) {
+          disable = true
+        }
+      });
+
+      return disable;
+    }
   }
 ]);

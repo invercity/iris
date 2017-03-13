@@ -6,7 +6,7 @@
     <form name="orderForm" class="form-horizontal" ng-submit="update(orderForm.$valid)" novalidate>
       <fieldset>
         <div class="form-group">
-          <label for="name">Клиент *</label>
+          <label for="name">Клиент (создать нового если не выбрано)</label>
           <div>
             <select id="name"
                     class="form-control"
@@ -76,11 +76,11 @@
               <td class="col-md-6">
                 <select class="form-control"
                         ng-model="item.good"
-                        ng-options="good.name + ' (' + good.count + ' единиц)' for good in goods track by good._id">
+                        ng-options="good.name + ' (' + good.count + ' единиц)' for good in calcArray(item.good) track by good._id">
                 </select>
               </td>
               <td class="col-md-1">
-                <input class="form-control" type="number" min="1" step="1" ng-model="item.count">
+                <input class="form-control" type="number" min="1" max="good.count" step="1" ng-model="item.count">
               </td>
               <td class="col-md-2">
                 <label style="margin: 5px">{{calculate(item.good.price, item.count)}}</label>
@@ -97,7 +97,7 @@
           </tbody>
         </table>
 
-        <button type="button" class="btn btn-info" ng-click="addItem()">Добавить</button>
+        <button type="button" class="btn btn-info" ng-click="addItem()" ng-disabled="!calcArray().length">Добавить</button>
 
         <div class="row">
           <h4>Общая сумма: {{calculateTotal()}}</h4>
