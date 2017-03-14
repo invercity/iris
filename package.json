@@ -1,7 +1,7 @@
 {
   "name": "iris",
   "description": "Goods keeper",
-  "version": "0.1.0",
+  "version": "1.0.0-alpha",
   "private": false,
   "author": "Andriy Ermolenko",
   "license": "MIT",
@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "acl": "~0.4.4",
-    "async": "~2.1.5",
+    "async": "^2.1.5",
     "bluebird": "^3.4.7",
     "body-parser": "^1.13.1",
     "bower": "^1.4.1",

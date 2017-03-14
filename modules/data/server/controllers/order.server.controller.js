@@ -9,6 +9,7 @@ exports.create = (req, res) => {
   const orderData = {
     items: req.body.items,
     place: req.body.place,
+    placeDescription: req.body.placeDescription,
     date: req.body.date,
   };
   const clientData = req.body.client;
@@ -62,7 +63,8 @@ exports.update = (req, res) => {
 
   order.items = req.body.items;
   order.place = req.body.place;
-  order.date = req.body.date;
+  order.placeDescription = req.body.placeDescription;
+  order.payed = req.body.payed;
 
   order.save((err) => {
     if (err) {
@@ -94,7 +96,7 @@ exports.list = (req, res) => {
     .sort('-created')
     .populate('user', 'displayName')
     .populate('client')
-    .populate('items')
+    .populate('items.good')
     .populate('place')
     .exec((err, orders) => {
       if (err) {
