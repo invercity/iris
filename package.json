@@ -1,7 +1,7 @@
 {
   "name": "iris",
   "description": "Goods keeper",
-  "version": "0.0.2",
+  "version": "1.0.0-alpha",
   "private": false,
   "author": "Andriy Ermolenko",
   "license": "MIT",
@@ -10,7 +10,7 @@
     "url": "https://github.com/invercity/iris.git"
   },
   "engines": {
-    "node": "~4.3",
+    "node": "~7",
     "npm": ">=1.4.28"
   },
   "scripts": {
