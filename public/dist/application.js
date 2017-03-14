@@ -792,7 +792,9 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
     };
 
     $scope.find = function () {
-      $scope.orders = Orders.query();
+      $scope.orders = Orders.query(function () {
+        $scope.buildPager();
+      });
     };
 
     $scope.findOne = function () {
@@ -834,11 +836,11 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
       $scope.order.items.push(defaultItem);
     };
 
-    $scope.calculateTotal = function () {
-      if (!$scope.order.items) return;
+    $scope.calculateTotal = function (order) {
+      if (!order.items) return;
       var total = 0;
-      for (var i=0;i<$scope.order.items.length;i++) {
-        var item = $scope.order.items[i];
+      for (var i=0;i<order.items.length;i++) {
+        var item = order.items[i];
         if (item.good && item.good.price && item.count) {
           total += (item.good.price * item.count);
         }
@@ -884,6 +886,37 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
       });
 
       return disable;
+    };
+
+    $scope.buildPager = function () {
+      $scope.pagedItems = [];
+      $scope.itemsPerPage = 15;
+      $scope.currentPage = 1;
+      $scope.figureOutItemsToDisplay();
+    };
+
+    $scope.figureOutItemsToDisplay = function () {
+      $scope.filteredItems = _.filter($scope.orders, function (order) {
+        if (!$scope.search) return true;
+        var fields = [
+          'client.firstName',
+          'client.lastName',
+          'client.phone',
+          'code'
+        ];
+        return _.some(fields, function (field) {
+          var value = _.get(order, field);
+          return value && value.toString().indexOf($scope.search) !== -1;
+        });
+      });
+      $scope.filterLength = $scope.filteredItems.length;
+      var begin = (($scope.currentPage - 1) * $scope.itemsPerPage);
+      var end = begin + $scope.itemsPerPage;
+      $scope.pagedItems = $scope.filteredItems.slice(begin, end);
+    };
+
+    $scope.pageChanged = function () {
+      $scope.figureOutItemsToDisplay();
     };
   }
 ]);
