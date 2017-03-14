@@ -37,8 +37,9 @@ const OrderSchema = new Schema({
     type: Schema.ObjectId,
     ref: 'Place'
   },
-  date: {
-    type: Date
+  placeDescription: {
+    type: String,
+    default: ''
   },
   user: {
     type: Schema.ObjectId,
@@ -123,7 +124,9 @@ OrderSchema.post('remove', function (order) {
     };
   });
 
-  async.parallel(functions, () => {});
+  if (!order.payed) {
+    async.parallel(functions, () => {});
+  }
 });
 
 mongoose.model(modelOrder, OrderSchema);

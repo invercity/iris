@@ -1,12 +1,17 @@
 <section ng-controller="OrdersController" ng-init="find()">
   <div class="page-header row">
-    <h1>
-      Заказы
-      <a ui-sref="orders.create" class="add-btn">+</a>
-    </h1>
+    <div class="col-md-4">
+      <h1>
+        Заказы
+        <a ui-sref="orders.create" class="add-btn">+</a>
+      </h1>
+    </div>
+    <div class="col-md-4" style="margin-top: 2em">
+      <input class="form-control col-md-4" type="text" ng-model="search" placeholder="Поиск" ng-change="figureOutItemsToDisplay()" />
+    </div>
   </div>
   <div class="list-group">
-    <div ng-repeat="order in orders" ui-sref="orders.edit({orderId: order._id})" class="list-group-item" style="margin-bottom: 10px">
+    <div ng-repeat="order in pagedItems" ui-sref="orders.edit({orderId: order._id})" class="list-group-item" style="margin-bottom: 10px">
       <div>
         <h4>Заказ #{{order.code}}</h4>
       </div>
@@ -17,11 +22,19 @@
         </a>
       </div>
       <small>
-        <p class="lead">Клиент: {{order.client.firstName}} {{order.client.lastName}}</p>
+        <p class="lead">Клиент: {{order.client.firstName}} {{order.client.lastName}}, тел: {{order.client.phone}}</p>
         <em class="text-muted">
-          <span></span>
+          <span>Сумма: {{calculateTotal(order)}}</span>
         </em>
       </small>
     </div>
   </div>
+
+  <pagination boundary-links="true"
+              max-size="8"
+              items-per-page="itemsPerPage"
+              total-items="filterLength"
+              ng-model="currentPage"
+              ng-change="pageChanged()">
+  </pagination>
 </section>
