@@ -191,6 +191,21 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
 
 'use strict';
 
+angular.module('core').controller('ConfirmController', ["$scope", "$modalInstance", "data", function ($scope, $modalInstance, data) {
+
+  $scope.confirmText = data.confirmText;
+  $scope.confirmTitle = data.confirmTitle;
+
+  $scope.ok = function () {
+    $modalInstance.close(true);
+  };
+
+  $scope.cancel = function () {
+    $modalInstance.dismiss('cancel');
+  };
+}]);
+'use strict';
+
 angular.module('core').controller('HeaderController', ['$scope', '$state', 'Authentication', 'Menus',
   function ($scope, $state, Authentication, Menus) {
     // Expose view variables
@@ -324,6 +339,35 @@ angular.module('core')
     };
   }]);
 
+'use strict';
+
+angular.module('data').factory('ConfirmService', ['$modal', function ($modal) {
+  return {
+    show: function (title, text, confirm, decline) {
+      var modalInstance = $modal.open({
+        animation: true,
+        templateUrl: 'modules/core/client/views/confirm.client.view.html',
+        controller: 'ConfirmController',
+        resolve: {
+          data: {
+            confirmText: text,
+            confirmTitle: title,
+          }
+        }
+      });
+
+      modalInstance.result.then(function (is) {
+        if (confirm && is) {
+          confirm();
+        }
+      }, function () {
+        if (decline) {
+          decline();
+        }
+      });
+    }
+  };
+}]);
 'use strict';
 
 angular.module('core').factory('authInterceptor', ['$q', '$injector',
@@ -741,21 +785,55 @@ angular.module('data').controller('GoodsController', ['$scope', '$stateParams', 
 'use strict';
 
 // Order controller
-angular.module('data').controller('OrdersController', ['$scope', '$stateParams', '$location', 'Authentication', 'Orders', 'Goods', 'Clients',
-  function ($scope, $stateParams, $location, Authentication, Orders, Goods, Clients) {
+angular.module('data').controller('OrdersController', ['$scope', '$stateParams', '$location', 'Authentication', 'Orders', 'Goods', 'Clients', 'ConfirmService',
+  function ($scope, $stateParams, $location, Authentication, Orders, Goods, Clients, Confirm) {
 
     $scope.authentication = Authentication;
     $scope.currency = ' UAH';
 
+    $scope.orderTypes = [
+      {
+        name: 'Новые',
+        payed: false,
+        active: true
+      },
+      {
+        name: 'Оплаченные',
+        payed: true,
+        active: false
+      },
+      {
+        name: 'Все',
+        payed: undefined,
+        active: false
+      }
+    ];
+
+    $scope.changeType = function (type) {
+      if ($scope.selectedType) {
+        $scope.selectedType.active = false;
+      }
+      $scope.selectedType = type;
+      $scope.selectedType.active = true;
+      $scope.orders = Orders.query({
+        payed: type.payed
+      }, function () {
+        $scope.buildPager();
+      });
+    };
+
     $scope.remove = function (order) {
       if (order) {
-        order.$remove();
+        Confirm.show('Подтверждение', 'Удалить данный заказ?', function () {
+          order.$remove();
 
-        for (var i in $scope.orders) {
-          if ($scope.orders[i] === order) {
-            $scope.orders.splice(i, 1);
+          for (var i in $scope.orders) {
+            if ($scope.orders[i] === order) {
+              $scope.orders.splice(i, 1);
+            }
           }
-        }
+          $scope.buildPager();
+        });
       } else {
         $scope.order.$remove(function () {
           $location.path('orders');
@@ -791,24 +869,48 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
       }
     };
 
-    $scope.find = function () {
-      $scope.orders = Orders.query(function () {
-        $scope.buildPager();
+    $scope.pay = function () {
+      Confirm.show('Подтверждение', 'Оплатить данный заказ?', function () {
+        $scope.order.payed = true;
+        $scope.update(true);
       });
+    };
+
+    $scope.find = function () {
+      $scope.changeType($scope.orderTypes[0]);
+    };
+
+    var calcArray = function (good) {
+      if (!$scope.goods) return [];
+      var items = [];
+      if (good) {
+        items.push(good);
+      }
+      $scope.goods.forEach(function (g) {
+        if (!_.find($scope.order.items, function (item) {
+          return item.good && item.good._id === g._id;
+        })) {
+          items.push(g);
+        }
+      });
+      return items;
     };
 
     $scope.findOne = function () {
       if ($stateParams.orderId) {
-        $scope.order = Orders.get({
+        Orders.get({
           orderId: $stateParams.orderId
+        }, function (data) {
+          $scope.order = data;
+          $scope.calcArray = calcArray;
+          $scope.title = 'Редактирование заказа #' + data.code;
         });
-        $scope.title = 'Редактирование заказа';
       }
       else {
         $scope.order = new Orders();
         $scope.title = 'Новый заказ';
         $scope.order.client = 0;
-        $scope.addItem();
+        $scope.calcArray = calcArray;
       }
 
       $scope.goods = Goods.query();
@@ -822,12 +924,18 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
       return 0 + $scope.currency;
     };
 
+    $scope.calculateLeft = function (goods, count) {
+      if (!count) return goods;
+      return goods - count;
+    };
+
     $scope.addItem = function () {
       var defaultItem = {
         count: 1,
       };
-      if ($scope.goods && $scope.goods.length) {
-        // defaultItem.good = $scope.goods[0];
+      var availableGoods = calcArray();
+      if (availableGoods.length) {
+        defaultItem.good = availableGoods[0];
       }
       if (!$scope.order.items) {
         $scope.order.items = [];
@@ -837,7 +945,7 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
     };
 
     $scope.calculateTotal = function (order) {
-      if (!order.items) return;
+      if (!order || !order.items) return;
       var total = 0;
       for (var i=0;i<order.items.length;i++) {
         var item = order.items[i];
@@ -860,27 +968,11 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
       }
     };
 
-    $scope.calcArray = function (good) {
-      var items = [];
-      if (good) {
-        items.push(good);
-      }
-      $scope.goods.forEach(function (g) {
-        if (!_.find($scope.order.items, function (item) {
-          return item.good && item.good._id === g._id;
-        })) {
-          items.push(g);
-        }
-      });
-      return items;
-    };
-
     $scope.disableSave = function () {
-      // if ($scope.order.$promise) return false;
-      if (!$scope.order || !$scope.order.items || $scope.order.items.length) return true;
+      if (!$scope.order || !$scope.order.items || !$scope.order.items.length) return true;
       var disable = false;
       $scope.order.items.forEach(function (item) {
-        if (!item.good || !item.count || item.count === 0 || item.count > item.good.count) {
+        if (!item.count || item.count === 0 || item.count > item.good.count) {
           disable = true;
         }
       });
