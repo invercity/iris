@@ -1,11 +1,13 @@
 <section ng-controller="OrdersController" ng-init="findOne()">
-  <div class="page-header">
-    <h3>{{title}}</h3>
+  <div class="page-header" style="display: inline">
+    <h3>
+      {{title}} <span ng-if="order.payed" class="glyphicon glyphicon-ok" style="color: green"></span>
+    </h3>
   </div>
   <div class="col-md-8">
     <form name="orderForm" class="form-horizontal" ng-submit="update(orderForm.$valid)" novalidate>
       <fieldset>
-        <div class="form-group">
+        <div class="form-group" ng-if="!order._id">
           <label for="name">Клиент (создать нового если не выбрано)</label>
           <div>
             <select id="name"
@@ -61,22 +63,13 @@
           </div>
         </div>
 
-        <!--<div class="form-group">
-          <label for="payed">Оплачен</label>
-          <input name="payed"
-                 type="checkbox"
-                 ng-model="order.payed"
-                 id="payed"
-                 class="form-control">
-        </div> -->
-
-        <table class="table table-striped table-responsive">
+        <table class="table table-bordered table-responsive">
           <thead>
             <tr>
               <td class="col-md-6">Название</td>
               <td class="col-md-1">Колличество</td>
               <td class="col-md-2">Сумма</td>
-              <td class="col-md-2"></td>
+              <td class="col-md-2" ng-if="!order.payed"></td>
             </tr>
           </thead>
           <tbody>
@@ -84,16 +77,23 @@
               <td class="col-md-6">
                 <select class="form-control"
                         ng-model="item.good"
-                        ng-options="good.name + ' (' + good.count + ' единиц)' for good in calcArray(item.good) track by good._id">
+                        ng-options="good.name + ' (' + good.count + ' единиц)' for good in calcArray(item.good) track by good._id"
+                        ng-disabled="order.payed">
                 </select>
               </td>
               <td class="col-md-1">
-                <input class="form-control" type="number" min="1" max="good.count" step="1" ng-model="item.count">
+                <input class="form-control"
+                       type="number"
+                       min="1"
+                       max="good.count"
+                       step="1"
+                       ng-disabled="order.payed"
+                       ng-model="item.count">
               </td>
               <td class="col-md-2">
                 <label style="margin: 5px">{{calculate(item.good.price, item.count)}}</label>
               </td>
-              <td class="col-md-2">
+              <td class="col-md-2" ng-if="!order.payed">
                 <button type="button"
                         class="btn btn-info"
                         ng-click="removeItem(item)"
@@ -105,15 +105,34 @@
           </tbody>
         </table>
 
-        <button type="button" class="btn btn-info" ng-click="addItem()" ng-disabled="!calcArray().length">Добавить</button>
+        <button type="button"
+                class="btn btn-info"
+                ng-click="addItem()"
+                ng-disabled="!calcArray().length"
+                ng-if="!order.payed">
+          Добавить
+        </button>
 
         <div class="row">
           <h4>Общая сумма: {{calculateTotal(order)}}</h4>
         </div>
 
         <div class="form-group">
-          <input type="submit" class="btn btn-default save-btn pull-right" value="Сохранить">
-          <input type="button" class="btn btn-default save-btn pull-right" ng-click="cancel()" value="Отмена">
+          <input type="button"
+                 class="btn btn-success save-btn pull-right"
+                 ng-click="pay()"
+                 ng-if="!order.payed"
+                 ng-disabled="disableSave()"
+                 value="Оплатить">
+          <input type="submit"
+                 class="btn btn-default save-btn pull-right"
+                 ng-if="!order.payed"
+                 ng-disabled="disableSave()"
+                 value="Сохранить">
+          <input type="button"
+                 class="btn btn-default save-btn pull-right"
+                 ng-click="cancel()"
+                 value="Назад">
         </div>
         <div ng-show="error" class="text-danger">
           <strong ng-bind="error"></strong>

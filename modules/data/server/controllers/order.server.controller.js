@@ -92,7 +92,9 @@ exports.delete = (req, res) => {
 };
 
 exports.list = (req, res) => {
-  Order.find()
+  const payed = req.query.payed;
+  const search = typeof payed === 'undefined' ? undefined: { payed };
+  Order.find(search)
     .sort('-created')
     .populate('user', 'displayName')
     .populate('client')
