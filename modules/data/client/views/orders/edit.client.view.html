@@ -122,10 +122,12 @@
                  class="btn btn-success save-btn pull-right"
                  ng-click="pay()"
                  ng-if="!order.payed"
+                 ng-disabled="disableSave()"
                  value="Оплатить">
           <input type="submit"
                  class="btn btn-default save-btn pull-right"
                  ng-if="!order.payed"
+                 ng-disabled="disableSave()"
                  value="Сохранить">
           <input type="button"
                  class="btn btn-default save-btn pull-right"

@@ -83,7 +83,7 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
     };
 
     $scope.pay = function () {
-      Confirm.show('Подтвердить', 'Оплатить данный заказ?', function () {
+      Confirm.show('Подтверждение', 'Оплатить данный заказ?', function () {
         $scope.order.payed = true;
         $scope.update(true);
       });
@@ -94,14 +94,15 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
     };
 
     var calcArray = function (good) {
+      if (!$scope.goods) return [];
       var items = [];
       if (good) {
         items.push(good);
       }
       $scope.goods.forEach(function (g) {
         if (!_.find($scope.order.items, function (item) {
-            return item.good && item.good._id === g._id;
-          })) {
+          return item.good && item.good._id === g._id;
+        })) {
           items.push(g);
         }
       });
@@ -122,7 +123,6 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
         $scope.order = new Orders();
         $scope.title = 'Новый заказ';
         $scope.order.client = 0;
-        $scope.addItem();
         $scope.calcArray = calcArray;
       }
 
@@ -137,12 +137,18 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
       return 0 + $scope.currency;
     };
 
+    $scope.calculateLeft = function (goods, count) {
+      if (!count) return goods;
+      return goods - count;
+    };
+
     $scope.addItem = function () {
       var defaultItem = {
         count: 1,
       };
-      if ($scope.goods && $scope.goods.length) {
-        // defaultItem.good = $scope.goods[0];
+      var availableGoods = calcArray();
+      if (availableGoods.length) {
+        defaultItem.good = availableGoods[0];
       }
       if (!$scope.order.items) {
         $scope.order.items = [];
@@ -176,11 +182,11 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
     };
 
     $scope.disableSave = function () {
-      // if ($scope.order.$promise) return false;
-      if (!$scope.order || !$scope.order.items || $scope.order.items.length) return true;
+      if (!$scope.order || !$scope.order.items || !$scope.order.items.length) return true;
       var disable = false;
       $scope.order.items.forEach(function (item) {
-        if (!item.good || !item.count || item.count === 0 || item.count > item.good.count) {
+        if (!item.count || item.count === 0 || item.count > item.good.count) {
+          console.log(item)
           disable = true;
         }
       });
