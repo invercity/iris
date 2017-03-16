@@ -21,8 +21,8 @@
     </div>
   </div>
   <div class="list-group">
-    <div ng-repeat="order in pagedItems" ui-sref="orders.edit({orderId: order._id})" class="list-group-item" style="margin-bottom: 10px">
-      <div>
+    <div ng-repeat="order in pagedItems" class="list-group-item" style="margin-bottom: 10px">
+      <div ui-sref="orders.edit({orderId: order._id})">
         <h4>
           Заказ #{{order.code}}
           <span class="glyphicon glyphicon-ok" ng-if="order.payed" style="color: green"></span>
@@ -30,11 +30,11 @@
       </div>
       <div class="pull-right"
            ng-show="authentication.user._id == order.user._id || authentication.user.roles.includes('admin')">
-        <a class="btn btn-primary" ng-click="remove();">
+        <a class="btn btn-primary" ng-click="remove(order);">
           <i class="glyphicon glyphicon-trash"></i>
         </a>
       </div>
-      <small>
+      <small ui-sref="orders.edit({orderId: order._id})">
         <p class="lead">Клиент: {{order.client.firstName}} {{order.client.lastName}}, тел: {{order.client.phone}}</p>
         <em class="text-muted">
           <span>Сумма: {{calculateTotal(order)}}</span>

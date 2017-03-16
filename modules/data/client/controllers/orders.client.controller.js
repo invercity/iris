@@ -40,13 +40,16 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
 
     $scope.remove = function (order) {
       if (order) {
-        order.$remove();
+        Confirm.show('Подтверждение', 'Удалить данный заказ?', function () {
+          order.$remove();
 
-        for (var i in $scope.orders) {
-          if ($scope.orders[i] === order) {
-            $scope.orders.splice(i, 1);
+          for (var i in $scope.orders) {
+            if ($scope.orders[i] === order) {
+              $scope.orders.splice(i, 1);
+            }
           }
-        }
+          $scope.buildPager();
+        });
       } else {
         $scope.order.$remove(function () {
           $location.path('orders');
@@ -186,7 +189,6 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
       var disable = false;
       $scope.order.items.forEach(function (item) {
         if (!item.count || item.count === 0 || item.count > item.good.count) {
-          console.log(item)
           disable = true;
         }
       });
