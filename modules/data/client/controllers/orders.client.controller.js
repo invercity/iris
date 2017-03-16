@@ -1,11 +1,42 @@
 'use strict';
 
 // Order controller
-angular.module('data').controller('OrdersController', ['$scope', '$stateParams', '$location', 'Authentication', 'Orders', 'Goods', 'Clients',
-  function ($scope, $stateParams, $location, Authentication, Orders, Goods, Clients) {
+angular.module('data').controller('OrdersController', ['$scope', '$stateParams', '$location', 'Authentication', 'Orders', 'Goods', 'Clients', 'ConfirmService',
+  function ($scope, $stateParams, $location, Authentication, Orders, Goods, Clients, Confirm) {
 
     $scope.authentication = Authentication;
     $scope.currency = ' UAH';
+
+    $scope.orderTypes = [
+      {
+        name: 'Новые',
+        payed: false,
+        active: true
+      },
+      {
+        name: 'Оплаченные',
+        payed: true,
+        active: false
+      },
+      {
+        name: 'Все',
+        payed: undefined,
+        active: false
+      }
+    ];
+
+    $scope.changeType = function (type) {
+      if ($scope.selectedType) {
+        $scope.selectedType.active = false;
+      }
+      $scope.selectedType = type;
+      $scope.selectedType.active = true;
+      $scope.orders = Orders.query({
+        payed: type.payed
+      }, function () {
+        $scope.buildPager();
+      });
+    };
 
     $scope.remove = function (order) {
       if (order) {
@@ -51,24 +82,48 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
       }
     };
 
-    $scope.find = function () {
-      $scope.orders = Orders.query(function () {
-        $scope.buildPager();
+    $scope.pay = function () {
+      Confirm.show('Подтвердить', 'Оплатить данный заказ?', function () {
+        $scope.order.payed = true;
+        $scope.update(true);
       });
+    };
+
+    $scope.find = function () {
+      $scope.changeType($scope.orderTypes[0]);
+    };
+
+    var calcArray = function (good) {
+      var items = [];
+      if (good) {
+        items.push(good);
+      }
+      $scope.goods.forEach(function (g) {
+        if (!_.find($scope.order.items, function (item) {
+            return item.good && item.good._id === g._id;
+          })) {
+          items.push(g);
+        }
+      });
+      return items;
     };
 
     $scope.findOne = function () {
       if ($stateParams.orderId) {
-        $scope.order = Orders.get({
+        Orders.get({
           orderId: $stateParams.orderId
+        }, function (data) {
+          $scope.order = data;
+          $scope.calcArray = calcArray;
+          $scope.title = 'Редактирование заказа #' + data.code;
         });
-        $scope.title = 'Редактирование заказа';
       }
       else {
         $scope.order = new Orders();
         $scope.title = 'Новый заказ';
         $scope.order.client = 0;
         $scope.addItem();
+        $scope.calcArray = calcArray;
       }
 
       $scope.goods = Goods.query();
@@ -97,7 +152,7 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
     };
 
     $scope.calculateTotal = function (order) {
-      if (!order.items) return;
+      if (!order || !order.items) return;
       var total = 0;
       for (var i=0;i<order.items.length;i++) {
         var item = order.items[i];
@@ -118,21 +173,6 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
           $scope.order.items.splice(i, 1);
         }
       }
-    };
-
-    $scope.calcArray = function (good) {
-      var items = [];
-      if (good) {
-        items.push(good);
-      }
-      $scope.goods.forEach(function (g) {
-        if (!_.find($scope.order.items, function (item) {
-          return item.good && item.good._id === g._id;
-        })) {
-          items.push(g);
-        }
-      });
-      return items;
     };
 
     $scope.disableSave = function () {

@@ -9,11 +9,24 @@
     <div class="col-md-4" style="margin-top: 2em">
       <input class="form-control col-md-4" type="text" ng-model="search" placeholder="Поиск" ng-change="figureOutItemsToDisplay()" />
     </div>
+    <div class="col-md-4" style="margin-top: 2em">
+      <div class="btn-group" role="group" aria-label="Типы заказов">
+        <button type="button"
+                ng-repeat="type in orderTypes"
+                ng-class="{active: type.active}"
+                class="btn btn-default"
+                ng-click="changeType(type)">{{type.name}}
+        </button>
+      </div>
+    </div>
   </div>
   <div class="list-group">
     <div ng-repeat="order in pagedItems" ui-sref="orders.edit({orderId: order._id})" class="list-group-item" style="margin-bottom: 10px">
       <div>
-        <h4>Заказ #{{order.code}}</h4>
+        <h4>
+          Заказ #{{order.code}}
+          <span class="glyphicon glyphicon-ok" ng-if="order.payed" style="color: green"></span>
+        </h4>
       </div>
       <div class="pull-right"
            ng-show="authentication.user._id == order.user._id || authentication.user.roles.includes('admin')">
@@ -35,6 +48,10 @@
               items-per-page="itemsPerPage"
               total-items="filterLength"
               ng-model="currentPage"
+              first-text="Начало"
+              last-text="Конец"
+              previous-text="Пред."
+              next-text="След."
               ng-change="pageChanged()">
   </pagination>
 </section>
