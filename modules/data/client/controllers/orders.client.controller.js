@@ -181,7 +181,7 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
         return i.good._id === good._id;
       });
       var savedItem = $scope.savedOrder ? _.find($scope.savedOrder.items, function (i) {
-        return item.good._id === i.good._id;
+        return good._id === i.good._id;
       }) : null;
       if (!item) {
         if (savedItem) {
