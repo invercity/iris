@@ -7,6 +7,10 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
     $scope.authentication = Authentication;
     $scope.currency = ' UAH';
 
+    var toZero = function (val) {
+      return val < 0 ? 0 : val;
+    };
+
     $scope.orderTypes = [
       {
         name: 'Новые',
@@ -119,6 +123,7 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
         }, function (data) {
           $scope.order = data;
           $scope.calcArray = calcArray;
+          $scope.savedOrder = _.cloneDeep(data);
           $scope.title = 'Редактирование заказа #' + data.code;
         });
       }
@@ -138,11 +143,6 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
         return (price * count).toFixed(2) + $scope.currency;
       }
       return 0 + $scope.currency;
-    };
-
-    $scope.calculateLeft = function (goods, count) {
-      if (!count) return goods;
-      return goods - count;
     };
 
     $scope.addItem = function () {
@@ -172,6 +172,30 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
       return total.toFixed(2) + $scope.currency;
     };
 
+    $scope.calculateLeft = function (good) {
+      var items = $scope.order.items;
+      if (!good || !items) {
+        return;
+      }
+      var item = _.find(items, function (i) {
+        return i.good._id === good._id;
+      });
+      var savedItem = $scope.savedOrder ? _.find($scope.savedOrder.items, function (i) {
+        return item.good._id === i.good._id;
+      }) : null;
+      if (!item) {
+        if (savedItem) {
+          return good.count + savedItem.count;
+        }
+        return good.count;
+      }
+      var newItemCount = good.count - item.count;
+      if (!savedItem) {
+        return toZero(newItemCount);
+      }
+      return toZero(savedItem.count + newItemCount);
+    };
+
     $scope.cancel = function () {
       $location.path('orders');
     };
@@ -187,8 +211,14 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
     $scope.disableSave = function () {
       if (!$scope.order || !$scope.order.items || !$scope.order.items.length) return true;
       var disable = false;
+      var findSelectedOrder = function (item) {
+        return function (i) {
+          return i.good._id === item.good._id;
+        };
+      };
       $scope.order.items.forEach(function (item) {
-        if (!item.count || item.count === 0 || item.count > item.good.count) {
+        var saved = $scope.savedOrder ? _.find($scope.savedOrder.items, findSelectedOrder(item)) : undefined;
+        if (!item.count || item.count === 0 || (item.count > item.good.count && !saved) || (saved && item.count - saved.count > item.good.count)) {
           disable = true;
         }
       });
