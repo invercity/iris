@@ -140,7 +140,7 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
         $scope.places = data;
         $scope.places.unshift({
           name: 'Ввести вручную'
-        })
+        });
       });
     };
 

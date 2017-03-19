@@ -707,6 +707,50 @@ angular.module('data').config(['$stateProvider',
 
 'use strict';
 
+angular.module('data').run(['Menus',
+  function (Menus) {
+    Menus.addMenuItem('topbar', {
+      title: 'Места',
+      state: 'places.list',
+      roles: ['*']
+    });
+  }
+]);
+
+'use strict';
+
+// Setting up route
+angular.module('data').config(['$stateProvider',
+  function ($stateProvider) {
+    $stateProvider
+      .state('places', {
+        abstract: true,
+        url: '/places',
+        template: '<ui-view/>'
+      })
+      .state('places.list', {
+        url: '',
+        templateUrl: 'modules/data/client/views/places/list.client.view.html'
+      })
+      .state('places.create', {
+        url: '/create',
+        templateUrl: 'modules/data/client/views/places/edit.client.view.html',
+        data: {
+          roles: ['user', 'admin']
+        }
+      })
+      .state('places.edit', {
+        url: '/:placeId/edit',
+        templateUrl: 'modules/data/client/views/places/edit.client.view.html',
+        data: {
+          roles: ['user', 'admin']
+        }
+      });
+  }
+]);
+
+'use strict';
+
 // Goods controller
 angular.module('data').controller('GoodsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Goods',
   function ($scope, $stateParams, $location, Authentication, Goods) {
@@ -785,11 +829,15 @@ angular.module('data').controller('GoodsController', ['$scope', '$stateParams', 
 'use strict';
 
 // Order controller
-angular.module('data').controller('OrdersController', ['$scope', '$stateParams', '$location', 'Authentication', 'Orders', 'Goods', 'Clients', 'ConfirmService',
-  function ($scope, $stateParams, $location, Authentication, Orders, Goods, Clients, Confirm) {
+angular.module('data').controller('OrdersController', ['$scope', '$stateParams', '$location', 'Authentication', 'Orders', 'Goods', 'Clients', 'Places', 'ConfirmService',
+  function ($scope, $stateParams, $location, Authentication, Orders, Goods, Clients, Places, Confirm) {
 
     $scope.authentication = Authentication;
     $scope.currency = ' UAH';
+
+    var toZero = function (val) {
+      return val < 0 ? 0 : val;
+    };
 
     $scope.orderTypes = [
       {
@@ -903,6 +951,7 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
         }, function (data) {
           $scope.order = data;
           $scope.calcArray = calcArray;
+          $scope.savedOrder = _.cloneDeep(data);
           $scope.title = 'Редактирование заказа #' + data.code;
         });
       }
@@ -915,6 +964,12 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
 
       $scope.goods = Goods.query();
       $scope.clients = Clients.query();
+      Places.query(function (data) {
+        $scope.places = data;
+        $scope.places.unshift({
+          name: 'Ввести вручную'
+        });
+      });
     };
 
     $scope.calculate = function (price, count) {
@@ -956,6 +1011,30 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
       return total.toFixed(2) + $scope.currency;
     };
 
+    $scope.calculateLeft = function (good) {
+      var items = $scope.order.items;
+      if (!good || !items) {
+        return;
+      }
+      var item = _.find(items, function (i) {
+        return i.good._id === good._id;
+      });
+      var savedItem = $scope.savedOrder ? _.find($scope.savedOrder.items, function (i) {
+        return good._id === i.good._id;
+      }) : null;
+      if (!item) {
+        if (savedItem) {
+          return good.count + savedItem.count;
+        }
+        return good.count;
+      }
+      var newItemCount = good.count - item.count;
+      if (!savedItem) {
+        return toZero(newItemCount);
+      }
+      return toZero(savedItem.count + newItemCount);
+    };
+
     $scope.cancel = function () {
       $location.path('orders');
     };
@@ -971,8 +1050,14 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
     $scope.disableSave = function () {
       if (!$scope.order || !$scope.order.items || !$scope.order.items.length) return true;
       var disable = false;
+      var findSelectedOrder = function (item) {
+        return function (i) {
+          return i.good._id === item.good._id;
+        };
+      };
       $scope.order.items.forEach(function (item) {
-        if (!item.count || item.count === 0 || item.count > item.good.count) {
+        var saved = $scope.savedOrder ? _.find($scope.savedOrder.items, findSelectedOrder(item)) : undefined;
+        if (!item.count || item.count === 0 || (item.count > item.good.count && !saved) || (saved && item.count - saved.count > item.good.count)) {
           disable = true;
         }
       });
@@ -1015,6 +1100,80 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
 
 'use strict';
 
+// Places controller
+angular.module('data').controller('PlacesController', ['$scope', '$stateParams', '$location', 'Authentication', 'Places',
+  function ($scope, $stateParams, $location, Authentication, Places) {
+    $scope.authentication = Authentication;
+
+    $scope.remove = function (place) {
+      if (place) {
+        place.$remove();
+
+        for (var i in $scope.places) {
+          if ($scope.places[i] === place) {
+            $scope.places.splice(i, 1);
+          }
+        }
+      } else {
+        $scope.place.$remove(function () {
+          $location.path('goods');
+        });
+      }
+    };
+
+    $scope.update = function (isValid) {
+      $scope.error = null;
+
+      if (!isValid) {
+        $scope.$broadcast('show-errors-check-validity', 'articleForm');
+
+        return false;
+      }
+
+      var place = $scope.place;
+
+      if ($scope.place._id) {
+        place.$update(function () {
+          $location.path('places');
+        }, function (errorResponse) {
+          $scope.error = errorResponse.data.message;
+        });
+      }
+
+      else {
+        place.$save(function () {
+          $location.path('places');
+        }, function (errorResponse) {
+          $scope.error = errorResponse.data.message;
+        });
+      }
+    };
+
+    $scope.find = function () {
+      $scope.places = Places.query();
+    };
+
+    $scope.findOne = function () {
+      if ($stateParams.placeId) {
+        $scope.place = Places.get({
+          placeId: $stateParams.placeId
+        });
+        $scope.title = 'Редактирование места выдачи';
+      }
+      else {
+        $scope.place = new Places();
+        $scope.title = 'Новое место выдачи';
+      }
+    };
+
+    $scope.cancel = function () {
+      $location.path('places');
+    };
+  }
+]);
+
+'use strict';
+
 angular.module('data').factory('Clients', ['$resource',
   function ($resource) {
     return $resource('api/clients/:clientId', {
@@ -1047,6 +1206,20 @@ angular.module('data').factory('Orders', ['$resource',
   function ($resource) {
     return $resource('api/orders/:orderId', {
       orderId: '@_id'
+    }, {
+      update: {
+        method: 'PUT'
+      }
+    });
+  }
+]);
+
+'use strict';
+
+angular.module('data').factory('Places', ['$resource',
+  function ($resource) {
+    return $resource('api/places/:placeId', {
+      placeId: '@_id'
     }, {
       update: {
         method: 'PUT'
