@@ -1,0 +1,26 @@
+<section ng-controller="PlacesController" ng-init="find()">
+  <div class="page-header row">
+    <div class="col-md-4">
+      <h1>
+        Места выдачи
+        <a ui-sref="places.create" class="add-btn">+</a>
+      </h1>
+    </div>
+  </div>
+  <div class="list-group">
+    <div ng-repeat="place in places" class="list-group-item" style="margin-bottom: 10px">
+      <div ui-sref="places.edit({placeId: place._id})">
+        <h4>{{place.name}}</h4>
+      </div>
+      <div class="pull-right"
+           ng-show="authentication.user._id == place.user._id || authentication.user.roles.includes('admin')">
+        <a class="btn btn-primary" ng-click="remove(place);">
+          <i class="glyphicon glyphicon-trash"></i>
+        </a>
+      </div>
+      <small ui-sref="places.edit({placeId: place._id})">
+        <p class="lead">{{place.address}}</p>
+      </small>
+    </div>
+  </div>
+</section>
