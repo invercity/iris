@@ -1,8 +1,8 @@
 'use strict';
 
 // Order controller
-angular.module('data').controller('OrdersController', ['$scope', '$stateParams', '$location', 'Authentication', 'Orders', 'Goods', 'Clients', 'ConfirmService',
-  function ($scope, $stateParams, $location, Authentication, Orders, Goods, Clients, Confirm) {
+angular.module('data').controller('OrdersController', ['$scope', '$stateParams', '$location', 'Authentication', 'Orders', 'Goods', 'Clients', 'Places', 'ConfirmService',
+  function ($scope, $stateParams, $location, Authentication, Orders, Goods, Clients, Places, Confirm) {
 
     $scope.authentication = Authentication;
     $scope.currency = ' UAH';
@@ -136,6 +136,12 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
 
       $scope.goods = Goods.query();
       $scope.clients = Clients.query();
+      Places.query(function (data) {
+        $scope.places = data;
+        $scope.places.unshift({
+          name: 'Ввести вручную'
+        })
+      });
     };
 
     $scope.calculate = function (price, count) {
@@ -143,6 +149,11 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
         return (price * count).toFixed(2) + $scope.currency;
       }
       return 0 + $scope.currency;
+    };
+
+    $scope.calculateLeft = function (goods, count) {
+      if (!count) return goods;
+      return goods - count;
     };
 
     $scope.addItem = function () {
@@ -181,7 +192,7 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
         return i.good._id === good._id;
       });
       var savedItem = $scope.savedOrder ? _.find($scope.savedOrder.items, function (i) {
-        return item.good._id === i.good._id;
+        return good._id === i.good._id;
       }) : null;
       if (!item) {
         if (savedItem) {

@@ -27,7 +27,7 @@
                  id="firstName"
                  class="form-control"
                  placeholder="Имя"
-                 ng-disabled="order.client._id"
+                 ng-disabled="order.client._id || order._id"
                  required>
           <div ng-messages="orderForm.firstName.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Имя</p>
@@ -42,7 +42,7 @@
                  id="lastName"
                  class="form-control"
                  placeholder="Фамилия"
-                 ng-disabled="order.client._id">
+                 ng-disabled="order.client._id || order._id">
           <div ng-messages="orderForm.lastName.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Фамилия</p>
           </div>
@@ -56,11 +56,35 @@
                  id="phone"
                  class="form-control"
                  placeholder="Телефон"
-                 ng-disabled="order.client._id"
+                 ng-disabled="order.client._id || order._id"
                  required>
           <div ng-messages="orderForm.phone.$error" role="alert">
             <p class="help-block error-text" ng-message="required">Телефон</p>
           </div>
+        </div>
+
+        <div class="form-group">
+          <label for="name">Место выдачи</label>
+          <div>
+            <select id="place"
+                    class="form-control"
+                    ng-model="order.place"
+                    ng-disabled="order.placeDescription"
+                    ng-options="place.name for place in places track by place._id">
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="placeDescription">Адресс</label>
+          <textarea name="placeDescriptions"
+                    ng-model="order.placeDescription"
+                    id="placeDescription"
+                    class="form-control"
+                    cols="30" rows="5"
+                    ng-disabled="order.place"
+                    placeholder="Описание">
+          </textarea>
         </div>
 
         <table class="table table-bordered table-responsive">
