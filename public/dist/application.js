@@ -195,9 +195,14 @@ angular.module('core').controller('ConfirmController', ["$scope", "$modalInstanc
 
   $scope.confirmText = data.confirmText;
   $scope.confirmTitle = data.confirmTitle;
+  $scope.confirmValue = data.confirmValue;
+
+  $scope.state = {
+    value: 1
+  };
 
   $scope.ok = function () {
-    $modalInstance.close(true);
+    $modalInstance.close($scope.state.value);
   };
 
   $scope.cancel = function () {
@@ -341,9 +346,12 @@ angular.module('core')
 
 'use strict';
 
-angular.module('data').factory('ConfirmService', ['$modal', function ($modal) {
+angular.module('core').factory('ConfirmService', ['$modal', function ($modal) {
   return {
-    show: function (title, text, confirm, decline) {
+    showValue: function (data, confirm, decline) {
+      var title = data.title;
+      var text = data.text;
+      var value = data.value;
       var modalInstance = $modal.open({
         animation: true,
         templateUrl: 'modules/core/client/views/confirm.client.view.html',
@@ -352,19 +360,26 @@ angular.module('data').factory('ConfirmService', ['$modal', function ($modal) {
           data: {
             confirmText: text,
             confirmTitle: title,
+            confirmValue: value,
           }
         }
       });
 
       modalInstance.result.then(function (is) {
         if (confirm && is) {
-          confirm();
+          confirm(is);
         }
       }, function () {
         if (decline) {
           decline();
         }
       });
+    },
+    show: function (title, text, confirm, decline) {
+      this.showValue({
+        title: title,
+        text: text
+      }, confirm, decline);
     }
   };
 }]);
@@ -752,8 +767,8 @@ angular.module('data').config(['$stateProvider',
 'use strict';
 
 // Goods controller
-angular.module('data').controller('GoodsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Goods',
-  function ($scope, $stateParams, $location, Authentication, Goods) {
+angular.module('data').controller('GoodsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Goods', 'ConfirmService',
+  function ($scope, $stateParams, $location, Authentication, Goods, Confirm) {
     $scope.authentication = Authentication;
 
     $scope.remove = function (good) {
@@ -783,7 +798,7 @@ angular.module('data').controller('GoodsController', ['$scope', '$stateParams', 
 
       var good = $scope.good;
 
-      if ($scope.good._id) {
+      if (good._id) {
         good.$update(function () {
           $location.path('goods');
         }, function (errorResponse) {
@@ -801,7 +816,10 @@ angular.module('data').controller('GoodsController', ['$scope', '$stateParams', 
     };
 
     $scope.find = function () {
-      $scope.goods = Goods.query();
+      Goods.query(function (data) {
+        $scope.goods = data;
+        $scope.buildPager();
+      });
     };
 
     $scope.findOne = function () {
@@ -822,6 +840,49 @@ angular.module('data').controller('GoodsController', ['$scope', '$stateParams', 
 
     $scope.cancel = function () {
       $location.path('goods');
+    };
+
+    $scope.add = function (good) {
+      Confirm.showValue({
+        title: 'Добавление товара',
+        text: 'Введите колличество:',
+        value: true
+      }, function (count) {
+        good.count += count;
+        good.$update();
+      });
+    };
+
+    $scope.buildPager = function () {
+      $scope.pagedItems = [];
+      $scope.itemsPerPage = 15;
+      $scope.currentPage = 1;
+      $scope.figureOutItemsToDisplay();
+    };
+
+    $scope.figureOutItemsToDisplay = function () {
+      $scope.filteredItems = _.filter($scope.goods, function (good) {
+        if (!$scope.search) return true;
+        var fields = [
+          'code',
+          'name',
+          'details',
+          'country',
+          'type'
+        ];
+        return _.some(fields, function (field) {
+          var value = _.get(good, field);
+          return value && value.toString().indexOf($scope.search) !== -1;
+        });
+      });
+      $scope.filterLength = $scope.filteredItems.length;
+      var begin = (($scope.currentPage - 1) * $scope.itemsPerPage);
+      var end = begin + $scope.itemsPerPage;
+      $scope.pagedItems = $scope.filteredItems.slice(begin, end);
+    };
+
+    $scope.pageChanged = function () {
+      $scope.figureOutItemsToDisplay();
     };
   }
 ]);
@@ -863,12 +924,20 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
       }
       $scope.selectedType = type;
       $scope.selectedType.active = true;
+      var place = $scope.selectedPlace ? $scope.selectedPlace._id : undefined;
       $scope.orders = Orders.query({
-        payed: type.payed
+        payed: type.payed,
+        place: place,
       }, function () {
         $scope.buildPager();
       });
     };
+
+    $scope.$watch('selectedPlace', function () {
+      if ($scope.selectedType) {
+        $scope.changeType($scope.selectedType);
+      }
+    });
 
     $scope.remove = function (order) {
       if (order) {
@@ -889,7 +958,7 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
       }
     };
 
-    $scope.update = function (isValid) {
+    $scope.update = function (isValid, useOrder, callback) {
       $scope.error = null;
 
       if (!isValid) {
@@ -898,11 +967,14 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
         return false;
       }
 
-      var order = $scope.order;
+      var order = useOrder || $scope.order;
 
-      if ($scope.order._id) {
+      if (order._id) {
         order.$update(function () {
           $location.path('orders');
+          if (callback) {
+            callback();
+          }
         }, function (errorResponse) {
           $scope.error = errorResponse.data.message;
         });
@@ -911,21 +983,34 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
       else {
         order.$save(function () {
           $location.path('orders');
+          if (callback) {
+            callback();
+          }
         }, function (errorResponse) {
           $scope.error = errorResponse.data.message;
         });
       }
     };
 
-    $scope.pay = function () {
+    $scope.pay = function (isValid, order, update) {
       Confirm.show('Подтверждение', 'Оплатить данный заказ?', function () {
-        $scope.order.payed = true;
-        $scope.update(true);
+        order.payed = true;
+        $scope.update(isValid, order, function () {
+          if (update) {
+            $scope.changeType($scope.selectedType);
+          }
+        });
       });
     };
 
     $scope.find = function () {
       $scope.changeType($scope.orderTypes[0]);
+      Places.query(function (data) {
+        $scope.places = data;
+        $scope.places.unshift({
+          name: 'Все'
+        });
+      });
     };
 
     var calcArray = function (good) {
@@ -938,7 +1023,9 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
         if (!_.find($scope.order.items, function (item) {
           return item.good && item.good._id === g._id;
         })) {
-          items.push(g);
+          if (g.count) {
+            items.push(g);
+          }
         }
       });
       return items;
