@@ -13,21 +13,21 @@ angular.module('data').config(['$stateProvider',
         url: '',
         templateUrl: 'modules/data/client/views/places/list.client.view.html',
         data: {
-          roles: ['user', 'admin']
+          roles: ['admin']
         }
       })
       .state('places.create', {
         url: '/create',
         templateUrl: 'modules/data/client/views/places/edit.client.view.html',
         data: {
-          roles: ['user', 'admin']
+          roles: ['admin']
         }
       })
       .state('places.edit', {
         url: '/:placeId/edit',
         templateUrl: 'modules/data/client/views/places/edit.client.view.html',
         data: {
-          roles: ['user', 'admin']
+          roles: ['admin']
         }
       });
   }

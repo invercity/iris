@@ -151,6 +151,7 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
           $scope.calcArray = calcArray;
           $scope.savedOrder = _.cloneDeep(data);
           $scope.title = 'Редактирование заказа #' + data.code;
+          $scope.order.link = 'https://vitaly.herokuapp.com/orders/' + order._id;
         });
       }
       else {

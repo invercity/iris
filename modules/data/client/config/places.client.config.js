@@ -5,7 +5,7 @@ angular.module('data').run(['Menus',
     Menus.addMenuItem('topbar', {
       title: 'Места',
       state: 'places.list',
-      roles: ['*']
+      roles: ['admin']
     });
   }
 ]);

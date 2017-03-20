@@ -13,25 +13,25 @@ angular.module('data').config(['$stateProvider',
         url: '',
         templateUrl: 'modules/data/client/views/orders/list.client.view.html',
         data: {
-          roles: ['user', 'admin']
+          roles: ['user']
         }
       })
       .state('orders.create', {
         url: '/create',
         templateUrl: 'modules/data/client/views/orders/edit.client.view.html',
         data: {
-          roles: ['user', 'admin']
+          roles: ['user']
         }
       })
-      /*.state('orders.view', {
+      .state('orders.view', {
         url: '/:orderId',
         templateUrl: 'modules/data/client/views/orders/view.client.view.html'
-      })*/
+      })
       .state('orders.edit', {
         url: '/:orderId/edit',
         templateUrl: 'modules/data/client/views/orders/edit.client.view.html',
         data: {
-          roles: ['user', 'admin']
+          roles: ['user']
         }
       });
   }

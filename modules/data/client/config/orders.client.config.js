@@ -6,7 +6,7 @@ angular.module('data').run(['Menus',
     Menus.addMenuItem('topbar', {
       title: 'Заказы',
       state: 'orders.list',
-      roles: ['*']
+      roles: ['admin']
     });
   }
 ]);
