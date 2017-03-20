@@ -50,7 +50,10 @@ angular.module('data').controller('GoodsController', ['$scope', '$stateParams', 
     };
 
     $scope.find = function () {
-      $scope.goods = Goods.query();
+      Goods.query(function (data) {
+        $scope.goods = data;
+        $scope.buildPager();
+      });
     };
 
     $scope.findOne = function () {
@@ -82,6 +85,38 @@ angular.module('data').controller('GoodsController', ['$scope', '$stateParams', 
         good.count += count;
         good.$update();
       });
+    };
+
+    $scope.buildPager = function () {
+      $scope.pagedItems = [];
+      $scope.itemsPerPage = 15;
+      $scope.currentPage = 1;
+      $scope.figureOutItemsToDisplay();
+    };
+
+    $scope.figureOutItemsToDisplay = function () {
+      $scope.filteredItems = _.filter($scope.goods, function (good) {
+        if (!$scope.search) return true;
+        var fields = [
+          'code',
+          'name',
+          'details',
+          'country',
+          'type'
+        ];
+        return _.some(fields, function (field) {
+          var value = _.get(good, field);
+          return value && value.toString().indexOf($scope.search) !== -1;
+        });
+      });
+      $scope.filterLength = $scope.filteredItems.length;
+      var begin = (($scope.currentPage - 1) * $scope.itemsPerPage);
+      var end = begin + $scope.itemsPerPage;
+      $scope.pagedItems = $scope.filteredItems.slice(begin, end);
+    };
+
+    $scope.pageChanged = function () {
+      $scope.figureOutItemsToDisplay();
     };
   }
 ]);

@@ -1,12 +1,18 @@
 <section ng-controller="GoodsController" ng-init="find()">
   <div class="page-header row">
-    <h1>
-      Товары
-      <a ui-sref="goods.create" class="add-btn">+</a>
-    </h1>
+    <div class="col-md-3">
+      <h1>
+        Товары
+        <a ui-sref="goods.create" class="add-btn">+</a>
+      </h1>
+    </div>
+
+    <div class="col-md-3" style="margin-top: 2em">
+      <input class="form-control col-md-4" type="text" ng-model="search" placeholder="Поиск" ng-change="figureOutItemsToDisplay()" />
+    </div>
   </div>
   <div class="list-group">
-    <div ng-repeat="good in goods" class="list-group-item" style="margin-bottom: 10px">
+    <div ng-repeat="good in pagedItems" class="list-group-item" style="margin-bottom: 10px">
       <div ui-sref="goods.edit({goodId: good._id})">
         <h4 ng-bind="good.name"></h4>
       </div>
@@ -30,4 +36,16 @@
       </small>
     </div>
   </div>
+
+  <pagination boundary-links="true"
+              max-size="8"
+              items-per-page="itemsPerPage"
+              total-items="filterLength"
+              ng-model="currentPage"
+              first-text="Начало"
+              last-text="Конец"
+              previous-text="Пред."
+              next-text="След."
+              ng-change="pageChanged()">
+  </pagination>
 </section>
