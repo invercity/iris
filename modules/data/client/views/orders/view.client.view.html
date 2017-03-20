@@ -6,6 +6,11 @@
       <h5>Клиент: {{order.client.firstName}}</h5>
       <h5>Телефон: {{order.client.phone}}</h5>
       <h5>Место выдачи: {{order.place ? order.place.name + ' (' + order.place.address + ')' : order.placeDescription}}</h5>
+      <h5>Статус:
+        <span style="color: {{order.payed ? 'green': 'red'}}">
+          {{order.payed ? 'Оплачен' : 'Не оплачен'}}
+        </span>
+      </h5>
     </div>
     <h5> Список товаров:</h5>
     <table class="table table-bordered table-responsive">

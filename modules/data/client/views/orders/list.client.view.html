@@ -36,7 +36,7 @@
   <div class="list-group">
     <div ng-repeat="order in pagedItems" class="list-group-item" style="margin-bottom: 10px">
       <div style="display: inline">
-        <div style="display: inline-block">
+        <div>
           <h4>
             <a class="add-btn" ui-sref="orders.edit({orderId: order._id})">Заказ #{{order.code}}</a>
             <span class="glyphicon glyphicon-ok" ng-if="order.payed" style="color: green"></span>
