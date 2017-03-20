@@ -630,7 +630,7 @@ angular.module('data').run(['Menus',
     Menus.addMenuItem('topbar', {
       title: 'Товары',
       state: 'goods.list',
-      roles: ['*']
+      roles: ['user']
     });
   }
 ]);
@@ -648,24 +648,23 @@ angular.module('data').config(['$stateProvider',
       })
       .state('goods.list', {
         url: '',
-        templateUrl: 'modules/data/client/views/goods/list.client.view.html'
+        templateUrl: 'modules/data/client/views/goods/list.client.view.html',
+        data: {
+          roles: ['user']
+        }
       })
       .state('goods.create', {
         url: '/create',
         templateUrl: 'modules/data/client/views/goods/edit.client.view.html',
         data: {
-          roles: ['user', 'admin']
+          roles: ['admin']
         }
       })
-      /*.state('goods.view', {
-        url: '/:goodId',
-        templateUrl: 'modules/data/client/views/goods/view.client.view.html'
-      }) */
       .state('goods.edit', {
         url: '/:goodId/edit',
         templateUrl: 'modules/data/client/views/goods/edit.client.view.html',
         data: {
-          roles: ['user', 'admin']
+          roles: ['admin']
         }
       });
   }
@@ -679,7 +678,7 @@ angular.module('data').run(['Menus',
     Menus.addMenuItem('topbar', {
       title: 'Заказы',
       state: 'orders.list',
-      roles: ['*']
+      roles: ['admin']
     });
   }
 ]);
@@ -699,25 +698,25 @@ angular.module('data').config(['$stateProvider',
         url: '',
         templateUrl: 'modules/data/client/views/orders/list.client.view.html',
         data: {
-          roles: ['user', 'admin']
+          roles: ['user']
         }
       })
       .state('orders.create', {
         url: '/create',
         templateUrl: 'modules/data/client/views/orders/edit.client.view.html',
         data: {
-          roles: ['user', 'admin']
+          roles: ['user']
         }
       })
-      /*.state('orders.view', {
+      .state('orders.view', {
         url: '/:orderId',
         templateUrl: 'modules/data/client/views/orders/view.client.view.html'
-      })*/
+      })
       .state('orders.edit', {
         url: '/:orderId/edit',
         templateUrl: 'modules/data/client/views/orders/edit.client.view.html',
         data: {
-          roles: ['user', 'admin']
+          roles: ['user']
         }
       });
   }
@@ -730,7 +729,7 @@ angular.module('data').run(['Menus',
     Menus.addMenuItem('topbar', {
       title: 'Места',
       state: 'places.list',
-      roles: ['*']
+      roles: ['admin']
     });
   }
 ]);
@@ -750,21 +749,21 @@ angular.module('data').config(['$stateProvider',
         url: '',
         templateUrl: 'modules/data/client/views/places/list.client.view.html',
         data: {
-          roles: ['user', 'admin']
+          roles: ['admin']
         }
       })
       .state('places.create', {
         url: '/create',
         templateUrl: 'modules/data/client/views/places/edit.client.view.html',
         data: {
-          roles: ['user', 'admin']
+          roles: ['admin']
         }
       })
       .state('places.edit', {
         url: '/:placeId/edit',
         templateUrl: 'modules/data/client/views/places/edit.client.view.html',
         data: {
-          roles: ['user', 'admin']
+          roles: ['admin']
         }
       });
   }
@@ -1046,6 +1045,7 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
           $scope.calcArray = calcArray;
           $scope.savedOrder = _.cloneDeep(data);
           $scope.title = 'Редактирование заказа #' + data.code;
+          $scope.order.link = 'https://vitaly.herokuapp.com/orders/' + data._id;
         });
       }
       else {
