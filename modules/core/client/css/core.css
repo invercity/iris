@@ -43,6 +43,11 @@ a:hover .header-profile-image {
 
 .add-btn {
   text-decoration: none;
+  color: black;
+}
+
+.add-btn:hover {
+  color: black;
 }
 
 @media screen and (max-width: 991px) {
