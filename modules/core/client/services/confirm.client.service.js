@@ -1,8 +1,11 @@
 'use strict';
 
-angular.module('data').factory('ConfirmService', ['$modal', function ($modal) {
+angular.module('core').factory('ConfirmService', ['$modal', function ($modal) {
   return {
-    show: function (title, text, confirm, decline) {
+    showValue: function (data, confirm, decline) {
+      var title = data.title;
+      var text = data.text;
+      var value = data.value;
       var modalInstance = $modal.open({
         animation: true,
         templateUrl: 'modules/core/client/views/confirm.client.view.html',
@@ -11,19 +14,26 @@ angular.module('data').factory('ConfirmService', ['$modal', function ($modal) {
           data: {
             confirmText: text,
             confirmTitle: title,
+            confirmValue: value,
           }
         }
       });
 
       modalInstance.result.then(function (is) {
         if (confirm && is) {
-          confirm();
+          confirm(is);
         }
       }, function () {
         if (decline) {
           decline();
         }
       });
+    },
+    show: function (title, text, confirm, decline) {
+      this.showValue({
+        title: title,
+        text: text
+      }, confirm, decline);
     }
   };
 }]);

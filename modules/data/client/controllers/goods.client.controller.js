@@ -1,8 +1,8 @@
 'use strict';
 
 // Goods controller
-angular.module('data').controller('GoodsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Goods',
-  function ($scope, $stateParams, $location, Authentication, Goods) {
+angular.module('data').controller('GoodsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Goods', 'ConfirmService',
+  function ($scope, $stateParams, $location, Authentication, Goods, Confirm) {
     $scope.authentication = Authentication;
 
     $scope.remove = function (good) {
@@ -71,6 +71,17 @@ angular.module('data').controller('GoodsController', ['$scope', '$stateParams', 
 
     $scope.cancel = function () {
       $location.path('goods');
+    };
+
+    $scope.add = function (good) {
+      Confirm.showValue({
+        title: 'Добавление товара',
+        text: 'Введите колличество:',
+        value: true
+      }, function (count) {
+        good.count += count;
+        good.$update();
+      });
     };
   }
 ]);

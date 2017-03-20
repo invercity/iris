@@ -16,6 +16,12 @@
           <i class="glyphicon glyphicon-trash"></i>
         </a>
       </div>
+      <div class="pull-right"
+           ng-show="authentication.user._id == good.user._id || authentication.user.roles.includes('admin')">
+        <a class="btn btn-success" ng-click="add(good);">
+          <i class="glyphicon glyphicon-plus"></i>
+        </a>
+      </div>
       <small ui-sref="goods.edit({goodId: good._id})">
         <p class="lead">Осталось: {{good.count}}</p>
         <em class="text-muted">
