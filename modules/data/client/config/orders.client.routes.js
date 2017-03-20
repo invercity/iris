@@ -11,7 +11,10 @@ angular.module('data').config(['$stateProvider',
       })
       .state('orders.list', {
         url: '',
-        templateUrl: 'modules/data/client/views/orders/list.client.view.html'
+        templateUrl: 'modules/data/client/views/orders/list.client.view.html',
+        data: {
+          roles: ['user', 'admin']
+        }
       })
       .state('orders.create', {
         url: '/create',
@@ -20,10 +23,10 @@ angular.module('data').config(['$stateProvider',
           roles: ['user', 'admin']
         }
       })
-      .state('orders.view', {
+      /*.state('orders.view', {
         url: '/:orderId',
         templateUrl: 'modules/data/client/views/orders/view.client.view.html'
-      })
+      })*/
       .state('orders.edit', {
         url: '/:orderId/edit',
         templateUrl: 'modules/data/client/views/orders/edit.client.view.html',

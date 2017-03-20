@@ -11,7 +11,10 @@ angular.module('data').config(['$stateProvider',
       })
       .state('places.list', {
         url: '',
-        templateUrl: 'modules/data/client/views/places/list.client.view.html'
+        templateUrl: 'modules/data/client/views/places/list.client.view.html',
+        data: {
+          roles: ['user', 'admin']
+        }
       })
       .state('places.create', {
         url: '/create',
