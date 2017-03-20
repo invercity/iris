@@ -20,10 +20,10 @@ angular.module('data').config(['$stateProvider',
           roles: ['user', 'admin']
         }
       })
-      .state('goods.view', {
+      /*.state('goods.view', {
         url: '/:goodId',
         templateUrl: 'modules/data/client/views/goods/view.client.view.html'
-      })
+      }) */
       .state('goods.edit', {
         url: '/:goodId/edit',
         templateUrl: 'modules/data/client/views/goods/edit.client.view.html',
