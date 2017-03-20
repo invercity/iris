@@ -6,15 +6,12 @@ angular.module('core').controller('ConfirmController', function ($scope, $modalI
   $scope.confirmTitle = data.confirmTitle;
   $scope.confirmValue = data.confirmValue;
 
-  // just for test
-  $scope.$watch('some.value', function () {
-    console.log($scope.value);
-  });
-
-  $scope.value = 1;
+  $scope.state = {
+    value: 1
+  };
 
   $scope.ok = function () {
-    $modalInstance.close($scope.value);
+    $modalInstance.close($scope.state.value);
   };
 
   $scope.cancel = function () {
