@@ -1,12 +1,12 @@
 <section ng-controller="OrdersController" ng-init="find()">
   <div class="page-header row">
-    <div class="col-md-4">
+    <div class="col-md-3">
       <h1>
         Заказы
         <a ui-sref="orders.create" class="add-btn">+</a>
       </h1>
     </div>
-    <div class="col-md-4" style="margin-top: 2em">
+    <div class="col-md-3" style="margin-top: 2em">
       <input class="form-control col-md-4" type="text" ng-model="search" placeholder="Поиск" ng-change="figureOutItemsToDisplay()" />
     </div>
     <div class="col-md-4" style="margin-top: 2em">
@@ -19,17 +19,35 @@
         </button>
       </div>
     </div>
+
+    <div class="col-md-2">
+      <div class="form-group">
+        <label for="place" class="list-select-filter">Место выдачи</label>
+        <div>
+          <select id="place"
+                  class="form-control"
+                  ng-model="selectedPlace"
+                  ng-options="place.name for place in places track by place._id">
+          </select>
+        </div>
+      </div>
+    </div>
   </div>
   <div class="list-group">
     <div ng-repeat="order in pagedItems" class="list-group-item" style="margin-bottom: 10px">
-      <div ui-sref="orders.edit({orderId: order._id})">
-        <h4>
-          Заказ #{{order.code}}
-          <span class="glyphicon glyphicon-ok" ng-if="order.payed" style="color: green"></span>
-        </h4>
+      <div style="display: inline">
+        <div style="display: inline-block">
+          <h4>
+            <a class="add-btn" ui-sref="orders.edit({orderId: order._id})">Заказ #{{order.code}}</a>
+            <span class="glyphicon glyphicon-ok" ng-if="order.payed" style="color: green"></span>
+          </h4>
+        </div>
       </div>
       <div class="pull-right"
            ng-show="authentication.user._id == order.user._id || authentication.user.roles.includes('admin')">
+        <a class="btn btn-success" ng-click="pay(true, order, true);">
+          <i class="glyphicon glyphicon-usd"></i>
+        </a>
         <a class="btn btn-primary" ng-click="remove(order);">
           <i class="glyphicon glyphicon-trash"></i>
         </a>
@@ -37,21 +55,26 @@
       <small ui-sref="orders.edit({orderId: order._id})">
         <p class="lead">Клиент: {{order.client.firstName}} {{order.client.lastName}}, тел: {{order.client.phone}}</p>
         <em class="text-muted">
+          <span>Адрес: {{order.place ? order.place.name : order.placeDescription}}</span>
           <span>Сумма: {{calculateTotal(order)}}</span>
         </em>
       </small>
     </div>
   </div>
 
-  <pagination boundary-links="true"
-              max-size="8"
-              items-per-page="itemsPerPage"
-              total-items="filterLength"
-              ng-model="currentPage"
-              first-text="Начало"
-              last-text="Конец"
-              previous-text="Пред."
-              next-text="След."
-              ng-change="pageChanged()">
-  </pagination>
+  <div class="row">
+    <div class="col-md-8">
+      <pagination boundary-links="true"
+                  max-size="8"
+                  items-per-page="itemsPerPage"
+                  total-items="filterLength"
+                  ng-model="currentPage"
+                  first-text="Начало"
+                  last-text="Конец"
+                  previous-text="Пред."
+                  next-text="След."
+                  ng-change="pageChanged()">
+      </pagination>
+    </div>
+  </div>
 </section>

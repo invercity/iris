@@ -43,11 +43,20 @@ a:hover .header-profile-image {
 
 .add-btn {
   text-decoration: none;
+  color: black;
 }
 
-@media screen and (max-width: 769px) {
+.add-btn:hover {
+  color: black;
+}
+
+@media screen and (max-width: 991px) {
   .page-header {
     margin-left: 1px;
+  }
+
+  .list-select-filter {
+    margin-top: 2em;
   }
 }
 

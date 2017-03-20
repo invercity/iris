@@ -1,17 +1,28 @@
 <section ng-controller="GoodsController" ng-init="find()">
   <div class="page-header row">
-    <h1>
-      Товары
-      <a ui-sref="goods.create" class="add-btn">+</a>
-    </h1>
+    <div class="col-md-3">
+      <h1>
+        Товары
+        <a ui-sref="goods.create" class="add-btn">+</a>
+      </h1>
+    </div>
+
+    <div class="col-md-3" style="margin-top: 2em">
+      <input class="form-control col-md-4" type="text" ng-model="search" placeholder="Поиск" ng-change="figureOutItemsToDisplay()" />
+    </div>
   </div>
   <div class="list-group">
-    <div ng-repeat="good in goods" class="list-group-item" style="margin-bottom: 10px">
-      <div ui-sref="goods.edit({goodId: good._id})">
-        <h4 ng-bind="good.name"></h4>
+    <div ng-repeat="good in pagedItems" class="list-group-item" style="margin-bottom: 10px">
+      <div>
+        <h4>
+          <a class="add-btn" ui-sref="goods.edit({goodId: good._id})">{{good.name}}</a>
+        </h4>
       </div>
       <div class="pull-right"
            ng-show="authentication.user._id == good.user._id || authentication.user.roles.includes('admin')">
+        <a class="btn btn-success" ng-click="add(good);">
+          <i class="glyphicon glyphicon-plus"></i>
+        </a>
         <a class="btn btn-primary" ng-click="remove(good);">
           <i class="glyphicon glyphicon-trash"></i>
         </a>
@@ -22,6 +33,22 @@
           <span>Цена: {{good.price}} UAH</span>
         </em>
       </small>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <pagination boundary-links="true"
+                  max-size="8"
+                  items-per-page="itemsPerPage"
+                  total-items="filterLength"
+                  ng-model="currentPage"
+                  first-text="Начало"
+                  last-text="Конец"
+                  previous-text="Пред."
+                  next-text="След."
+                  ng-change="pageChanged()">
+      </pagination>
     </div>
   </div>
 </section>

@@ -3,6 +3,16 @@
 </div>
 <div class="modal-body">
   <h3>{{confirmText}}</h3>
+  <div ng-if="confirmValue">
+    <input name="value"
+           type="number"
+           ng-model="state.value"
+           id="value"
+           min="1"
+           step="1"
+           class="form-control"
+           placeholder="Введите колличество">
+  </div>
 </div>
 
 <div class="modal-footer">

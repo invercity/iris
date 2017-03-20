@@ -92,8 +92,12 @@ exports.delete = (req, res) => {
 };
 
 exports.list = (req, res) => {
-  const payed = req.query.payed;
-  const search = typeof payed === 'undefined' ? undefined: { payed };
+  const { payed, place } = req.query;
+  const search = typeof payed === 'undefined' && typeof place === 'undefined' ? undefined: {};
+  if (search) {
+    if (payed) search.payed = payed;
+    if (place) search.place = place;
+  }
   Order.find(search)
     .sort('-created')
     .populate('user', 'displayName')

@@ -4,9 +4,14 @@ angular.module('core').controller('ConfirmController', function ($scope, $modalI
 
   $scope.confirmText = data.confirmText;
   $scope.confirmTitle = data.confirmTitle;
+  $scope.confirmValue = data.confirmValue;
+
+  $scope.state = {
+    value: 1
+  };
 
   $scope.ok = function () {
-    $modalInstance.close(true);
+    $modalInstance.close($scope.state.value);
   };
 
   $scope.cancel = function () {
