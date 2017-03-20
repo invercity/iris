@@ -35,12 +35,20 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
       }
       $scope.selectedType = type;
       $scope.selectedType.active = true;
+      var place = $scope.selectedPlace ? $scope.selectedPlace._id : undefined;
       $scope.orders = Orders.query({
-        payed: type.payed
+        payed: type.payed,
+        place: place,
       }, function () {
         $scope.buildPager();
       });
     };
+
+    $scope.$watch('selectedPlace', function () {
+      if ($scope.selectedType) {
+        $scope.changeType($scope.selectedType);
+      }
+    });
 
     $scope.remove = function (order) {
       if (order) {
@@ -98,6 +106,12 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
 
     $scope.find = function () {
       $scope.changeType($scope.orderTypes[0]);
+      Places.query(function (data) {
+        $scope.places = data;
+        $scope.places.unshift({
+          name: 'Все'
+        });
+      });
     };
 
     var calcArray = function (good) {
@@ -140,7 +154,7 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
         $scope.places = data;
         $scope.places.unshift({
           name: 'Ввести вручную'
-        })
+        });
       });
     };
 

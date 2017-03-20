@@ -30,7 +30,7 @@
                  ng-disabled="order.client._id || order._id"
                  required>
           <div ng-messages="orderForm.firstName.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">Имя</p>
+            <p class="help-block error-text" ng-message="required">Введите имя или выберите пользователя из списка</p>
           </div>
         </div>
 
@@ -43,14 +43,11 @@
                  class="form-control"
                  placeholder="Фамилия"
                  ng-disabled="order.client._id || order._id">
-          <div ng-messages="orderForm.lastName.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">Фамилия</p>
-          </div>
         </div>
 
         <div class="form-group" show-errors>
           <label for="firstName">Телефон *</label>
-          <input name="count"
+          <input name="phone"
                  type="tel"
                  ng-model="order.client.phone"
                  id="phone"
@@ -59,23 +56,27 @@
                  ng-disabled="order.client._id || order._id"
                  required>
           <div ng-messages="orderForm.phone.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">Телефон</p>
+            <p class="help-block error-text" ng-message="required">Введите телефон</p>
           </div>
         </div>
 
-        <div class="form-group">
+        <div class="form-group" show-errors>
           <label for="name">Место выдачи</label>
           <div>
             <select id="place"
                     class="form-control"
                     ng-model="order.place"
                     ng-disabled="order.placeDescription"
+                    required
                     ng-options="place.name for place in places track by place._id">
             </select>
           </div>
+          <div ng-messages="orderForm.place.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Выберите место выдачи</p>
+          </div>
         </div>
 
-        <div class="form-group">
+        <div class="form-group" show-errors ng-if="!order.place._id">
           <label for="placeDescription">Адресс</label>
           <textarea name="placeDescriptions"
                     ng-model="order.placeDescription"
@@ -83,8 +84,12 @@
                     class="form-control"
                     cols="30" rows="5"
                     ng-disabled="order.place"
+                    required
                     placeholder="Описание">
           </textarea>
+          <div ng-messages="orderForm.placeDescriptions.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Введите место выдачи или выберите из списка</p>
+          </div>
         </div>
 
         <table class="table table-bordered table-responsive">
