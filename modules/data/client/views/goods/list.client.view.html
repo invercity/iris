@@ -19,7 +19,7 @@
         </h4>
       </div>
       <div class="pull-right"
-           ng-show="authentication.user._id == good.user._id || authentication.user.roles.includes('admin')">
+           ng-show="authentication.user && (authentication.user._id == good.user._id || authentication.user.roles.includes('admin'))">
         <a class="btn btn-success" ng-click="add(good);">
           <i class="glyphicon glyphicon-plus"></i>
         </a>

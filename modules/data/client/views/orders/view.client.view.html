@@ -1,21 +1,32 @@
 <section ng-controller="OrdersController" ng-init="findOne()">
-  <div class="page-header">
-    <h3 ng-bind="order.code"></h3>
+  <div class="col-md-6">
+    <div class="page-header">
+      <h3>Заказ #{{order.code}}</h3>
+      <h5>Добавлен: {{order.created | date:'mediumDate'}}</h5>
+      <h5>Клиент: {{order.client.firstName}}</h5>
+      <h5>Телефон: {{order.client.phone}}</h5>
+      <h5>Место выдачи: {{order.place ? order.place.name + ' (' + order.place.address + ')' : order.placeDescription}}</h5>
+    </div>
+    <h5> Список товаров:</h5>
+    <table class="table table-bordered table-responsive">
+      <thead>
+      <tr>
+        <td>Товар</td>
+        <td>Цена</td>
+        <td>Колличество</td>
+        <td>Сумма</td>
+      </tr>
+      </thead>
+      <tbody>
+      <tr ng-repeat="item in order.items">
+        <td>{{item.good.name}}</td>
+        <td>{{item.good.price}} UAH</td>
+        <td>{{item.count}}</td>
+        <td>{{item.count * item.good.price}} UAH</td>
+      </tr>
+      </tbody>
+    </table>
+    <h4>
+      К оплате: {{calculateTotal(order)}}</h4>
   </div>
-  <div class="pull-right"
-       ng-show="authentication.user._id == order.user._id || authentication.user.roles.includes('admin')">
-    <a class="btn btn-primary" ui-sref="orders.edit({orderId: order._id})">
-      <i class="glyphicon glyphicon-edit"></i>
-    </a>
-    <a class="btn btn-primary" ng-click="remove();">
-      <i class="glyphicon glyphicon-trash"></i>
-    </a>
-  </div>
-  <small>
-    <p class="lead" ng-bind="order.details"></p>
-    <em class="text-muted">
-      Добавлено
-      <span ng-bind="order.created | date:'mediumDate'"></span>
-    </em>
-  </small>
 </section>
