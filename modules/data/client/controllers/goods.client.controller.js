@@ -32,7 +32,7 @@ angular.module('data').controller('GoodsController', ['$scope', '$stateParams', 
 
       var good = $scope.good;
 
-      if ($scope.good._id) {
+      if (good._id) {
         good.$update(function () {
           $location.path('goods');
         }, function (errorResponse) {

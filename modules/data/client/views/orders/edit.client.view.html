@@ -46,7 +46,7 @@
         </div>
 
         <div class="form-group" show-errors>
-          <label for="firstName">Телефон *</label>
+          <label for="phone">Телефон *</label>
           <input name="phone"
                  type="tel"
                  ng-model="order.client.phone"
@@ -61,9 +61,10 @@
         </div>
 
         <div class="form-group" show-errors>
-          <label for="name">Место выдачи</label>
+          <label for="place">Место выдачи</label>
           <div>
             <select id="place"
+                    name="phone"
                     class="form-control"
                     ng-model="order.place"
                     ng-disabled="order.placeDescription"
@@ -78,7 +79,7 @@
 
         <div class="form-group" show-errors ng-if="!order.place._id">
           <label for="placeDescription">Адресс</label>
-          <textarea name="placeDescriptions"
+          <textarea name="placeDescription"
                     ng-model="order.placeDescription"
                     id="placeDescription"
                     class="form-control"
@@ -149,7 +150,7 @@
         <div class="form-group">
           <input type="button"
                  class="btn btn-success save-btn pull-right"
-                 ng-click="pay()"
+                 ng-click="pay(orderForm.$valid, order)"
                  ng-if="!order.payed"
                  ng-disabled="disableSave()"
                  value="Оплатить">

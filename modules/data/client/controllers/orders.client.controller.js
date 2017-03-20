@@ -69,7 +69,7 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
       }
     };
 
-    $scope.update = function (isValid) {
+    $scope.update = function (isValid, useOrder, callback) {
       $scope.error = null;
 
       if (!isValid) {
@@ -78,11 +78,14 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
         return false;
       }
 
-      var order = $scope.order;
+      var order = useOrder || $scope.order;
 
-      if ($scope.order._id) {
+      if (order._id) {
         order.$update(function () {
           $location.path('orders');
+          if (callback) {
+            callback();
+          }
         }, function (errorResponse) {
           $scope.error = errorResponse.data.message;
         });
@@ -91,16 +94,23 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
       else {
         order.$save(function () {
           $location.path('orders');
+          if (callback) {
+            callback();
+          }
         }, function (errorResponse) {
           $scope.error = errorResponse.data.message;
         });
       }
     };
 
-    $scope.pay = function () {
+    $scope.pay = function (isValid, order, update) {
       Confirm.show('Подтверждение', 'Оплатить данный заказ?', function () {
-        $scope.order.payed = true;
-        $scope.update(true);
+        order.payed = true;
+        $scope.update(isValid, order, function () {
+          if (update) {
+            $scope.changeType($scope.selectedType);
+          }
+        });
       });
     };
 
@@ -124,7 +134,9 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
         if (!_.find($scope.order.items, function (item) {
           return item.good && item.good._id === g._id;
         })) {
-          items.push(g);
+          if (g.count) {
+            items.push(g);
+          }
         }
       });
       return items;
