@@ -8,7 +8,7 @@
     <form name="orderForm" class="form-horizontal" ng-submit="update(orderForm.$valid)" novalidate>
       <fieldset>
         <div class="form-group" show-errors ng-if="order._id">
-          <label for="link"><a ng-href="{{order.link}}">Ссылка на заказ</a></label>
+          <label for="link"><a target="_blank" ng-href="{{order.link}}">Ссылка на заказ</a></label>
           <input name="link"
                  type="text"
                  ng-model="order.link"
