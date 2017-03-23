@@ -837,7 +837,7 @@ angular.module('data').controller('GoodsController', ['$scope', '$stateParams', 
       else {
         $scope.good = new Goods({
           price: 1,
-          count: 1
+          count: 0
         });
         $scope.title = 'Новый товар';
       }
