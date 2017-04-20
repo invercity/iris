@@ -17,16 +17,16 @@
       <thead>
       <tr>
         <td>Товар</td>
-        <td>Цена</td>
         <td>Колличество</td>
+        <td>Цена</td>
         <td>Сумма</td>
       </tr>
       </thead>
       <tbody>
       <tr ng-repeat="item in order.items">
         <td>{{item.good.name}}</td>
-        <td>{{item.good.price}} UAH</td>
         <td>{{item.count}}</td>
+        <td>{{item.good.price}} UAH</td>
         <td>{{item.count * item.good.price}} UAH</td>
       </tr>
       </tbody>
