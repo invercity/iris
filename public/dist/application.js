@@ -163,7 +163,10 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
     $stateProvider
     .state('home', {
       url: '/',
-      templateUrl: 'modules/core/client/views/home.client.view.html'
+      templateUrl: 'modules/core/client/views/home.client.view.html',
+      data: {
+        roles: ['admin']
+      }
     })
     .state('not-found', {
       url: '/not-found',
@@ -877,7 +880,7 @@ angular.module('data').controller('GoodsController', ['$scope', '$stateParams', 
         ];
         return _.some(fields, function (field) {
           var value = _.get(good, field);
-          return value && value.toString().indexOf($scope.search) !== -1;
+          return value && value.toString().toLowerCase().indexOf($scope.search.toLowerCase()) !== -1;
         });
       });
       $scope.filterLength = $scope.filteredItems.length;
@@ -1176,7 +1179,7 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
         ];
         return _.some(fields, function (field) {
           var value = _.get(order, field);
-          return value && value.toString().indexOf($scope.search) !== -1;
+          return value && value.toString().toLowerCase().indexOf($scope.search.toLowerCase()) !== -1;
         });
       });
       $scope.filterLength = $scope.filteredItems.length;
