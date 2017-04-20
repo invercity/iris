@@ -106,7 +106,7 @@ angular.module('data').controller('GoodsController', ['$scope', '$stateParams', 
         ];
         return _.some(fields, function (field) {
           var value = _.get(good, field);
-          return value && value.toString().indexOf($scope.search) !== -1;
+          return value && value.toString().toLowerCase().indexOf($scope.search.toLowerCase()) !== -1;
         });
       });
       $scope.filterLength = $scope.filteredItems.length;

@@ -277,7 +277,7 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
         ];
         return _.some(fields, function (field) {
           var value = _.get(order, field);
-          return value && value.toString().indexOf($scope.search) !== -1;
+          return value && value.toString().toLowerCase().indexOf($scope.search.toLowerCase()) !== -1;
         });
       });
       $scope.filterLength = $scope.filteredItems.length;
