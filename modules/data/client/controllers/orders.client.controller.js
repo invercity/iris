@@ -127,7 +127,7 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
     var calcArray = function (good) {
       if (!$scope.goods) return [];
       var items = [];
-      if (good) {
+      if (good && good._id) {
         items.push(good);
       }
       $scope.goods.forEach(function (g) {
@@ -139,6 +139,7 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
           }
         }
       });
+      console.log(items)
       return items;
     };
 
@@ -212,7 +213,7 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
 
     $scope.calculateLeft = function (good) {
       var items = $scope.order.items;
-      if (!good || !items) {
+      if (!good || !items || !good._id) {
         return;
       }
       var item = _.find(items, function (i) {
@@ -256,7 +257,7 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
       };
       $scope.order.items.forEach(function (item) {
         var saved = $scope.savedOrder ? _.find($scope.savedOrder.items, findSelectedOrder(item)) : undefined;
-        if (!item.count || item.count === 0 || (item.count > item.good.count && !saved) || (saved && item.count - saved.count > item.good.count)) {
+        if (!item.count || item.count === 0 || (!item.good) || (!item.good._id) || (item.count > item.good.count && !saved) || (saved && item.count - saved.count > item.good.count)) {
           disable = true;
         }
       });

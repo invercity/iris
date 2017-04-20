@@ -106,7 +106,8 @@
         <table class="table table-bordered table-responsive">
           <thead>
             <tr>
-              <td class="col-md-6">Название</td>
+              <td class="col-md-5">Название</td>
+              <td class="col-md-1">Остаток</td>
               <td class="col-md-1">Колличество</td>
               <td class="col-md-2">Сумма</td>
               <td class="col-md-2" ng-if="!order.payed"></td>
@@ -114,12 +115,23 @@
           </thead>
           <tbody>
             <tr ng-repeat="item in order.items">
-              <td class="col-md-6">
-                <select class="form-control"
+              <td class="col-md-5">
+                <!--<select class="form-control"
                         ng-model="item.good"
                         ng-options="good.name + ' (Осталось ' + calculateLeft(good) + ' единиц)' for good in calcArray(item.good) track by good._id"
                         ng-disabled="order.payed">
-                </select>
+                </select> -->
+                <input type="text"
+                       ng-model="item.good"
+                       typeahead-editable="true"
+                       typeahead="good as good.name for good in calcArray(item.good) | filter:$viewValue | limitTo:8"
+                       class="form-control">
+              </td>
+              <td class="col-md-1">
+                <input type="text"
+                       class="form-control"
+                       ng-value="calculateLeft(item.good)"
+                       readony>
               </td>
               <td class="col-md-1">
                 <input class="form-control"
