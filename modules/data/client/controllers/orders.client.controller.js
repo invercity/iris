@@ -139,7 +139,6 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
           }
         }
       });
-      console.log(items)
       return items;
     };
 
