@@ -11,6 +11,7 @@ exports.create = (req, res) => {
     place: req.body.place,
     placeDescription: req.body.placeDescription,
     date: req.body.date,
+    status: req.body.status,
   };
   const clientData = req.body.client;
   async.parallel([
@@ -65,6 +66,8 @@ exports.update = (req, res) => {
   order.place = req.body.place;
   order.placeDescription = req.body.placeDescription;
   order.payed = req.body.payed;
+  // temporary realization
+  order.status = req.body.status;
 
   order.save((err) => {
     if (err) {
@@ -92,11 +95,15 @@ exports.delete = (req, res) => {
 };
 
 exports.list = (req, res) => {
-  const { payed, place } = req.query;
-  const search = typeof payed === 'undefined' && typeof place === 'undefined' ? undefined: {};
+  const { payed, place, status } = req.query;
+  const search =
+    typeof payed === 'undefined' &&
+    typeof place === 'undefined' &&
+    typeof status === 'undefined' ? undefined : {};
   if (search) {
     if (payed) search.payed = payed;
     if (place) search.place = place;
+    if (status) search.status = status;
   }
   Order.find(search)
     .sort('-created')

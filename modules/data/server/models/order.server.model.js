@@ -48,6 +48,10 @@ const OrderSchema = new Schema({
   payed: {
     type: Boolean,
     default: false
+  },
+  status: {
+    type: String,
+    default: 'work' // other types: ready, togo, done
   }
 });
 
