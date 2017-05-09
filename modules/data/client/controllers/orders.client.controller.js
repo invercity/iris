@@ -29,6 +29,29 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
       }
     ];
 
+    $scope.statuses = [
+      {
+        name: 'Новый',
+        value: 'work',
+      },
+      {
+        name: 'Готов',
+        value: 'ready'
+      },
+      {
+        name: 'Можно собирать',
+        value: 'togo'
+      },
+      {
+        name: 'Собран',
+        value: 'done'
+      },
+    ];
+
+    $scope.listStatuses = $scope.statuses.concat({
+      name: 'Все',
+    });
+
     $scope.changeType = function (type) {
       if ($scope.selectedType) {
         $scope.selectedType.active = false;
@@ -36,15 +59,23 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
       $scope.selectedType = type;
       $scope.selectedType.active = true;
       var place = $scope.selectedPlace ? $scope.selectedPlace._id : undefined;
+      var status = $scope.selectedStatus ? $scope.selectedStatus.value : undefined;
       $scope.orders = Orders.query({
         payed: type.payed,
         place: place,
+        status: status,
       }, function () {
         $scope.buildPager();
       });
     };
 
     $scope.$watch('selectedPlace', function () {
+      if ($scope.selectedType) {
+        $scope.changeType($scope.selectedType);
+      }
+    });
+
+    $scope.$watch('selectedStatus', function () {
       if ($scope.selectedType) {
         $scope.changeType($scope.selectedType);
       }
@@ -122,6 +153,7 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
           name: 'Все'
         });
       });
+      $scope.selectedStatus = $scope.listStatuses[4];
     };
 
     var calcArray = function (good) {
@@ -152,12 +184,16 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
           $scope.savedOrder = _.cloneDeep(data);
           $scope.title = 'Редактирование заказа #' + data.code;
           $scope.order.link = 'https://vitaly.herokuapp.com/orders/' + data._id;
+          if (!$scope.order.status) {
+            $scope.order.status = $scope.statuses[0].value;
+          }
         });
       }
       else {
         $scope.order = new Orders();
         $scope.title = 'Новый заказ';
         $scope.order.client = 0;
+        $scope.order.status = $scope.statuses[0].value;
         $scope.calcArray = calcArray;
       }
 
@@ -182,10 +218,6 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
       var defaultItem = {
         count: 1,
       };
-      var availableGoods = calcArray();
-      if (availableGoods.length) {
-        defaultItem.good = availableGoods[0];
-      }
       if (!$scope.order.items) {
         $scope.order.items = [];
       }

@@ -1,6 +1,6 @@
 <section ng-controller="OrdersController" ng-init="find()">
   <div class="page-header row">
-    <div class="col-md-3">
+    <div class="col-md-2">
       <h1>
         Заказы
         <a ui-sref="orders.create" class="add-btn">+</a>
@@ -9,7 +9,7 @@
     <div class="col-md-3" style="margin-top: 2em">
       <input class="form-control col-md-4" type="text" ng-model="search" placeholder="Поиск" ng-change="figureOutItemsToDisplay()" />
     </div>
-    <div class="col-md-4" style="margin-top: 2em">
+    <div class="col-md-3" style="margin-top: 2em">
       <div class="btn-group" role="group" aria-label="Типы заказов">
         <button type="button"
                 ng-repeat="type in orderTypes"
@@ -17,6 +17,19 @@
                 class="btn btn-default"
                 ng-click="changeType(type)">{{type.name}}
         </button>
+      </div>
+    </div>
+
+    <div class="col-md-2">
+      <div class="form-group">
+        <label for="type" class="list-select-filter">Статус заказа</label>
+        <div>
+          <select id="type"
+                  class="form-control"
+                  ng-model="selectedStatus"
+                  ng-options="status.name for status in listStatuses">
+          </select>
+        </div>
       </div>
     </div>
 
