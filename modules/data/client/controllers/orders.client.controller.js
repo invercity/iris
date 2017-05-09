@@ -152,8 +152,9 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
         $scope.places.unshift({
           name: 'Все'
         });
+        $scope.selectedStatus = $scope.listStatuses[4];
+        $scope.selectedPlace = $scope.places[0];
       });
-      $scope.selectedStatus = $scope.listStatuses[4];
     };
 
     var calcArray = function (good) {
