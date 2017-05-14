@@ -127,11 +127,6 @@
           <tbody>
             <tr ng-repeat="item in order.items">
               <td class="col-md-5">
-                <!--<select class="form-control"
-                        ng-model="item.good"
-                        ng-options="good.name + ' (Осталось ' + calculateLeft(good) + ' единиц)' for good in calcArray(item.good) track by good._id"
-                        ng-disabled="order.payed">
-                </select> -->
                 <input type="text"
                        ng-model="item.good"
                        typeahead-editable="true"
