@@ -15,21 +15,33 @@
     <h5> Список товаров:</h5>
     <table class="table table-bordered table-responsive">
       <thead>
-      <tr>
-        <td>Товар</td>
-        <td>Колличество</td>
-        <td>Цена</td>
-        <td>Сумма</td>
-      </tr>
+        <tr>
+          <td>Товар</td>
+          <td>Колличество</td>
+          <td>Цена</td>
+          <td>Сумма</td>
+        </tr>
       </thead>
       <tbody>
-      <tr ng-repeat="item in order.items">
-        <td>{{item.good.name}}</td>
-        <td>{{item.count}}</td>
-        <td>{{item.good.price}} UAH</td>
-        <td>{{item.count * item.good.price}} UAH</td>
-      </tr>
+        <tr ng-repeat="item in order.items">
+          <td>{{item.good.name}}</td>
+          <td>{{item.count}}</td>
+          <td>{{item.good.price}} UAH</td>
+          <td>{{item.count * item.good.price}} UAH</td>
+        </tr>
       </tbody>
+    </table>
+    <table class="table table-bordered table-responsive" ng-if="order.sale || order.credit">
+      <thead>
+        <tr ng-if="order.sale">
+          <td colspan="4">Скидка</td>
+          <td>{{order.sale}} {{currency}}</td>
+        </tr>
+        <tr ng-if="order.credit">
+          <td colspan="4">Долг</td>
+          <td>{{order.credit}} {{currency}}</td>
+        </tr>
+      </thead>
     </table>
     <h4>
       К оплате: {{calculateTotal(order)}}</h4>

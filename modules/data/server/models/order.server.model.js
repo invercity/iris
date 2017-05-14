@@ -52,7 +52,15 @@ const OrderSchema = new Schema({
   status: {
     type: String,
     default: 'work' // other types: ready, togo, done
-  }
+  },
+  credit: {
+    type: Number,
+    default: 0
+  },
+  sale: {
+    type: Number,
+    default: 0,
+  },
 });
 
 OrderSchema.plugin(autoIncrement.plugin, {
