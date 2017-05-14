@@ -240,7 +240,13 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
           total += (item.good.price * item.count);
         }
       }
-      return total.toFixed(2) + $scope.currency;
+      if (order.sale) {
+        total -= order.sale;
+      }
+      if (order.credit) {
+        total += order.credit;
+      }
+      return Math.max(0, total.toFixed(2)) + $scope.currency;
     };
 
     $scope.calculateLeft = function (good) {

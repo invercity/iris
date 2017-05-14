@@ -6,14 +6,26 @@ const path = require('path'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
 
 exports.create = (req, res) => {
+  const {
+    items,
+    place,
+    placeDescription,
+    date,
+    status,
+    sale,
+    credit,
+  } = req.body;
   const orderData = {
-    items: req.body.items,
-    place: req.body.place,
-    placeDescription: req.body.placeDescription,
-    date: req.body.date,
-    status: req.body.status,
+    items,
+    place,
+    placeDescription,
+    date,
+    status,
+    sale,
+    credit,
   };
   const clientData = req.body.client;
+
   async.parallel([
     (callback) => {
       if (!clientData._id) {
@@ -61,13 +73,23 @@ exports.read = (req, res) => {
 
 exports.update = (req, res) => {
   const { order } = req;
+  const {
+    items,
+    place,
+    placeDescription,
+    payed,
+    status,
+    sale,
+    credit,
+  } = req.body;
 
-  order.items = req.body.items;
-  order.place = req.body.place;
-  order.placeDescription = req.body.placeDescription;
-  order.payed = req.body.payed;
-  // temporary realization
-  order.status = req.body.status;
+  order.items = items;
+  order.place = place;
+  order.placeDescription = placeDescription;
+  order.payed = payed;
+  order.status = status;
+  order.sale = sale;
+  order.credit = credit;
 
   order.save((err) => {
     if (err) {
