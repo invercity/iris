@@ -81,7 +81,7 @@ OrderSchema.pre('save', function (next) {
               const functions = order.items.map(item => {
                 return (next) => {
                   // TODO: fix with missing good
-                  if (!item.good._id) {
+                  if (!item.good || !item.good._id) {
                     return next();
                   }
                   Good.findById(item.good._id)
