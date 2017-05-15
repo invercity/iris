@@ -80,6 +80,10 @@ OrderSchema.pre('save', function (next) {
             if (order && order.items) {
               const functions = order.items.map(item => {
                 return (next) => {
+                  // TODO: fix with missing good
+                  if (!item.good._id) {
+                    return next();
+                  }
                   Good.findById(item.good._id)
                     .exec((err, good) => {
                       good.count += item.count;
