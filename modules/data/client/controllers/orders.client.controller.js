@@ -255,6 +255,7 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
         return;
       }
       var item = _.find(items, function (i) {
+        if (!i.good || !good) return false;
         return i.good._id === good._id;
       });
       var savedItem = $scope.savedOrder ? _.find($scope.savedOrder.items, function (i) {
