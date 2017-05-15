@@ -290,6 +290,7 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
       var disable = false;
       var findSelectedOrder = function (item) {
         return function (i) {
+          if (!i.good || !item.good) return false;
           return i.good._id === item.good._id;
         };
       };
