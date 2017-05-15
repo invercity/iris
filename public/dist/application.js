@@ -1152,10 +1152,13 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
         return;
       }
       var item = _.find(items, function (i) {
+        // TODO: temporary realization
         if (!i.good || !good) return false;
         return i.good._id === good._id;
       });
       var savedItem = $scope.savedOrder ? _.find($scope.savedOrder.items, function (i) {
+        // TODO: temporary realization
+        if (!i.good || !good) return false;
         return good._id === i.good._id;
       }) : null;
       if (!item) {
@@ -1188,6 +1191,7 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
       var disable = false;
       var findSelectedOrder = function (item) {
         return function (i) {
+          // TODO: temporary realization
           if (!i.good || !item.good) return false;
           return i.good._id === item.good._id;
         };
