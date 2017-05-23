@@ -130,14 +130,14 @@
                 <input type="text"
                        ng-model="item.good"
                        typeahead-editable="true"
-                       typeahead="good as good.name for good in calcArray(item.good) | filter:$viewValue | limitTo:8"
+                       typeahead="good as good.name for good in calcArray(item.good) | filter:$viewValue"
                        class="form-control">
               </td>
               <td class="col-md-1">
                 <input type="text"
                        class="form-control"
                        ng-value="calculateLeft(item.good)"
-                       readony>
+                       readonly>
               </td>
               <td class="col-md-1">
                 <input class="form-control"

@@ -41,7 +41,7 @@
                  id="place"
                  ng-model="selectedPlace"
                  typeahead-editable="true"
-                 typeahead="place as place.name for place in places | filter:$viewValue | limitTo:8"
+                 typeahead="place as place.name for place in places | filter:$viewValue"
                  class="form-control">
         </div>
       </div>
