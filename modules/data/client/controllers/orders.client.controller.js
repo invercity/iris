@@ -70,13 +70,13 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
     };
 
     $scope.$watch('selectedPlace', function () {
-      if ($scope.selectedType) {
+      if ($scope.selectedType && $scope.selectedPlace) {
         $scope.changeType($scope.selectedType);
       }
     });
 
     $scope.$watch('selectedStatus', function () {
-      if ($scope.selectedType) {
+      if ($scope.selectedType && $scope.selectedStatus) {
         $scope.changeType($scope.selectedType);
       }
     });

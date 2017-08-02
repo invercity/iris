@@ -133,6 +133,8 @@ exports.list = (req, res) => {
     .populate('client')
     .populate('items.good')
     .populate('place')
+    // temporary, due to Heroku issues
+    .limit(500)
     .exec((err, orders) => {
       if (err) {
         return res.status(400).send({
