@@ -59,7 +59,7 @@
       </div>
       <div class="pull-right"
            ng-show="authentication.user._id == order.user._id || authentication.user.roles.includes('admin')">
-        <a class="btn btn-success" ng-click="pay(true, order, true);">
+        <a ng-if="!order.payed" class="btn btn-success" ng-click="pay(true, order._id, true);">
           <i class="glyphicon glyphicon-usd"></i>
         </a>
         <a class="btn btn-primary" ng-click="remove(order);">

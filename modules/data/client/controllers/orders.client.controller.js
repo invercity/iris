@@ -137,12 +137,26 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
 
     $scope.pay = function (isValid, order, update) {
       Confirm.show('Подтверждение', 'Оплатить данный заказ?', function () {
-        order.payed = true;
-        $scope.update(isValid, order, function () {
-          if (update) {
-            $scope.changeType($scope.selectedType);
-          }
-        });
+        // TODO: optimise this
+        if (order._id) {
+          order.payed = true;
+          $scope.update(isValid, order, function () {
+            if (update) {
+              $scope.changeType($scope.selectedType);
+            }
+          });
+        } else {
+          Orders.get({
+            orderId: order
+          }, function (data) {
+            data.payed = true;
+            $scope.update(isValid, data, function () {
+              if (update) {
+                $scope.changeType($scope.selectedType);
+              }
+            });
+          });
+        }
       });
     };
 
@@ -201,7 +215,7 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
       $scope.goods = Goods.query();
       Clients.query(function (data) {
         $scope.clients = data;
-        if (!$scope.order._id) {
+        if (!$stateParams.orderId) {
           $scope.clients.unshift({
             name: 'Создать нового клиента'
           });
