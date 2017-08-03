@@ -29,8 +29,9 @@
       </div>
       <small ui-sref="goods.edit({goodId: good._id})">
         <p class="lead">Осталось: {{good.count}}</p>
-        <em class="text-muted">
+        <em class="text-muted list-item-footer">
           <span>Цена: {{good.price}} UAH</span>
+          <span class="pull-right">Добавлен: {{good.created | date: "dd-MM-yyyy HH:mm" }}</span>
         </em>
       </small>
     </div>

@@ -10,7 +10,6 @@
         <div class="form-group" show-errors ng-if="order._id">
           <label for="link"><a target="_blank" ng-href="{{order.link}}">Ссылка на заказ</a></label>
           <input name="link"
-                 type="text"
                  ng-model="order.link"
                  id="link"
                  class="form-control"
@@ -18,13 +17,13 @@
         </div>
 
         <div class="form-group" ng-if="!order._id">
-          <label for="name">Клиент (создать нового если не выбрано)</label>
+          <label for="name">Клиент</label>
           <div>
             <select id="name"
                     class="form-control"
                     ng-model="order.client"
                     ng-disabled="order._id"
-                    ng-options="client.lastName + ' ' + client.phone for client in clients track by client._id">
+                    ng-options="client.name ? client.name : client.lastName + ' ' + client.phone for client in clients track by client._id">
             </select>
           </div>
         </div>
@@ -43,7 +42,6 @@
         <div class="form-group" show-errors>
           <label for="firstName">Имя *</label>
           <input name="firstName"
-                 type="text"
                  ng-model="order.client.firstName"
                  id="firstName"
                  class="form-control"
@@ -58,7 +56,6 @@
         <div class="form-group" show-errors>
           <label for="firstName">Фамилия</label>
           <input name="lastName"
-                 type="text"
                  ng-model="order.client.lastName"
                  id="lastName"
                  class="form-control"
@@ -69,7 +66,6 @@
         <div class="form-group" show-errors>
           <label for="phone">Телефон *</label>
           <input name="phone"
-                 type="tel"
                  ng-model="order.client.phone"
                  id="phone"
                  class="form-control"
@@ -127,15 +123,13 @@
           <tbody>
             <tr ng-repeat="item in order.items">
               <td class="col-md-5">
-                <input type="text"
-                       ng-model="item.good"
+                <input ng-model="item.good"
                        typeahead-editable="true"
                        typeahead="good as good.name for good in calcArray(item.good) | filter:$viewValue"
                        class="form-control">
               </td>
               <td class="col-md-1">
-                <input type="text"
-                       class="form-control"
+                <input class="form-control"
                        ng-value="calculateLeft(item.good)"
                        readonly>
               </td>

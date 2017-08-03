@@ -586,47 +586,6 @@ angular.module('core').service('Menus', [
 
 'use strict';
 
-// Create the Socket.io wrapper service
-angular.module('core').service('Socket', ['Authentication', '$state', '$timeout',
-  function (Authentication, $state, $timeout) {
-    // Connect to Socket.io server
-    this.connect = function () {
-      // Connect only when authenticated
-      if (Authentication.user) {
-        this.socket = io();
-      }
-    };
-    this.connect();
-
-    // Wrap the Socket.io 'on' method
-    this.on = function (eventName, callback) {
-      if (this.socket) {
-        this.socket.on(eventName, function (data) {
-          $timeout(function () {
-            callback(data);
-          });
-        });
-      }
-    };
-
-    // Wrap the Socket.io 'emit' method
-    this.emit = function (eventName, data) {
-      if (this.socket) {
-        this.socket.emit(eventName, data);
-      }
-    };
-
-    // Wrap the Socket.io 'removeListener' method
-    this.removeListener = function (eventName) {
-      if (this.socket) {
-        this.socket.removeListener(eventName);
-      }
-    };
-  }
-]);
-
-'use strict';
-
 angular.module('data').run(['Menus',
   function (Menus) {
     // Add the articles dropdown item
@@ -967,13 +926,13 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
     };
 
     $scope.$watch('selectedPlace', function () {
-      if ($scope.selectedType && $scope.selectedPlace) {
+      if ($scope.selectedType && $scope.selectedPlace && $scope.orders.$resolved) {
         $scope.changeType($scope.selectedType);
       }
     });
 
     $scope.$watch('selectedStatus', function () {
-      if ($scope.selectedType && $scope.selectedStatus) {
+      if ($scope.selectedType && $scope.selectedStatus && $scope.orders.$resolved) {
         $scope.changeType($scope.selectedType);
       }
     });
@@ -1096,7 +1055,13 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
       }
 
       $scope.goods = Goods.query();
-      $scope.clients = Clients.query();
+      Clients.query(function (data) {
+        $scope.clients = data;
+        $scope.clients.unshift({
+          name: 'Создать нового клиента'
+        });
+        $scope.order.client = $scope.clients[0];
+      });
       Places.query(function (data) {
         $scope.places = data;
         $scope.places.unshift({

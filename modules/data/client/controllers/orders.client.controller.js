@@ -70,13 +70,13 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
     };
 
     $scope.$watch('selectedPlace', function () {
-      if ($scope.selectedType && $scope.selectedPlace) {
+      if ($scope.selectedType && $scope.selectedPlace && $scope.orders.$resolved) {
         $scope.changeType($scope.selectedType);
       }
     });
 
     $scope.$watch('selectedStatus', function () {
-      if ($scope.selectedType && $scope.selectedStatus) {
+      if ($scope.selectedType && $scope.selectedStatus && $scope.orders.$resolved) {
         $scope.changeType($scope.selectedType);
       }
     });
@@ -199,7 +199,13 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
       }
 
       $scope.goods = Goods.query();
-      $scope.clients = Clients.query();
+      Clients.query(function (data) {
+        $scope.clients = data;
+        $scope.clients.unshift({
+          name: 'Создать нового клиента'
+        });
+        $scope.order.client = $scope.clients[0];
+      });
       Places.query(function (data) {
         $scope.places = data;
         $scope.places.unshift({
