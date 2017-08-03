@@ -112,6 +112,7 @@ OrderSchema.pre('save', function (next) {
       }
     }
   ], () => {
+    this.items || (this.items = []);
     const functions = this.items.map(item => {
       return (next) => {
         const id = item.good._id || item.good;
