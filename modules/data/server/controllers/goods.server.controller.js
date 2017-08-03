@@ -57,15 +57,18 @@ exports.delete = (req, res) => {
 };
 
 exports.list = (req, res) => {
-  Good.find().sort('-created').populate('user', 'displayName').exec((err, goods) => {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      res.json(goods);
-    }
-  });
+  Good.find()
+    .sort('-created')
+    .populate('user', 'displayName')
+    .exec((err, goods) => {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        res.json(goods);
+      }
+    });
 };
 
 exports.goodByID = (req, res, next, id) => {

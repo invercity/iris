@@ -121,7 +121,7 @@ exports.delete = (req, res) => {
 };
 
 exports.list = (req, res) => {
-  const { payed, place, status } = req.query;
+  const { payed, place, status, countOnly } = req.query;
   const search =
     typeof payed === 'undefined' &&
     typeof place === 'undefined' &&
@@ -131,9 +131,11 @@ exports.list = (req, res) => {
     if (place) search.place = place;
     if (status) search.status = status;
   }
+
+  const fieldsSetup = countOnly ? 'created': '-items';
   Order.find(search)
     .sort('-created')
-    .select('-items')
+    .select(fieldsSetup)
     .populate('user', 'displayName')
     .populate('client')
     .populate('place', 'name')

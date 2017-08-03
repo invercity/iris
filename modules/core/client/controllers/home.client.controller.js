@@ -6,7 +6,7 @@ angular.module('core').controller('HomeController', ['$scope', '$q', 'Authentica
     $scope.authentication = Authentication;
 
     var goods = Goods.query();
-    var orders = Orders.query();
+    var orders = Orders.query({ countOnly: true });
 
     $q.all([goods.$promise, orders.$promise])
       .then(function () {
