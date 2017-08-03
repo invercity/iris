@@ -244,7 +244,7 @@ angular.module('core').controller('HomeController', ['$scope', '$q', 'Authentica
     $scope.authentication = Authentication;
 
     var goods = Goods.query();
-    var orders = Orders.query();
+    var orders = Orders.query({ countOnly: true });
 
     $q.all([goods.$promise, orders.$promise])
       .then(function () {
@@ -1050,7 +1050,10 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
       else {
         $scope.order = new Orders();
         $scope.title = 'Новый заказ';
-        $scope.order.client = 0;
+        $scope.clients.unshift({
+          name: 'Создать нового клиента'
+        });
+        $scope.order.client = $scope.clients[0];
         $scope.order.status = $scope.statuses[0].value;
         $scope.calcArray = calcArray;
       }
@@ -1058,10 +1061,6 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
       $scope.goods = Goods.query();
       Clients.query(function (data) {
         $scope.clients = data;
-        $scope.clients.unshift({
-          name: 'Создать нового клиента'
-        });
-        $scope.order.client = $scope.clients[0];
       });
       Places.query(function (data) {
         $scope.places = data;
