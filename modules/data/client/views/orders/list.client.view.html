@@ -69,8 +69,8 @@
       <small ui-sref="orders.edit({orderId: order._id})">
         <p class="lead">Клиент: {{order.client.firstName}} {{order.client.lastName}}, тел: {{order.client.phone}}</p>
         <em class="text-muted list-item-footer">
-          <span>Адрес: {{order.place ? order.place.name : order.placeDescription}}</span> <br/>
-          <span>Сумма: {{calculateTotal(order)}}</span>
+          <span>Адрес: {{order.place ? order.place.name : order.placeDescription}}</span>
+          <span ng-if="order.total"></br>Сумма: {{order.total}}{{currency}}</span>
           <span class="pull-right">Создан: {{order.created | date: "dd-MM-yyyy HH:mm" }}</span>
         </em>
       </small>

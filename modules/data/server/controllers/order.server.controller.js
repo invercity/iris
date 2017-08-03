@@ -14,6 +14,7 @@ exports.create = (req, res) => {
     status,
     sale,
     credit,
+    total,
   } = req.body;
   const orderData = {
     items,
@@ -23,6 +24,7 @@ exports.create = (req, res) => {
     status,
     sale,
     credit,
+    total,
   };
   const clientData = req.body.client;
 
@@ -81,6 +83,7 @@ exports.update = (req, res) => {
     status,
     sale,
     credit,
+    total,
   } = req.body;
 
   order.items = items;
@@ -90,6 +93,7 @@ exports.update = (req, res) => {
   order.status = status;
   order.sale = sale;
   order.credit = credit;
+  order.total = total;
 
   order.save((err) => {
     if (err) {
@@ -129,10 +133,10 @@ exports.list = (req, res) => {
   }
   Order.find(search)
     .sort('-created')
+    .select('-items')
     .populate('user', 'displayName')
     .populate('client')
-    .populate('items.good')
-    .populate('place')
+    .populate('place', 'name')
     .exec((err, orders) => {
       if (err) {
         return res.status(400).send({

@@ -110,6 +110,7 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
       }
 
       var order = useOrder || $scope.order;
+      order.total = $scope.calculateTotal(order);
 
       if (order._id) {
         order.$update(function () {
@@ -252,7 +253,7 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
       if (order.credit) {
         total += order.credit;
       }
-      return Math.max(0, total.toFixed(2)) + $scope.currency;
+      return Math.max(0, total.toFixed(2));
     };
 
     $scope.calculateLeft = function (good) {
