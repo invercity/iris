@@ -1071,12 +1071,6 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
       $scope.goods = Goods.query();
       Clients.query(function (data) {
         $scope.clients = data;
-        if (!$stateParams.orderId) {
-          $scope.clients.unshift({
-            name: 'Создать нового клиента'
-          });
-          $scope.order.client = $scope.clients[0];
-        }
       });
       Places.query(function (data) {
         $scope.places = data;
