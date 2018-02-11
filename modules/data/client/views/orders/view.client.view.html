@@ -8,42 +8,42 @@
       <h5>Место выдачи: {{order.place ? order.place.name + ' (' + order.place.address + ')' : order.placeDescription}}</h5>
       <h5>Статус:
         <span style="color: {{order.payed ? 'green': 'red'}}">
-          {{order.payed ? 'Оплачен' : 'Не оплачен'}}
+          {{order.payed ? t.IS_PAYED : t.IS_NOT_PAYED}}
         </span>
       </h5>
     </div>
-    <h5> Список товаров:</h5>
+    <h5>{{t.GOODS_LIST}}</h5>
     <table class="table table-bordered table-responsive">
       <thead>
         <tr>
-          <td>Товар</td>
-          <td>Колличество</td>
-          <td>Цена</td>
-          <td>Сумма</td>
+          <td>{{t.GOOD}}</td>
+          <td>{{t.COUNT}}</td>
+          <td>{{t.PRICE}}</td>
+          <td>{{t.TOTAL}}</td>
         </tr>
       </thead>
       <tbody>
         <tr ng-repeat="item in order.items">
           <td>{{item.good.name}}</td>
           <td>{{item.count}}</td>
-          <td>{{item.good.price}} UAH</td>
-          <td>{{item.count * item.good.price}} UAH</td>
+          <td>{{item.good.price}} {{t.UAH}}</td>
+          <td>{{item.count * item.good.price}} {{t.UAH}}</td>
         </tr>
       </tbody>
     </table>
     <table class="table table-bordered table-responsive" ng-if="order.sale || order.credit">
       <thead>
         <tr ng-if="order.sale">
-          <td colspan="4">Скидка</td>
+          <td colspan="4">{{t.SALE}}</td>
           <td>{{order.sale}} {{currency}}</td>
         </tr>
         <tr ng-if="order.credit">
-          <td colspan="4">Долг</td>
+          <td colspan="4">{{t.DEBT}}</td>
           <td>{{order.credit}} {{currency}}</td>
         </tr>
       </thead>
     </table>
     <h4>
-      К оплате: {{calculateTotal(order)}}</h4>
+      {{t.TOTAL_PAY}}{{calculateTotal(order)}}</h4>
   </div>
 </section>

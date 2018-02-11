@@ -1,10 +1,10 @@
 'use strict';
 
-angular.module('data').run(['Menus',
-  function (Menus) {
+angular.module('data').run(['Menus', 't',
+  function (Menus, t) {
     // Add the articles dropdown item
     Menus.addMenuItem('topbar', {
-      title: 'Товары',
+      title: t.MENU_GOODS,
       state: 'goods.list',
       roles: ['user']
     });

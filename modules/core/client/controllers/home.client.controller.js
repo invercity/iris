@@ -14,18 +14,18 @@ angular.module('core').controller('HomeController', ['$scope', '$q', 'Authentica
         $scope.tabs = [
           {
             icon: 'shopping-cart',
-            title: 'Заказы',
+            title: $scope.t.ORDERS_LIST,
             state: 'orders.list',
-            actionTitle: 'Добавить заказ',
+            actionTitle: $scope.t.ADD,
             actionState: 'orders.create',
             actionIcon: 'plus',
             count: orders.length,
           },
           {
             icon: 'apple',
-            title: 'Товары',
+            title: t.GOODS,
             state: 'goods.list',
-            actionTitle: 'Добавить товар',
+            actionTitle: t.ADD,
             actionState: 'goods.create',
             actionIcon: 'plus',
             count: goods.length,

@@ -2,15 +2,19 @@
   <div class="page-header row">
     <div class="col-md-2">
       <h1>
-        Заказы
+        {{t.ORDERS}}
         <a ui-sref="orders.create" class="add-btn">+</a>
       </h1>
     </div>
     <div class="col-md-3" style="margin-top: 2em">
-      <input class="form-control col-md-4" type="text" ng-model="search" placeholder="Поиск" ng-change="figureOutItemsToDisplay()" />
+      <input class="form-control col-md-4"
+             type="text"
+             ng-model="search"
+             placeholder="{{t.SEARCH}}"
+             ng-change="figureOutItemsToDisplay()" />
     </div>
     <div class="col-md-3" style="margin-top: 2em">
-      <div class="btn-group" role="group" aria-label="Типы заказов">
+      <div class="btn-group" role="group" aria-label="{{t.ORDER_TYPES}}">
         <button type="button"
                 ng-repeat="type in orderTypes"
                 ng-class="{active: type.active}"
@@ -22,7 +26,7 @@
 
     <div class="col-md-2">
       <div class="form-group">
-        <label for="type" class="list-select-filter">Статус заказа</label>
+        <label for="type" class="list-select-filter">{{t.ORDER_STATUS}}</label>
         <div>
           <select id="type"
                   class="form-control"
@@ -35,7 +39,7 @@
 
     <div class="col-md-2">
       <div class="form-group">
-        <label for="place" class="list-select-filter">Место выдачи</label>
+        <label for="place" class="list-select-filter">{{t.PLACE_DELIVER}}</label>
         <div>
           <input type="text"
                  id="place"
@@ -52,8 +56,14 @@
       <div style="display: inline">
         <div>
           <h4>
-            <a class="add-btn" ui-sref="orders.edit({orderId: order._id})">Заказ #{{order.code}}</a>
-            <span class="glyphicon glyphicon-ok" ng-if="order.payed" style="color: green"></span>
+            <a class="add-btn"
+               ui-sref="orders.edit({orderId: order._id})">
+              {{t.ORDER_NUM}}{{order.code}}
+            </a>
+            <span class="glyphicon glyphicon-ok"
+                  ng-if="order.payed"
+                  style="color: green">
+            </span>
           </h4>
         </div>
       </div>
@@ -67,10 +77,10 @@
         </a>
       </div>
       <small ui-sref="orders.edit({orderId: order._id})">
-        <p class="lead">Клиент: {{order.client.firstName}} {{order.client.lastName}}, тел: {{order.client.phone}}</p>
+        <p class="lead">{{t.CLIENT_LAB}}{{order.client.firstName}} {{order.client.lastName}}, {{order.client.phone}}</p>
         <em class="text-muted">
-          <span>Адрес: {{order.place ? order.place.name : order.placeDescription}}</span>
-          <span>Сумма: {{calculateTotal(order)}}</span>
+          <span>{{t.ADDRESS}}: {{order.place ? order.place.name : order.placeDescription}}</span>
+          <span>{{t.TOTAL}}: {{calculateTotal(order)}}</span>
         </em>
       </small>
     </div>

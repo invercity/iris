@@ -2,13 +2,13 @@
   <div class="page-header row">
     <div class="col-md-3">
       <h1>
-        Товары
+        {{t.GOODS}}
         <a ui-sref="goods.create" class="add-btn">+</a>
       </h1>
     </div>
 
     <div class="col-md-3" style="margin-top: 2em">
-      <input class="form-control col-md-4" type="text" ng-model="search" placeholder="Поиск" ng-change="figureOutItemsToDisplay()" />
+      <input class="form-control col-md-4" type="text" ng-model="search" placeholder="{{t.SEARCH}}" ng-change="figureOutItemsToDisplay()" />
     </div>
   </div>
   <div class="list-group">
@@ -30,7 +30,7 @@
       <small ui-sref="goods.edit({goodId: good._id})">
         <p class="lead">Осталось: {{good.count}}</p>
         <em class="text-muted">
-          <span>Цена: {{good.price}} UAH</span>
+          <span>{{t.PRICE}}: {{good.price}} {{t.UAH}}</span>
         </em>
       </small>
     </div>
@@ -43,10 +43,10 @@
                   items-per-page="itemsPerPage"
                   total-items="filterLength"
                   ng-model="currentPage"
-                  first-text="Начало"
-                  last-text="Конец"
-                  previous-text="Пред."
-                  next-text="След."
+                  first-text="{{t.P_FIRST}}"
+                  last-text="{{t.P_LAST}}"
+                  previous-text="{{t.P_PREV}}"
+                  next-text="{{t.P_NEXT}}"
                   ng-change="pageChanged()">
       </pagination>
     </div>

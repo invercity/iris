@@ -1,11 +1,12 @@
 'use strict';
 
 // Order controller
-angular.module('data').controller('OrdersController', ['$scope', '$stateParams', '$location', 'Authentication', 'Orders', 'Goods', 'Clients', 'Places', 'ConfirmService',
-  function ($scope, $stateParams, $location, Authentication, Orders, Goods, Clients, Places, Confirm) {
+angular.module('data').controller('OrdersController', ['$scope', '$stateParams', '$location', 'Authentication', 'Orders', 'Goods', 'Clients', 'Places', 'ConfirmService', 't',
+  function ($scope, $stateParams, $location, Authentication, Orders, Goods, Clients, Places, Confirm, t) {
 
+    $scope.t = t;
     $scope.authentication = Authentication;
-    $scope.currency = ' UAH';
+    $scope.currency = ' ' + $scope.t.UAH;
 
     var toZero = function (val) {
       return val < 0 ? 0 : val;
@@ -13,17 +14,17 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
 
     $scope.orderTypes = [
       {
-        name: 'Новые',
+        name: $scope.t.ORDER_TYPE_NEW,
         payed: false,
         active: true
       },
       {
-        name: 'Оплаченные',
+        name: $scope.t.ORDER_TYPE_PAYED,
         payed: true,
         active: false
       },
       {
-        name: 'Все',
+        name: $scope.t.ORDER_TYPE_ALL,
         payed: undefined,
         active: false
       }
@@ -31,25 +32,25 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
 
     $scope.statuses = [
       {
-        name: 'Новый',
+        name: $scope.t.ORDER_STATUS_NEW,
         value: 'work',
       },
       {
-        name: 'Готов',
+        name: $scope.t.ORDER_STATUS_READY,
         value: 'ready'
       },
       {
-        name: 'Можно собирать',
+        name: $scope.t.ORDER_STATUS_TOGO,
         value: 'togo'
       },
       {
-        name: 'Собран',
+        name: $scope.t.ORDER_STATUS_DONE,
         value: 'done'
       },
     ];
 
     $scope.listStatuses = $scope.statuses.concat({
-      name: 'Все',
+      name: $scope.t.ORDER_TYPE_ALL,
     });
 
     $scope.changeType = function (type) {
@@ -83,7 +84,7 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
 
     $scope.remove = function (order) {
       if (order) {
-        Confirm.show('Подтверждение', 'Удалить данный заказ?', function () {
+        Confirm.show($scope.t.CONFIRM, $scope.t.REMOVE_ORDER_CONF, function () {
           order.$remove();
 
           for (var i in $scope.orders) {
@@ -135,7 +136,7 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
     };
 
     $scope.pay = function (isValid, order, update) {
-      Confirm.show('Подтверждение', 'Оплатить данный заказ?', function () {
+      Confirm.show($scope.t.CONFIRM, $scope.t.PAY_ORDER_CONF, function () {
         order.payed = true;
         $scope.update(isValid, order, function () {
           if (update) {
@@ -183,7 +184,7 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
           $scope.order = data;
           $scope.calcArray = calcArray;
           $scope.savedOrder = _.cloneDeep(data);
-          $scope.title = 'Редактирование заказа #' + data.code;
+          $scope.title = $scope.t.EDIT_ORDER_NUM + data.code;
           $scope.order.link = 'https://vitaly.herokuapp.com/orders/' + data._id;
           if (!$scope.order.status) {
             $scope.order.status = $scope.statuses[0].value;
@@ -192,7 +193,7 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
       }
       else {
         $scope.order = new Orders();
-        $scope.title = 'Новый заказ';
+        $scope.title = $scope.t.NEW_ORDER;
         $scope.order.client = 0;
         $scope.order.status = $scope.statuses[0].value;
         $scope.calcArray = calcArray;
@@ -203,7 +204,7 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
       Places.query(function (data) {
         $scope.places = data;
         $scope.places.unshift({
-          name: 'Ввести вручную'
+          name: $scope.t.EDIT_MANUALLY
         });
       });
     };
@@ -251,12 +252,16 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
       }
       var item = _.find(items, function (i) {
         // TODO: temporary realization
-        if (!i.good || !good) return false;
+        if (!i.good || !good) {
+          return false;
+        }
         return i.good._id === good._id;
       });
       var savedItem = $scope.savedOrder ? _.find($scope.savedOrder.items, function (i) {
         // TODO: temporary realization
-        if (!i.good || !good) return false;
+        if (!i.good || !good) {
+          return false;
+        }
         return good._id === i.good._id;
       }) : null;
       if (!item) {

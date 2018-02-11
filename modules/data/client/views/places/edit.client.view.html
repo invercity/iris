@@ -7,37 +7,37 @@
       <fieldset>
 
         <div class="form-group" show-errors>
-          <label for="name">Название *</label>
+          <label for="name">{{t.NAME}} *</label>
           <input name="name"
                  type="text"
                  ng-model="place.name"
                  id="name"
                  class="form-control"
-                 placeholder="Название"
+                 placeholder="{{t.NAME}}"
                  required>
           <div ng-messages="placeForm.name.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">Название</p>
+            <p class="help-block error-text" ng-message="required">{{t.NAME}} {{t.REQUIRED}}</p>
           </div>
         </div>
 
         <div class="form-group" show-errors>
-          <label for="address">Адресс</label>
+          <label for="address">{{t.ADDRESS}}</label>
           <input name="address"
                  type="text"
                  ng-model="place.address"
                  id="address"
                  class="form-control"
-                 placeholder="Адресс">
+                 placeholder="{{t.ADDRESS}}">
         </div>
 
         <div class="form-group">
           <input type="submit"
                  class="btn btn-default save-btn pull-right"
-                 value="Сохранить">
+                 value="{{t.SAVE}}">
           <input type="button"
                  class="btn btn-default save-btn pull-right"
                  ng-click="cancel()"
-                 value="Назад">
+                 value="{{t.CANCEL}}">
         </div>
         <div ng-show="error" class="text-danger">
           <strong ng-bind="error"></strong>
