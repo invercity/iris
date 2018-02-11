@@ -1,6 +1,8 @@
 'use strict';
 
-angular.module('core').controller('ConfirmController', function ($scope, $modalInstance, data) {
+angular.module('core').controller('ConfirmController', function ($scope, $modalInstance, data, t) {
+
+  $scope.t = t;
 
   $scope.confirmText = data.confirmText;
   $scope.confirmTitle = data.confirmTitle;

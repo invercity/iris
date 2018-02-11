@@ -1,7 +1,8 @@
 'use strict';
 
-angular.module('core').controller('HomeController', ['$scope', '$q', 'Authentication', 'Goods', 'Orders',
-  function ($scope, $q, Authentication, Goods, Orders) {
+angular.module('core').controller('HomeController', ['$scope', '$q', 'Authentication', 'Goods', 'Orders', 't',
+  function ($scope, $q, Authentication, Goods, Orders, t) {
+    $scope.t = t;
     // This provides Authentication context.
     $scope.authentication = Authentication;
 
