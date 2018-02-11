@@ -103,14 +103,13 @@
           </div>
         </div>
 
-        <div class="form-group" show-errors ng-if="!order.place._id">
+        <div class="form-group" show-errors ng-if="order.place && !order.place._id">
           <label for="placeDescription">{{t.ADDRESS}}</label>
           <textarea name="placeDescription"
                     ng-model="order.placeDescription"
                     id="placeDescription"
                     class="form-control"
                     cols="30" rows="5"
-                    ng-disabled="order.place"
                     required
                     placeholder="{{t.ADDRESS}}">
           </textarea>
