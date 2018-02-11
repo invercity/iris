@@ -44,13 +44,13 @@
         </div>
 
         <div class="form-group" show-errors>
-          <label for="firstName">{{t.NAME}} *</label>
+          <label for="firstName">{{t.P_NAME}} *</label>
           <input name="firstName"
                  type="text"
                  ng-model="order.client.firstName"
                  id="firstName"
                  class="form-control"
-                 placeholder="{{t.NAME}}"
+                 placeholder="{{t.P_NAME}}"
                  ng-disabled="order.client._id || order._id"
                  required>
           <div ng-messages="orderForm.firstName.$error" role="alert">
@@ -87,13 +87,15 @@
         <div class="form-group" show-errors>
           <label for="place">{{t.PLACE_DELIVER}}</label>
           <div>
-            <select id="place"
-                    name="phone"
-                    class="form-control"
-                    ng-model="order.place"
-                    ng-disabled="order.placeDescription"
-                    required
-                    ng-options="place.name for place in places track by place._id">
+            <input type="text"
+                   id="place"
+                   name="place"
+                   ng-model="order.place"
+                   typeahead-editable="true"
+                   ng-disabled="order.placeDescription"
+                   typeahead="place as place.name for place in places | filter:$viewValue | limitTo:8"
+                   required
+                   class="form-control">
             </select>
           </div>
           <div ng-messages="orderForm.place.$error" role="alert">

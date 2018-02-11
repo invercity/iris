@@ -35,6 +35,7 @@ angular.module('core').factory('t', [function () {
     EDIT_PLACE: 'Редагування місця видачі',
     NEW_PLACE: 'Нове місце видачі',
     NAME: 'Назва',
+    P_NAME: 'Ім\'я',
     REQUIRED: 'обов\'язково.',
     DESC: 'Деталі',
     PRICE: 'Ціна',
