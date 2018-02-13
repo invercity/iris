@@ -663,7 +663,11 @@ angular.module('core').factory('t', [function () {
     TOTAL_PAY: 'Сума до сплати: ',
     ADDITIONAL: 'Додатково %',
     ADD: 'Додати',
+    CREATED: 'Створений',
     ENTER_KEY_FOR_SEARCH: 'Введіть ключ для пошуку',
+    AUTH: 'Авторизація',
+    LOGIN: 'Логін',
+    PASS: 'Пароль',
     P_FIRST: '<<',
     P_LAST: '>>',
     P_PREV: '<',
@@ -1649,8 +1653,9 @@ angular.module('users.admin').controller('UserController', ['$scope', '$state', 
 
 'use strict';
 
-angular.module('users').controller('AuthenticationController', ['$scope', '$state', '$http', '$location', '$window', 'Authentication', 'PasswordValidator',
-  function ($scope, $state, $http, $location, $window, Authentication, PasswordValidator) {
+angular.module('users').controller('AuthenticationController', ['$scope', '$state', '$http', '$location', '$window', 'Authentication', 'PasswordValidator', 't',
+  function ($scope, $state, $http, $location, $window, Authentication, PasswordValidator, t) {
+    $scope.t = t;
     $scope.authentication = Authentication;
     $scope.popoverMsg = PasswordValidator.getPopoverMsg();
 
