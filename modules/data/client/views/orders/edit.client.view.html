@@ -23,12 +23,13 @@
           <label for="name">{{t.CLIENT_SELECT_CREATE}}</label>
           <div>
             <input type="text"
+                   autocomplete="off"
                    id="name"
                    ng-model="order.client"
                    typeahead-editable="true"
                    ng-disabled="order._id"
                    placeholder="{{t.ENTER_KEY_FOR_SEARCH}}"
-                   typeahead="client as client.name ? client.name : client.lastName + ' ' + client.phone for client in clients | filter:$viewValue"
+                   typeahead="client as client.name ? client.name : client.firstName + ' ' + client.phone for client in clients | filter:$viewValue"
                    class="form-control">
           </div>
         </div>
@@ -102,7 +103,7 @@
           </div>
         </div>
 
-        <div class="form-group" show-errors ng-if="order.place && !order.place._id">
+        <div class="form-group" show-errors>
           <label for="placeDescription">{{t.ADDRESS}}</label>
           <textarea name="placeDescription"
                     ng-model="order.placeDescription"
@@ -201,7 +202,7 @@
           <input name="extra"
                  type="number"
                  max="100"
-                 min="0"
+                 min="-100"
                  step="1"
                  ng-model="order.extra"
                  id="extra"
