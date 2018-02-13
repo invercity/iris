@@ -77,8 +77,6 @@
                  placeholder="{{t.PHONE}}"
                  ng-disabled="order.client._id || order._id"
                  required>
-                 placeholder="Телефон"
-                 ng-disabled="order.client._id || order._id">
           <div ng-messages="orderForm.phone.$error" role="alert">
             <p class="help-block error-text" ng-message="required">{{t.PHONE}} {{t.REQUIRED}}</p>
           </div>
