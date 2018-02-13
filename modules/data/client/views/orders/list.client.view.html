@@ -81,7 +81,7 @@
         <em class="text-muted list-item-footer">
           <span>{{t.ADDRESS}}: {{order.place ? order.place.name : order.placeDescription}}</span>
           <span ng-if="order.total"></br>{{t.TOTAL}}: {{order.total}}{{currency}}</span>
-          <span class="pull-right">Создан: {{order.created | date: "dd-MM-yyyy HH:mm" }}</span>
+          <span class="pull-right">{{t.CREATED}}: {{order.created | date: "dd-MM-yyyy HH:mm" }}</span>
         </em>
       </small>
     </div>
@@ -94,10 +94,10 @@
                   items-per-page="itemsPerPage"
                   total-items="ordersCount"
                   ng-model="currentPage"
-                  first-text="Начало"
-                  last-text="Конец"
-                  previous-text="Пред."
-                  next-text="След."
+                  first-text="{{t.P_FIRST}}"
+                  last-text="{{t.P_LAST}}"
+                  previous-text="{{t.P_PREV}}"
+                  next-text="{{t.P_NEXT}}"
                   ng-change="pageChanged()">
       </pagination>
     </div>
