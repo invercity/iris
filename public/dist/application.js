@@ -1004,7 +1004,7 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
     $scope.updateList = function () {
       var place = $scope.selectedPlace ? $scope.selectedPlace._id : undefined;
       var status = $scope.selectedStatus ? $scope.selectedStatus.value : undefined;
-      Orders.query({
+      $scope.ordersResolved = Orders.query({
         payed: $scope.selectedType.payed,
         place: place,
         status: status,
@@ -1028,13 +1028,13 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
     };
 
     $scope.$watch('selectedPlace', function () {
-      if ($scope.selectedType && $scope.selectedPlace && $scope.orders.$resolved) {
+      if ($scope.selectedType && $scope.selectedPlace && $scope.ordersResolved.$resolved) {
         $scope.changeType($scope.selectedType);
       }
     });
 
     $scope.$watch('selectedStatus', function () {
-      if ($scope.selectedType && $scope.selectedStatus && $scope.orders.$resolved) {
+      if ($scope.selectedType && $scope.selectedStatus && $scope.ordersResolved.$resolved) {
         $scope.changeType($scope.selectedType);
       }
     });
