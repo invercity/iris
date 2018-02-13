@@ -200,6 +200,19 @@
                  placeholder="{{t.DEBT}}">
         </div>
 
+        <div class="form-group" show-errors style="margin-top: 20px">
+          <label for="extra">{{t.ADDITIONAL}}</label>
+          <input name="extra"
+                 type="number"
+                 max="100"
+                 min="0"
+                 step="1"
+                 ng-model="order.extra"
+                 id="extra"
+                 class="form-control"
+                 placeholder="{{t.ADDITIONAL}}">
+        </div>
+
         <div class="row">
           <h4>{{t.TOTAL_PRICE}} {{calculateTotal(order)}}</h4>
         </div>

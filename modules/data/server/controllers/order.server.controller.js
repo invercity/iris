@@ -15,6 +15,7 @@ exports.create = (req, res) => {
     status,
     sale,
     credit,
+    extra = 0
   } = req.body;
   const orderData = {
     items,
@@ -24,6 +25,7 @@ exports.create = (req, res) => {
     status,
     sale,
     credit,
+    extra
   };
   const clientData = req.body.client;
 
@@ -82,8 +84,10 @@ exports.update = (req, res) => {
     status,
     sale,
     credit,
+    extra
   } = req.body;
 
+  // TODO: replace with extend
   order.items = items;
   order.place = place;
   order.placeDescription = placeDescription;
@@ -91,6 +95,7 @@ exports.update = (req, res) => {
   order.status = status;
   order.sale = sale;
   order.credit = credit;
+  order.extra = extra;
 
   order.save((err) => {
     if (err) {
@@ -118,7 +123,7 @@ exports.delete = (req, res) => {
 };
 
 exports.list = (req, res) => {
-  const { q, payed, place, status, page = 1, limit = 1 } = req.query;
+  const { q, payed, place, status, page = 1, limit = 20 } = req.query;
   const search = {
     payed,
     place,

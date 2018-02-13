@@ -70,6 +70,7 @@ angular.module('core').factory('t', [function () {
     GOODS_LIST: 'Список товарів:',
     GOOD: 'Товар',
     TOTAL_PAY: 'Сума до сплати: ',
+    ADDITIONAL: 'Додатково %',
     ADD: 'Додати',
     P_FIRST: '<<',
     P_LAST: '>>',

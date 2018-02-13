@@ -255,7 +255,11 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
       if (order.credit) {
         total += order.credit;
       }
-      return Math.max(0, total.toFixed(2)) + $scope.currency;
+      let totalPrice = Math.max(0, total.toFixed(2));
+      if (order.extra) {
+        totalPrice += +((order.extra * totalPrice)/100).toFixed(2);
+      }
+      return totalPrice + $scope.currency;
     };
 
     $scope.calculateLeft = function (good) {
@@ -323,7 +327,7 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
     };
 
     $scope.buildPager = function () {
-      $scope.itemsPerPage = 1;
+      $scope.itemsPerPage = 20;
       $scope.figureOutItemsToDisplay();
     };
 
