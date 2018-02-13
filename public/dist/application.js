@@ -194,7 +194,9 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
 
 'use strict';
 
-angular.module('core').controller('ConfirmController', ["$scope", "$modalInstance", "data", function ($scope, $modalInstance, data) {
+angular.module('core').controller('ConfirmController', ["$scope", "$modalInstance", "data", "t", function ($scope, $modalInstance, data, t) {
+
+  $scope.t = t;
 
   $scope.confirmText = data.confirmText;
   $scope.confirmTitle = data.confirmTitle;
@@ -212,10 +214,12 @@ angular.module('core').controller('ConfirmController', ["$scope", "$modalInstanc
     $modalInstance.dismiss('cancel');
   };
 }]);
+
 'use strict';
 
-angular.module('core').controller('HeaderController', ['$scope', '$state', 'Authentication', 'Menus',
-  function ($scope, $state, Authentication, Menus) {
+angular.module('core').controller('HeaderController', ['$scope', '$state', 'Authentication', 'Menus', 't',
+  function ($scope, $state, Authentication, Menus, t) {
+    $scope.t = t;
     // Expose view variables
     $scope.$state = $state;
     $scope.authentication = Authentication;
@@ -238,34 +242,35 @@ angular.module('core').controller('HeaderController', ['$scope', '$state', 'Auth
 
 'use strict';
 
-angular.module('core').controller('HomeController', ['$scope', '$q', 'Authentication', 'Goods', 'Orders',
-  function ($scope, $q, Authentication, Goods, Orders) {
+angular.module('core').controller('HomeController', ['$scope', '$q', 'Authentication', 'Goods', 'Orders', 't',
+  function ($scope, $q, Authentication, Goods, Orders, t) {
+    $scope.t = t;
     // This provides Authentication context.
     $scope.authentication = Authentication;
 
-    var goods = Goods.query();
-    var orders = Orders.query({ countOnly: true });
+    var goodsData = Goods.query();
+    var ordersData = Orders.query();
 
-    $q.all([goods.$promise, orders.$promise])
+    $q.all([goodsData.$promise, ordersData.$promise])
       .then(function () {
         $scope.tabs = [
           {
             icon: 'shopping-cart',
-            title: 'Заказы',
+            title: $scope.t.ORDERS_LIST,
             state: 'orders.list',
-            actionTitle: 'Добавить заказ',
+            actionTitle: $scope.t.ADD,
             actionState: 'orders.create',
             actionIcon: 'plus',
-            count: orders.length,
+            count: ordersData.count,
           },
           {
             icon: 'apple',
-            title: 'Товары',
+            title: t.GOODS,
             state: 'goods.list',
-            actionTitle: 'Добавить товар',
+            actionTitle: t.ADD,
             actionState: 'goods.create',
             actionIcon: 'plus',
-            count: goods.length,
+            count: goodsData.length,
           },
         ];
       });
@@ -586,11 +591,93 @@ angular.module('core').service('Menus', [
 
 'use strict';
 
-angular.module('data').run(['Menus',
-  function (Menus) {
+angular.module('core').factory('t', [function () {
+  return {
+    ERR: 'Помилка',
+    UAH: '₴',
+    MENU_ADMIN: 'Адмініcтрування',
+    MENU_ENTER: 'Вхід',
+    MENU_EDIT_PROFILE: 'Редагування профілю',
+    MENU_CHANGE_PWD: 'Змінити пароль',
+    MENU_EXIT: 'Вихід',
+    MENU_GOODS: 'Товари',
+    MENU_PLACES: 'Місця',
+    MENU_ORDERS: 'Замовлення',
+    ENTER_COUNT: 'Введіть кількість',
+    GOOD_EDIT: 'Редагувати товар',
+    GOOD_NEW: 'Створити товар',
+    GOOD_ADD: 'Додати товар',
+    GOOD_ENTER_COUNT: 'Введіть кількість:',
+    ORDER_TYPE_NEW: 'Нові',
+    ORDER_TYPE_PAYED: 'Оплачені',
+    ORDER_TYPE_ALL: 'Всі',
+    ORDER_STATUS_NEW: 'Нові',
+    ORDER_STATUS_READY: 'Готові',
+    ORDER_STATUS_TOGO: 'Можно збирати',
+    ORDER_STATUS_DONE: 'Зібрані',
+    OK: 'Так',
+    CANCEL: 'Відміна',
+    CONFIRM: 'Підтвердження',
+    REMOVE_ORDER_CONF: 'Видалити дане замовлення?',
+    PAY_ORDER_CONF: 'Оплатити дане замовлення?',
+    EDIT_ORDER_NUM: 'Редагувати замовлення #',
+    NEW_ORDER: 'Нове замовлення',
+    EDIT_MANUALLY: 'Ввести вручну',
+    EDIT_PLACE: 'Редагування місця видачі',
+    NEW_PLACE: 'Нове місце видачі',
+    NAME: 'Назва',
+    P_NAME: 'Ім\'я',
+    REQUIRED: 'обов\'язково.',
+    DESC: 'Деталі',
+    PRICE: 'Ціна',
+    COUNT: 'Кількість',
+    TYPE: 'Тип',
+    SAVE: 'Зберегти',
+    GOODS: 'Товари',
+    ORDERS: 'Списки',
+    ORDERS_LIST: 'Замовлення',
+    SEARCH: 'Пошук',
+    LINK_TO_ORDER: 'Посилання на замовлення',
+    CLIENT_SELECT_CREATE: 'Клієнт (створити нового якщо не вибрано)',
+    STATUS: 'Статус',
+    SELECT_NAME: 'Введіть ім\'я або виберіть зі списку',
+    SELECT_PLACE: 'Введіть місце або виберіть зі списку',
+    SURNAME: 'Прізвище',
+    PHONE: 'Телефон',
+    PLACE_DELIVER: 'Місце видачі',
+    ADDRESS: 'Адреса',
+    LEFT: 'Залишок',
+    TOTAL: 'Сума',
+    SALE: 'Знижка',
+    DEBT: 'Борг',
+    TO_PAY: 'Оплатити',
+    TOTAL_PRICE: 'Загальна сума:',
+    ORDER_TYPES: 'Типи замовлень',
+    ORDER_STATUS: 'Статус замовлень',
+    ORDER_NUM: 'Замовлення #',
+    CLIENT_LAB: 'Клієнт: ',
+    IS_PAYED: 'Оплачений',
+    IS_NOT_PAYED: 'Не оплачений',
+    GOODS_LIST: 'Список товарів:',
+    GOOD: 'Товар',
+    TOTAL_PAY: 'Сума до сплати: ',
+    ADDITIONAL: 'Додатково %',
+    ADD: 'Додати',
+    ENTER_KEY_FOR_SEARCH: 'Введіть ключ для пошуку',
+    P_FIRST: '<<',
+    P_LAST: '>>',
+    P_PREV: '<',
+    P_NEXT: '>'
+  };
+}]);
+
+'use strict';
+
+angular.module('data').run(['Menus', 't',
+  function (Menus, t) {
     // Add the articles dropdown item
     Menus.addMenuItem('topbar', {
-      title: 'Товары',
+      title: t.MENU_GOODS,
       state: 'goods.list',
       roles: ['user']
     });
@@ -634,11 +721,11 @@ angular.module('data').config(['$stateProvider',
 
 'use strict';
 
-angular.module('data').run(['Menus',
-  function (Menus) {
+angular.module('data').run(['Menus', 't',
+  function (Menus, t) {
     // Add the articles dropdown item
     Menus.addMenuItem('topbar', {
-      title: 'Заказы',
+      title: t.MENU_ORDERS,
       state: 'orders.list',
       roles: ['admin']
     });
@@ -686,10 +773,10 @@ angular.module('data').config(['$stateProvider',
 
 'use strict';
 
-angular.module('data').run(['Menus',
-  function (Menus) {
+angular.module('data').run(['Menus', 't',
+  function (Menus, t) {
     Menus.addMenuItem('topbar', {
-      title: 'Места',
+      title: t.MENU_PLACES,
       state: 'places.list',
       roles: ['admin']
     });
@@ -734,8 +821,9 @@ angular.module('data').config(['$stateProvider',
 'use strict';
 
 // Goods controller
-angular.module('data').controller('GoodsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Goods', 'ConfirmService',
-  function ($scope, $stateParams, $location, Authentication, Goods, Confirm) {
+angular.module('data').controller('GoodsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Goods', 'ConfirmService', 't',
+  function ($scope, $stateParams, $location, Authentication, Goods, Confirm, t) {
+    $scope.t = t;
     $scope.authentication = Authentication;
 
     $scope.remove = function (good) {
@@ -794,14 +882,14 @@ angular.module('data').controller('GoodsController', ['$scope', '$stateParams', 
         $scope.good = Goods.get({
           goodId: $stateParams.goodId
         });
-        $scope.title = 'Редактирование товара';
+        $scope.title = $scope.t.GOOD_EDIT;
       }
       else {
         $scope.good = new Goods({
           price: 1,
           count: 0
         });
-        $scope.title = 'Новый товар';
+        $scope.title = $scope.t.GOOD_NEW;
       }
     };
 
@@ -811,8 +899,8 @@ angular.module('data').controller('GoodsController', ['$scope', '$stateParams', 
 
     $scope.add = function (good) {
       Confirm.showValue({
-        title: 'Добавление товара',
-        text: 'Введите колличество:',
+        title: $scope.t.GOOD_ADD,
+        text: $scope.t.GOOD_ENTER_COUNT,
         value: true
       }, function (count) {
         good.count += count;
@@ -857,29 +945,30 @@ angular.module('data').controller('GoodsController', ['$scope', '$stateParams', 
 'use strict';
 
 // Order controller
-angular.module('data').controller('OrdersController', ['$scope', '$stateParams', '$location', 'Authentication', 'Orders', 'Goods', 'Clients', 'Places', 'ConfirmService',
-  function ($scope, $stateParams, $location, Authentication, Orders, Goods, Clients, Places, Confirm) {
-
+angular.module('data').controller('OrdersController', ['$scope', '$stateParams', '$location', 'Authentication', 'Orders', 'Goods', 'Clients', 'Places', 'ConfirmService', 't',
+  function ($scope, $stateParams, $location, Authentication, Orders, Goods, Clients, Places, Confirm, t) {
+    $scope.t = t;
     $scope.authentication = Authentication;
-    $scope.currency = ' UAH';
+    $scope.currency = ' ' + $scope.t.UAH;
+    $scope.currentPage = 1;
 
     var toZero = function (val) {
-      return val < 0 ? 0 : val;
+      return Math.max(0, val);
     };
 
     $scope.orderTypes = [
       {
-        name: 'Новые',
+        name: $scope.t.ORDER_TYPE_NEW,
         payed: false,
         active: true
       },
       {
-        name: 'Оплаченные',
+        name: $scope.t.ORDER_TYPE_PAYED,
         payed: true,
         active: false
       },
       {
-        name: 'Все',
+        name: $scope.t.ORDER_TYPE_ALL,
         payed: undefined,
         active: false
       }
@@ -887,26 +976,43 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
 
     $scope.statuses = [
       {
-        name: 'Новый',
+        name: $scope.t.ORDER_STATUS_NEW,
         value: 'work',
       },
       {
-        name: 'Готов',
+        name: $scope.t.ORDER_STATUS_READY,
         value: 'ready'
       },
       {
-        name: 'Можно собирать',
+        name: $scope.t.ORDER_STATUS_TOGO,
         value: 'togo'
       },
       {
-        name: 'Собран',
+        name: $scope.t.ORDER_STATUS_DONE,
         value: 'done'
       },
     ];
 
     $scope.listStatuses = $scope.statuses.concat({
-      name: 'Все',
+      name: $scope.t.ORDER_TYPE_ALL,
     });
+
+    $scope.updateList = function () {
+      var place = $scope.selectedPlace ? $scope.selectedPlace._id : undefined;
+      var status = $scope.selectedStatus ? $scope.selectedStatus.value : undefined;
+      Orders.query({
+        payed: $scope.selectedType.payed,
+        place: place,
+        status: status,
+        page: $scope.currentPage,
+        limit: $scope.itemsPerPage,
+        q: $scope.search
+      }, function (data) {
+        $scope.orders = data.orders;
+        $scope.ordersCount = data.count;
+        $scope.buildPager();
+      });
+    };
 
     $scope.changeType = function (type) {
       if ($scope.selectedType) {
@@ -914,15 +1020,7 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
       }
       $scope.selectedType = type;
       $scope.selectedType.active = true;
-      var place = $scope.selectedPlace ? $scope.selectedPlace._id : undefined;
-      var status = $scope.selectedStatus ? $scope.selectedStatus.value : undefined;
-      $scope.orders = Orders.query({
-        payed: type.payed,
-        place: place,
-        status: status,
-      }, function () {
-        $scope.buildPager();
-      });
+      $scope.updateList();
     };
 
     $scope.$watch('selectedPlace', function () {
@@ -937,9 +1035,13 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
       }
     });
 
+    $scope.$watch('search', function () {
+      $scope.updateList();
+    });
+
     $scope.remove = function (order) {
       if (order) {
-        Confirm.show('Подтверждение', 'Удалить данный заказ?', function () {
+        Confirm.show($scope.t.CONFIRM, $scope.t.REMOVE_ORDER_CONF, function () {
           order.$remove();
 
           for (var i in $scope.orders) {
@@ -992,7 +1094,7 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
     };
 
     $scope.pay = function (isValid, order, update) {
-      Confirm.show('Подтверждение', 'Оплатить данный заказ?', function () {
+      Confirm.show($scope.t.CONFIRM, $scope.t.PAY_ORDER_CONF, function () {
         // TODO: optimise this
         if (order._id) {
           order.payed = true;
@@ -1021,7 +1123,7 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
       Places.query(function (data) {
         $scope.places = data;
         $scope.places.unshift({
-          name: 'Все'
+          name: 'Всі'
         });
         $scope.selectedStatus = $scope.listStatuses[4];
         $scope.selectedPlace = $scope.places[0];
@@ -1054,7 +1156,7 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
           $scope.order = data;
           $scope.calcArray = calcArray;
           $scope.savedOrder = _.cloneDeep(data);
-          $scope.title = 'Редактирование заказа #' + data.code;
+          $scope.title = $scope.t.EDIT_ORDER_NUM + data.code;
           $scope.order.link = 'https://vitaly.herokuapp.com/orders/' + data._id;
           if (!$scope.order.status) {
             $scope.order.status = $scope.statuses[0].value;
@@ -1063,7 +1165,7 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
       }
       else {
         $scope.order = new Orders();
-        $scope.title = 'Новый заказ';
+        $scope.title = $scope.t.NEW_ORDER;
         $scope.order.status = $scope.statuses[0].value;
         $scope.calcArray = calcArray;
       }
@@ -1075,7 +1177,7 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
       Places.query(function (data) {
         $scope.places = data;
         $scope.places.unshift({
-          name: 'Ввести вручную'
+          name: $scope.t.EDIT_MANUALLY
         });
       });
     };
@@ -1085,11 +1187,6 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
         return (price * count).toFixed(2) + $scope.currency;
       }
       return 0 + $scope.currency;
-    };
-
-    $scope.calculateLeft = function (goods, count) {
-      if (!count) return goods;
-      return goods - count;
     };
 
     $scope.addItem = function () {
@@ -1118,7 +1215,11 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
       if (order.credit) {
         total += order.credit;
       }
-      return Math.max(0, total.toFixed(2));
+      var totalPrice = Math.max(0, total);
+      if (order.extra) {
+        return (totalPrice * (1 + order.extra/100)).toFixed(2);
+      }
+      return totalPrice.toFixed(2);
     };
 
     $scope.calculateLeft = function (good) {
@@ -1128,12 +1229,16 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
       }
       var item = _.find(items, function (i) {
         // TODO: temporary realization
-        if (!i.good || !good) return false;
+        if (!i.good || !good) {
+          return false;
+        }
         return i.good._id === good._id;
       });
       var savedItem = $scope.savedOrder ? _.find($scope.savedOrder.items, function (i) {
         // TODO: temporary realization
-        if (!i.good || !good) return false;
+        if (!i.good || !good) {
+          return false;
+        }
         return good._id === i.good._id;
       }) : null;
       if (!item) {
@@ -1182,33 +1287,16 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
     };
 
     $scope.buildPager = function () {
-      $scope.pagedItems = [];
-      $scope.itemsPerPage = 15;
-      $scope.currentPage = 1;
+      $scope.itemsPerPage = 20;
       $scope.figureOutItemsToDisplay();
     };
 
     $scope.figureOutItemsToDisplay = function () {
-      $scope.filteredItems = _.filter($scope.orders, function (order) {
-        if (!$scope.search) return true;
-        var fields = [
-          'client.firstName',
-          'client.lastName',
-          'client.phone',
-          'code'
-        ];
-        return _.some(fields, function (field) {
-          var value = _.get(order, field);
-          return value && value.toString().toLowerCase().indexOf($scope.search.toLowerCase()) !== -1;
-        });
-      });
-      $scope.filterLength = $scope.filteredItems.length;
-      var begin = (($scope.currentPage - 1) * $scope.itemsPerPage);
-      var end = begin + $scope.itemsPerPage;
-      $scope.pagedItems = $scope.filteredItems.slice(begin, end);
+      $scope.pagedItems = $scope.orders;
     };
 
     $scope.pageChanged = function () {
+      $scope.changeType($scope.selectedType);
       $scope.figureOutItemsToDisplay();
     };
   }
@@ -1217,8 +1305,9 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
 'use strict';
 
 // Places controller
-angular.module('data').controller('PlacesController', ['$scope', '$stateParams', '$location', 'Authentication', 'Places',
-  function ($scope, $stateParams, $location, Authentication, Places) {
+angular.module('data').controller('PlacesController', ['$scope', '$stateParams', '$location', 'Authentication', 'Places', 't',
+  function ($scope, $stateParams, $location, Authentication, Places, t) {
+    $scope.t = t;
     $scope.authentication = Authentication;
 
     $scope.remove = function (place) {
@@ -1274,11 +1363,11 @@ angular.module('data').controller('PlacesController', ['$scope', '$stateParams',
         $scope.place = Places.get({
           placeId: $stateParams.placeId
         });
-        $scope.title = 'Редактирование места выдачи';
+        $scope.title = $scope.t.EDIT_PLACE;
       }
       else {
         $scope.place = new Places();
-        $scope.title = 'Новое место выдачи';
+        $scope.title = $scope.t.NEW_PLACE;
       }
     };
 
@@ -1321,11 +1410,14 @@ angular.module('data').factory('Goods', ['$resource',
 angular.module('data').factory('Orders', ['$resource',
   function ($resource) {
     return $resource('api/orders/:orderId', {
-      orderId: '@_id'
+      orderId: '@_id',
     }, {
       update: {
         method: 'PUT'
-      }
+      },
+      query: {
+        method: 'GET', isArray:false
+      },
     });
   }
 ]);

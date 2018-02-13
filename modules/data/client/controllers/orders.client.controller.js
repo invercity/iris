@@ -271,11 +271,11 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
       if (order.credit) {
         total += order.credit;
       }
-      let totalPrice = Math.max(0, total);
+      var totalPrice = Math.max(0, total);
       if (order.extra) {
-        totalPrice = (totalPrice * (1 + order.extra/100)).toFixed(2);
+        return (totalPrice * (1 + order.extra/100)).toFixed(2);
       }
-      return totalPrice;
+      return totalPrice.toFixed(2);
     };
 
     $scope.calculateLeft = function (good) {
