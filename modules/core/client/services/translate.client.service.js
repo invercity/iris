@@ -48,6 +48,7 @@ angular.module('core').factory('t', [function () {
     SEARCH: 'Пошук',
     LINK_TO_ORDER: 'Посилання на замовлення',
     CLIENT_SELECT_CREATE: 'Клієнт (створити нового якщо не вибрано)',
+    CLIENT: 'Клієнт',
     STATUS: 'Статус',
     SELECT_NAME: 'Введіть ім\'я або виберіть зі списку',
     SELECT_PLACE: 'Введіть місце або виберіть зі списку',
