@@ -88,10 +88,11 @@
           <label for="place">{{t.PLACE_DELIVER}}</label>
           <div>
             <input type="text"
+                   autocomplete="off"
                    id="place"
                    name="place"
                    ng-model="order.place"
-                   typeahead-editable="true"
+                   typeahead-editable="false"
                    ng-disabled="order.placeDescription"
                    typeahead="place as place.name for place in places | filter:$viewValue | limitTo:8"
                    required

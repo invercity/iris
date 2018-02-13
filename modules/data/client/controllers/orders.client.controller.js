@@ -3,13 +3,13 @@
 // Order controller
 angular.module('data').controller('OrdersController', ['$scope', '$stateParams', '$location', 'Authentication', 'Orders', 'Goods', 'Clients', 'Places', 'ConfirmService', 't',
   function ($scope, $stateParams, $location, Authentication, Orders, Goods, Clients, Places, Confirm, t) {
-
     $scope.t = t;
     $scope.authentication = Authentication;
     $scope.currency = ' ' + $scope.t.UAH;
+    $scope.currentPage = 1;
 
     var toZero = function (val) {
-      return val < 0 ? 0 : val;
+      return Math.max(0, val);
     };
 
     $scope.orderTypes = [
@@ -53,21 +53,30 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
       name: $scope.t.ORDER_TYPE_ALL,
     });
 
+    $scope.updateList = function () {
+      var place = $scope.selectedPlace ? $scope.selectedPlace._id : undefined;
+      var status = $scope.selectedStatus ? $scope.selectedStatus.value : undefined;
+      Orders.query({
+        payed: $scope.selectedType.payed,
+        place: place,
+        status: status,
+        page: $scope.currentPage,
+        limit: $scope.itemsPerPage,
+        q: $scope.search
+      }, function (data) {
+        $scope.orders = data.orders;
+        $scope.ordersCount = data.count;
+        $scope.buildPager();
+      });
+    };
+
     $scope.changeType = function (type) {
       if ($scope.selectedType) {
         $scope.selectedType.active = false;
       }
       $scope.selectedType = type;
       $scope.selectedType.active = true;
-      var place = $scope.selectedPlace ? $scope.selectedPlace._id : undefined;
-      var status = $scope.selectedStatus ? $scope.selectedStatus.value : undefined;
-      $scope.orders = Orders.query({
-        payed: type.payed,
-        place: place,
-        status: status,
-      }, function () {
-        $scope.buildPager();
-      });
+      $scope.updateList();
     };
 
     $scope.$watch('selectedPlace', function () {
@@ -80,6 +89,10 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
       if ($scope.selectedType) {
         $scope.changeType($scope.selectedType);
       }
+    });
+
+    $scope.$watch('search', function () {
+      $scope.updateList();
     });
 
     $scope.remove = function (order) {
@@ -310,33 +323,16 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
     };
 
     $scope.buildPager = function () {
-      $scope.pagedItems = [];
-      $scope.itemsPerPage = 15;
-      $scope.currentPage = 1;
+      $scope.itemsPerPage = 1;
       $scope.figureOutItemsToDisplay();
     };
 
     $scope.figureOutItemsToDisplay = function () {
-      $scope.filteredItems = _.filter($scope.orders, function (order) {
-        if (!$scope.search) return true;
-        var fields = [
-          'client.firstName',
-          'client.lastName',
-          'client.phone',
-          'code'
-        ];
-        return _.some(fields, function (field) {
-          var value = _.get(order, field);
-          return value && value.toString().toLowerCase().indexOf($scope.search.toLowerCase()) !== -1;
-        });
-      });
-      $scope.filterLength = $scope.filteredItems.length;
-      var begin = (($scope.currentPage - 1) * $scope.itemsPerPage);
-      var end = begin + $scope.itemsPerPage;
-      $scope.pagedItems = $scope.filteredItems.slice(begin, end);
+      $scope.pagedItems = $scope.orders;
     };
 
     $scope.pageChanged = function () {
+      $scope.changeType($scope.selectedType);
       $scope.figureOutItemsToDisplay();
     };
   }

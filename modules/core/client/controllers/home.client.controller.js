@@ -6,10 +6,10 @@ angular.module('core').controller('HomeController', ['$scope', '$q', 'Authentica
     // This provides Authentication context.
     $scope.authentication = Authentication;
 
-    var goods = Goods.query();
-    var orders = Orders.query();
+    var goodsData = Goods.query();
+    var ordersData = Orders.query();
 
-    $q.all([goods.$promise, orders.$promise])
+    $q.all([goodsData.$promise, ordersData.$promise])
       .then(function () {
         $scope.tabs = [
           {
@@ -19,7 +19,7 @@ angular.module('core').controller('HomeController', ['$scope', '$q', 'Authentica
             actionTitle: $scope.t.ADD,
             actionState: 'orders.create',
             actionIcon: 'plus',
-            count: orders.length,
+            count: ordersData.count,
           },
           {
             icon: 'apple',
@@ -28,7 +28,7 @@ angular.module('core').controller('HomeController', ['$scope', '$q', 'Authentica
             actionTitle: t.ADD,
             actionState: 'goods.create',
             actionIcon: 'plus',
-            count: goods.length,
+            count: goodsData.length,
           },
         ];
       });
