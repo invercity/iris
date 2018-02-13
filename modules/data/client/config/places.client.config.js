@@ -1,9 +1,9 @@
 'use strict';
 
-angular.module('data').run(['Menus',
-  function (Menus) {
+angular.module('data').run(['Menus', 't',
+  function (Menus, t) {
     Menus.addMenuItem('topbar', {
-      title: 'Места',
+      title: t.MENU_PLACES,
       state: 'places.list',
       roles: ['admin']
     });

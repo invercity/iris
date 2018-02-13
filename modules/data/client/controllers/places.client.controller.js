@@ -1,8 +1,9 @@
 'use strict';
 
 // Places controller
-angular.module('data').controller('PlacesController', ['$scope', '$stateParams', '$location', 'Authentication', 'Places',
-  function ($scope, $stateParams, $location, Authentication, Places) {
+angular.module('data').controller('PlacesController', ['$scope', '$stateParams', '$location', 'Authentication', 'Places', 't',
+  function ($scope, $stateParams, $location, Authentication, Places, t) {
+    $scope.t = t;
     $scope.authentication = Authentication;
 
     $scope.remove = function (place) {
@@ -58,11 +59,11 @@ angular.module('data').controller('PlacesController', ['$scope', '$stateParams',
         $scope.place = Places.get({
           placeId: $stateParams.placeId
         });
-        $scope.title = 'Редактирование места выдачи';
+        $scope.title = $scope.t.EDIT_PLACE;
       }
       else {
         $scope.place = new Places();
-        $scope.title = 'Новое место выдачи';
+        $scope.title = $scope.t.NEW_PLACE;
       }
     };
 

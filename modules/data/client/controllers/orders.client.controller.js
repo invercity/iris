@@ -1,29 +1,30 @@
 'use strict';
 
 // Order controller
-angular.module('data').controller('OrdersController', ['$scope', '$stateParams', '$location', 'Authentication', 'Orders', 'Goods', 'Clients', 'Places', 'ConfirmService',
-  function ($scope, $stateParams, $location, Authentication, Orders, Goods, Clients, Places, Confirm) {
-
+angular.module('data').controller('OrdersController', ['$scope', '$stateParams', '$location', 'Authentication', 'Orders', 'Goods', 'Clients', 'Places', 'ConfirmService', 't',
+  function ($scope, $stateParams, $location, Authentication, Orders, Goods, Clients, Places, Confirm, t) {
+    $scope.t = t;
     $scope.authentication = Authentication;
-    $scope.currency = ' UAH';
+    $scope.currency = ' ' + $scope.t.UAH;
+    $scope.currentPage = 1;
 
     var toZero = function (val) {
-      return val < 0 ? 0 : val;
+      return Math.max(0, val);
     };
 
     $scope.orderTypes = [
       {
-        name: 'Новые',
+        name: $scope.t.ORDER_TYPE_NEW,
         payed: false,
         active: true
       },
       {
-        name: 'Оплаченные',
+        name: $scope.t.ORDER_TYPE_PAYED,
         payed: true,
         active: false
       },
       {
-        name: 'Все',
+        name: $scope.t.ORDER_TYPE_ALL,
         payed: undefined,
         active: false
       }
@@ -31,26 +32,43 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
 
     $scope.statuses = [
       {
-        name: 'Новый',
+        name: $scope.t.ORDER_STATUS_NEW,
         value: 'work',
       },
       {
-        name: 'Готов',
+        name: $scope.t.ORDER_STATUS_READY,
         value: 'ready'
       },
       {
-        name: 'Можно собирать',
+        name: $scope.t.ORDER_STATUS_TOGO,
         value: 'togo'
       },
       {
-        name: 'Собран',
+        name: $scope.t.ORDER_STATUS_DONE,
         value: 'done'
       },
     ];
 
     $scope.listStatuses = $scope.statuses.concat({
-      name: 'Все',
+      name: $scope.t.ORDER_TYPE_ALL,
     });
+
+    $scope.updateList = function () {
+      var place = $scope.selectedPlace ? $scope.selectedPlace._id : undefined;
+      var status = $scope.selectedStatus ? $scope.selectedStatus.value : undefined;
+      Orders.query({
+        payed: $scope.selectedType.payed,
+        place: place,
+        status: status,
+        page: $scope.currentPage,
+        limit: $scope.itemsPerPage,
+        q: $scope.search
+      }, function (data) {
+        $scope.orders = data.orders;
+        $scope.ordersCount = data.count;
+        $scope.buildPager();
+      });
+    };
 
     $scope.changeType = function (type) {
       if ($scope.selectedType) {
@@ -58,15 +76,7 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
       }
       $scope.selectedType = type;
       $scope.selectedType.active = true;
-      var place = $scope.selectedPlace ? $scope.selectedPlace._id : undefined;
-      var status = $scope.selectedStatus ? $scope.selectedStatus.value : undefined;
-      $scope.orders = Orders.query({
-        payed: type.payed,
-        place: place,
-        status: status,
-      }, function () {
-        $scope.buildPager();
-      });
+      $scope.updateList();
     };
 
     $scope.$watch('selectedPlace', function () {
@@ -81,9 +91,13 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
       }
     });
 
+    $scope.$watch('search', function () {
+      $scope.updateList();
+    });
+
     $scope.remove = function (order) {
       if (order) {
-        Confirm.show('Подтверждение', 'Удалить данный заказ?', function () {
+        Confirm.show($scope.t.CONFIRM, $scope.t.REMOVE_ORDER_CONF, function () {
           order.$remove();
 
           for (var i in $scope.orders) {
@@ -136,7 +150,7 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
     };
 
     $scope.pay = function (isValid, order, update) {
-      Confirm.show('Подтверждение', 'Оплатить данный заказ?', function () {
+      Confirm.show($scope.t.CONFIRM, $scope.t.PAY_ORDER_CONF, function () {
         // TODO: optimise this
         if (order._id) {
           order.payed = true;
@@ -198,7 +212,7 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
           $scope.order = data;
           $scope.calcArray = calcArray;
           $scope.savedOrder = _.cloneDeep(data);
-          $scope.title = 'Редактирование заказа #' + data.code;
+          $scope.title = $scope.t.EDIT_ORDER_NUM + data.code;
           $scope.order.link = 'https://vitaly.herokuapp.com/orders/' + data._id;
           if (!$scope.order.status) {
             $scope.order.status = $scope.statuses[0].value;
@@ -207,7 +221,7 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
       }
       else {
         $scope.order = new Orders();
-        $scope.title = 'Новый заказ';
+        $scope.title = $scope.t.NEW_ORDER;
         $scope.order.status = $scope.statuses[0].value;
         $scope.calcArray = calcArray;
       }
@@ -219,7 +233,7 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
       Places.query(function (data) {
         $scope.places = data;
         $scope.places.unshift({
-          name: 'Ввести вручную'
+          name: $scope.t.EDIT_MANUALLY
         });
       });
     };
@@ -229,11 +243,6 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
         return (price * count).toFixed(2) + $scope.currency;
       }
       return 0 + $scope.currency;
-    };
-
-    $scope.calculateLeft = function (goods, count) {
-      if (!count) return goods;
-      return goods - count;
     };
 
     $scope.addItem = function () {
@@ -262,7 +271,11 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
       if (order.credit) {
         total += order.credit;
       }
-      return Math.max(0, total.toFixed(2));
+      let totalPrice = Math.max(0, total.toFixed(2));
+      if (order.extra) {
+        totalPrice += +((order.extra * totalPrice)/100).toFixed(2);
+      }
+      return totalPrice;
     };
 
     $scope.calculateLeft = function (good) {
@@ -272,12 +285,16 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
       }
       var item = _.find(items, function (i) {
         // TODO: temporary realization
-        if (!i.good || !good) return false;
+        if (!i.good || !good) {
+          return false;
+        }
         return i.good._id === good._id;
       });
       var savedItem = $scope.savedOrder ? _.find($scope.savedOrder.items, function (i) {
         // TODO: temporary realization
-        if (!i.good || !good) return false;
+        if (!i.good || !good) {
+          return false;
+        }
         return good._id === i.good._id;
       }) : null;
       if (!item) {
@@ -326,33 +343,16 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
     };
 
     $scope.buildPager = function () {
-      $scope.pagedItems = [];
-      $scope.itemsPerPage = 15;
-      $scope.currentPage = 1;
+      $scope.itemsPerPage = 20;
       $scope.figureOutItemsToDisplay();
     };
 
     $scope.figureOutItemsToDisplay = function () {
-      $scope.filteredItems = _.filter($scope.orders, function (order) {
-        if (!$scope.search) return true;
-        var fields = [
-          'client.firstName',
-          'client.lastName',
-          'client.phone',
-          'code'
-        ];
-        return _.some(fields, function (field) {
-          var value = _.get(order, field);
-          return value && value.toString().toLowerCase().indexOf($scope.search.toLowerCase()) !== -1;
-        });
-      });
-      $scope.filterLength = $scope.filteredItems.length;
-      var begin = (($scope.currentPage - 1) * $scope.itemsPerPage);
-      var end = begin + $scope.itemsPerPage;
-      $scope.pagedItems = $scope.filteredItems.slice(begin, end);
+      $scope.pagedItems = $scope.orders;
     };
 
     $scope.pageChanged = function () {
+      $scope.changeType($scope.selectedType);
       $scope.figureOutItemsToDisplay();
     };
   }

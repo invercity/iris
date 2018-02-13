@@ -1,33 +1,34 @@
 'use strict';
 
-angular.module('core').controller('HomeController', ['$scope', '$q', 'Authentication', 'Goods', 'Orders',
-  function ($scope, $q, Authentication, Goods, Orders) {
+angular.module('core').controller('HomeController', ['$scope', '$q', 'Authentication', 'Goods', 'Orders', 't',
+  function ($scope, $q, Authentication, Goods, Orders, t) {
+    $scope.t = t;
     // This provides Authentication context.
     $scope.authentication = Authentication;
 
-    var goods = Goods.query();
-    var orders = Orders.query({ countOnly: true });
+    var goodsData = Goods.query();
+    var ordersData = Orders.query();
 
-    $q.all([goods.$promise, orders.$promise])
+    $q.all([goodsData.$promise, ordersData.$promise])
       .then(function () {
         $scope.tabs = [
           {
             icon: 'shopping-cart',
-            title: 'Заказы',
+            title: $scope.t.ORDERS_LIST,
             state: 'orders.list',
-            actionTitle: 'Добавить заказ',
+            actionTitle: $scope.t.ADD,
             actionState: 'orders.create',
             actionIcon: 'plus',
-            count: orders.length,
+            count: ordersData.count,
           },
           {
             icon: 'apple',
-            title: 'Товары',
+            title: t.GOODS,
             state: 'goods.list',
-            actionTitle: 'Добавить товар',
+            actionTitle: t.ADD,
             actionState: 'goods.create',
             actionIcon: 'plus',
-            count: goods.length,
+            count: goodsData.length,
           },
         ];
       });

@@ -59,11 +59,15 @@ const OrderSchema = new Schema({
   },
   sale: {
     type: Number,
-    default: 0,
+    default: 0
   },
   total: {
     type: Number,
     default: 0,
+  }
+  extra: {
+    type: Number,
+    default: 0
   }
 });
 

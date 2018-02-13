@@ -1,6 +1,7 @@
 const path = require('path'),
   mongoose = require('mongoose'),
   async = require('async'),
+  _ = require('lodash'),
   Order = mongoose.model('Order'),
   Client = mongoose.model('Client'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
@@ -15,6 +16,7 @@ exports.create = (req, res) => {
     sale,
     credit,
     total,
+    extra = 0
   } = req.body;
   const orderData = {
     items,
@@ -25,6 +27,7 @@ exports.create = (req, res) => {
     sale,
     credit,
     total,
+    extra
   };
   const clientData = req.body.client;
 
@@ -84,8 +87,10 @@ exports.update = (req, res) => {
     sale,
     credit,
     total,
+    extra
   } = req.body;
 
+  // TODO: replace with extend
   order.items = items;
   order.place = place;
   order.placeDescription = placeDescription;
@@ -94,6 +99,7 @@ exports.update = (req, res) => {
   order.sale = sale;
   order.credit = credit;
   order.total = total;
+  order.extra = extra;
 
   order.save((err) => {
     if (err) {
@@ -121,37 +127,62 @@ exports.delete = (req, res) => {
 };
 
 exports.list = (req, res) => {
-  const { payed, place, status, countOnly } = req.query;
-  const search =
-    typeof payed === 'undefined' &&
-    typeof place === 'undefined' &&
-    typeof status === 'undefined' ? undefined : {};
-  if (search) {
-    if (payed) search.payed = payed;
-    if (place) search.place = place;
-    if (status) search.status = status;
-  }
-
-  const fieldsSetup = countOnly ? 'created': '-items';
-  Order.find(search)
-    .sort('-created')
-    .select(fieldsSetup)
-    .populate('user', 'displayName')
-    .populate('client')
-    .populate('place', 'name')
-    .exec((err, orders) => {
-      if (err) {
-        return res.status(400).send({
-          message: errorHandler.getErrorMessage(err)
-        });
-      } else {
-        res.json(orders);
+  const { q, payed, place, status, page = 1, limit = 20 } = req.query;
+  const search = {
+    payed,
+    place,
+    status
+  };
+  return Promise.resolve()
+    .then(() => {
+      if (q) {
+        const fields = [
+          'firstName',
+          'lastName',
+          'phone',
+        ];
+        const $or = _.map(fields, field => ({ [field]: { $regex: new RegExp(q, 'i') } }));
+        return Client.find({ $or })
+          .select('_id');
       }
+      return null;
+    })
+    .then((clientIds) => {
+      const $or = [];
+      if (!isNaN(q) && q) {
+        $or.push({ code: +q });
+      }
+      if (clientIds) {
+        $or.push({ client: { $in: clientIds } });
+      }
+      if ($or.length) {
+        _.extend(search, { $or });
+      }
+      const params = _.pickBy(search, _.identity);
+      const orders = Order.find(params)
+        .limit(+limit)
+        .skip((page - 1) * limit)
+        .sort('-created')
+        .populate('user', 'displayName')
+        .populate('client')
+        .populate('items.good')
+        .populate('place');
+
+      const count = Order.count(params);
+      return Promise.props({
+        orders, count
+      });
+    })
+    .then(data => res.json(data))
+    .catch((err) => {
+      console.log(err);
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
     });
 };
 
 exports.orderByID = (req, res, next, id) => {
-
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).send({
       message: 'Order is invalid'

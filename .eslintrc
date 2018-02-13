@@ -15,6 +15,7 @@
     es6: true
   },
   globals: {
+    Promise: true,
     angular: true,
     $: true,
     jQuery: true,

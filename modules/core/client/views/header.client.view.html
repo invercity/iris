@@ -10,10 +10,22 @@
   </div>
   <nav class="collapse navbar-collapse" collapse="!isCollapsed" role="navigation">
     <ul class="nav navbar-nav" ng-if="menu.shouldRender(authentication.user);">
-      <li ng-repeat="item in menu.items | orderBy: 'position'" ng-if="item.shouldRender(authentication.user);" ng-switch="item.type" ng-class="{ active: $state.includes(item.state), dropdown: item.type === 'dropdown' }" class="{{item.class}}" dropdown="item.type === 'dropdown'">
-        <a ng-switch-when="dropdown" class="dropdown-toggle" dropdown-toggle role="button">{{::item.title}}&nbsp;<span class="caret"></span></a>
+      <li ng-repeat="item in menu.items | orderBy: 'position'"
+          ng-if="item.shouldRender(authentication.user);"
+          ng-switch="item.type"
+          ng-class="{ active: $state.includes(item.state), dropdown: item.type === 'dropdown' }"
+          class="{{item.class}}"
+          dropdown="item.type === 'dropdown'">
+        <a ng-switch-when="dropdown"
+           class="dropdown-toggle"
+           dropdown-toggle
+           role="button">{{::item.title}}&nbsp;
+          <span class="caret"></span>
+        </a>
         <ul ng-switch-when="dropdown" class="dropdown-menu">
-          <li ng-repeat="subitem in item.items | orderBy: 'position'" ng-if="subitem.shouldRender(authentication.user);" ui-sref-active="active">
+          <li ng-repeat="subitem in item.items | orderBy: 'position'"
+              ng-if="subitem.shouldRender(authentication.user);"
+              ui-sref-active="active">
             <a ui-sref="{{subitem.state}}" ng-bind="subitem.title"></a>
           </li>
         </ul>
@@ -26,28 +38,33 @@
       </li> -->
       <li class="divider-vertical"></li>
       <li ui-sref-active="active">
-        <a ui-sref="authentication.signin">Вход</a>
+        <a ui-sref="authentication.signin">{{t.MENU_ENTER}}</a>
       </li>
     </ul>
     <ul class="nav navbar-nav navbar-right" ng-show="authentication.user">
       <li class="dropdown" dropdown>
-        <a class="dropdown-toggle user-header-dropdown-toggle" dropdown-toggle role="button">
-          <img ng-src="{{authentication.user.profileImageURL}}" alt="{{authentication.user.displayName}}" class="header-profile-image" />
-          <span ng-bind="authentication.user.displayName"></span> <b class="caret"></b>
+        <a class="dropdown-toggle user-header-dropdown-toggle"
+           dropdown-toggle role="button">
+          <img ng-src="{{authentication.user.profileImageURL}}"
+               alt="{{authentication.user.displayName}}"
+               class="header-profile-image" />
+          <span ng-bind="authentication.user.displayName"></span>
+          <b class="caret"></b>
         </a>
         <ul class="dropdown-menu" role="menu">
-          <li ui-sref-active="active" ng-show="authentication.user.roles.includes('admin')">
-            <a ui-sref="admin.users">Администрирование</a>
+          <li ui-sref-active="active"
+              ng-show="authentication.user.roles.includes('admin')">
+            <a ui-sref="admin.users">{{t.MENU_ADMIN}}</a>
           </li>
           <li ui-sref-active="active">
-            <a ui-sref="settings.profile">Редактировать профиль</a>
+            <a ui-sref="settings.profile">{{t.MENU_EDIT_PROFILE}}</a>
           </li>
           <li ui-sref-active="active" ng-show="authentication.user.provider === 'local'">
-            <a ui-sref="settings.password">Изменить пароль</a>
+            <a ui-sref="settings.password">{{t.MENU_CHANGE_PWD}}</a>
           </li>
           <li class="divider"></li>
           <li>
-            <a href="/api/auth/signout" target="_self">Выход</a>
+            <a href="/api/auth/signout" target="_self">{{t.MENU_EXIT}}</a>
           </li>
         </ul>
       </li>

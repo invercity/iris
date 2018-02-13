@@ -1,14 +1,17 @@
 <section ng-controller="OrdersController" ng-init="findOne()">
   <div class="page-header" style="display: inline">
     <h3>
-      {{title}} <span ng-if="order.payed" class="glyphicon glyphicon-ok" style="color: green"></span>
+      {{title}}
+      <span ng-if="order.payed" class="glyphicon glyphicon-ok" style="color: green"></span>
     </h3>
   </div>
   <div class="col-md-8">
     <form name="orderForm" class="form-horizontal" ng-submit="update(orderForm.$valid)" novalidate>
       <fieldset>
         <div class="form-group" show-errors ng-if="order._id">
-          <label for="link"><a target="_blank" ng-href="{{order.link}}">Ссылка на заказ</a></label>
+          <label for="link">
+            <a target="_blank" ng-href="{{order.link}}">{{t.LINK_TO_ORDER}}</a>
+          </label>
           <input name="link"
                  ng-model="order.link"
                  id="link"
@@ -17,7 +20,7 @@
         </div>
 
         <div class="form-group" ng-if="!order._id">
-          <label for="name">Клиент</label>
+          <label for="name">{{t.CLIENT_SELECT_CREATE}}</label>
           <div>
             <input type="text"
                    id="name"
@@ -31,7 +34,7 @@
         </div>
 
         <div class="form-group">
-          <label for="status">Статус</label>
+          <label for="status">{{t.STATUS}}</label>
           <div>
             <select id="status"
                     class="form-control"
@@ -42,82 +45,87 @@
         </div>
 
         <div class="form-group" show-errors>
-          <label for="firstName">Имя *</label>
+          <label for="firstName">{{t.P_NAME}} *</label>
           <input name="firstName"
                  ng-model="order.client.firstName"
                  id="firstName"
                  class="form-control"
-                 placeholder="Имя"
+                 placeholder="{{t.P_NAME}}"
                  ng-disabled="order.client._id || order._id"
                  required>
           <div ng-messages="orderForm.firstName.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">Введите имя или выберите пользователя из списка</p>
+            <p class="help-block error-text" ng-message="required">{{t.SELECT_NAME}}</p>
           </div>
         </div>
 
         <div class="form-group" show-errors>
-          <label for="firstName">Фамилия</label>
+          <label for="firstName">{{t.SURNAME}}</label>
           <input name="lastName"
                  ng-model="order.client.lastName"
                  id="lastName"
                  class="form-control"
-                 placeholder="Фамилия"
+                 placeholder="{{t.SURNAME}}"
                  ng-disabled="order.client._id || order._id">
         </div>
 
         <div class="form-group" show-errors>
-          <label for="phone">Телефон *</label>
+          <label for="phone">{{t.PHONE}} *</label>
           <input name="phone"
                  ng-model="order.client.phone"
                  id="phone"
                  class="form-control"
+                 placeholder="{{t.PHONE}}"
+                 ng-disabled="order.client._id || order._id"
+                 required>
                  placeholder="Телефон"
                  ng-disabled="order.client._id || order._id">
           <div ng-messages="orderForm.phone.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">Введите телефон</p>
+            <p class="help-block error-text" ng-message="required">{{t.PHONE}} {{t.REQUIRED}}</p>
           </div>
         </div>
 
         <div class="form-group" show-errors>
-          <label for="place">Место выдачи</label>
+          <label for="place">{{t.PLACE_DELIVER}}</label>
           <div>
-            <select id="place"
-                    name="phone"
-                    class="form-control"
-                    ng-model="order.place"
-                    ng-disabled="order.placeDescription"
-                    ng-required="!order.placeDescription"
-                    ng-options="place.name for place in places track by place._id">
+            <input type="text"
+                   autocomplete="off"
+                   id="place"
+                   name="place"
+                   ng-model="order.place"
+                   typeahead-editable="false"
+                   ng-disabled="order.placeDescription"
+                   typeahead="place as place.name for place in places | filter:$viewValue | limitTo:8"
+                   required
+                   class="form-control">
             </select>
           </div>
           <div ng-messages="orderForm.place.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">Выберите место выдачи</p>
+            <p class="help-block error-text" ng-message="required">{{t.PLACE_DELIVER}} {{t.REQUIRED}}</p>
           </div>
         </div>
 
-        <div class="form-group" show-errors ng-if="!order.place._id">
-          <label for="placeDescription">Адресс</label>
+        <div class="form-group" show-errors ng-if="order.place && !order.place._id">
+          <label for="placeDescription">{{t.ADDRESS}}</label>
           <textarea name="placeDescription"
                     ng-model="order.placeDescription"
                     id="placeDescription"
                     class="form-control"
                     cols="30" rows="5"
-                    ng-disabled="order.place"
                     required
-                    placeholder="Описание">
+                    placeholder="{{t.ADDRESS}}">
           </textarea>
           <div ng-messages="orderForm.placeDescriptions.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">Введите место выдачи или выберите из списка</p>
+            <p class="help-block error-text" ng-message="required">{{t.SELECT_PLACE}}</p>
           </div>
         </div>
 
         <table class="table table-bordered table-responsive">
           <thead>
             <tr>
-              <td class="col-md-5">Название</td>
-              <td class="col-md-1">Остаток</td>
-              <td class="col-md-1">Колличество</td>
-              <td class="col-md-2">Сумма</td>
+              <td class="col-md-5">{{t.NAME}}</td>
+              <td class="col-md-1">{{t.LEFT}}</td>
+              <td class="col-md-1">{{t.COUNT}}</td>
+              <td class="col-md-2">{{t.TOTAL}}</td>
               <td class="col-md-2" ng-if="!order.payed"></td>
             </tr>
           </thead>
@@ -167,7 +175,7 @@
         </button>
 
         <div class="form-group" show-errors style="margin-top: 20px">
-          <label for="sale">Скидка</label>
+          <label for="sale">{{t.SALE}}</label>
           <input name="sale"
                  type="number"
                  min="0"
@@ -175,11 +183,11 @@
                  ng-model="order.sale"
                  id="sale"
                  class="form-control"
-                 placeholder="Скидка">
+                 placeholder="{{t.SALE}}">
         </div>
 
         <div class="form-group" show-errors style="margin-top: 20px">
-          <label for="credit">Долг</label>
+          <label for="credit">{{t.DEBT}}</label>
           <input name="credit"
                  type="number"
                  min="0"
@@ -187,11 +195,24 @@
                  ng-model="order.credit"
                  id="credit"
                  class="form-control"
-                 placeholder="Долг">
+                 placeholder="{{t.DEBT}}">
+        </div>
+
+        <div class="form-group" show-errors style="margin-top: 20px">
+          <label for="extra">{{t.ADDITIONAL}}</label>
+          <input name="extra"
+                 type="number"
+                 max="100"
+                 min="0"
+                 step="1"
+                 ng-model="order.extra"
+                 id="extra"
+                 class="form-control"
+                 placeholder="{{t.ADDITIONAL}}">
         </div>
 
         <div class="row">
-          <h4>Общая сумма: {{calculateTotal(order)}}{{currency}}</h4>
+          <h4>{{t.TOTAL_PRICE}} {{calculateTotal(order)}}</h4>
         </div>
 
         <div class="form-group">
@@ -200,16 +221,16 @@
                  ng-click="pay(orderForm.$valid, order)"
                  ng-if="!order.payed"
                  ng-disabled="disableSave()"
-                 value="Оплатить">
+                 value="{{t.TO_PAY}}">
           <input type="submit"
                  class="btn btn-default save-btn pull-right"
                  ng-if="!order.payed"
                  ng-disabled="disableSave()"
-                 value="Сохранить">
+                 value="{{t.SAVE}}">
           <input type="button"
                  class="btn btn-default save-btn pull-right"
                  ng-click="cancel()"
-                 value="Назад">
+                 value="{{t.CANCEL}}">
         </div>
         <div ng-show="error" class="text-danger">
           <strong ng-bind="error"></strong>

@@ -8,6 +8,7 @@ var config = require('../config'),
   morgan = require('morgan'),
   logger = require('./logger'),
   bodyParser = require('body-parser'),
+  boolParser = require('express-query-boolean'),
   session = require('express-session'),
   MongoStore = require('connect-mongo')(session),
   favicon = require('serve-favicon'),
@@ -83,6 +84,7 @@ module.exports.initMiddleware = function (app) {
     extended: true
   }));
   app.use(bodyParser.json());
+  app.use(boolParser());
   app.use(methodOverride());
 
   // Add the cookie parser and flash middleware

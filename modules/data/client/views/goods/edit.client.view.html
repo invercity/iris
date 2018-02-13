@@ -6,30 +6,30 @@
     <form name="articleForm" class="form-horizontal" ng-submit="update(articleForm.$valid)" novalidate>
       <fieldset>
         <div class="form-group" show-errors>
-          <label for="name">Название *</label>
+          <label for="name">{{t.NAME}} *</label>
           <input name="name"
                  type="text"
                  ng-model="good.name"
                  id="name"
                  class="form-control"
-                 placeholder="Название"
+                 placeholder="{{t.NAME}}"
                  required>
           <div ng-messages="articleForm.name.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">Название обязательно.</p>
+            <p class="help-block error-text" ng-message="required">{{t.NAME}} {{t.REQUIRED}}</p>
           </div>
         </div>
         <div class="form-group">
-          <label for="details">Описание</label>
+          <label for="details">{{t.DESC}}</label>
           <textarea name="content"
                     ng-model="good.details"
                     id="details"
                     class="form-control"
                     cols="30" rows="10"
-                    placeholder="Описание">
+                    placeholder="{{t.DESC}}">
           </textarea>
         </div>
         <div class="form-group" show-errors>
-          <label for="price">Цена *</label>
+          <label for="price">{{t.PRICE}} *</label>
           <input name="price"
                  type="number"
                  step="0.01"
@@ -37,14 +37,14 @@
                  ng-model="good.price"
                  id="price"
                  class="form-control"
-                 placeholder="Цена"
+                 placeholder="{{t.PRICE}}"
                  required>
           <div ng-messages="articleForm.price.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">Цена обзательна</p>
+            <p class="help-block error-text" ng-message="required">{{t.PRICE}} {{t>REQUIRED}}</p>
           </div>
         </div>
         <div class="form-group" show-errors>
-          <label for="count">Колличество *</label>
+          <label for="count">{{t.COUNT}} *</label>
           <input name="count"
                  type="number"
                  step="1"
@@ -52,23 +52,23 @@
                  ng-model="good.count"
                  id="count"
                  class="form-control"
-                 placeholder="Колличество"
+                 placeholder="{{t.COUNT}}"
                  required>
           <div ng-messages="articleForm.count.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">Колличество обзательно</p>
+            <p class="help-block error-text" ng-message="required">{{t.COUNT}} {{t.REQUIRED}}</p>
           </div>
         </div>
         <div class="form-group" show-errors>
-          <label for="type">Тип</label>
+          <label for="type">{{t.TYPE}}</label>
           <input name="type"
                  type="text"
                  ng-model="good.type"
                  id="type"
                  class="form-control"
-                 placeholder="Тип">
+                 placeholder="{{t.TYPE}}">
         <div class="form-group">
-          <input type="submit" class="btn btn-default save-btn pull-right" value="Сохранить">
-          <input type="button" class="btn btn-default save-btn pull-right" ng-click="cancel()" value="Отмена">
+          <input type="submit" class="btn btn-default save-btn pull-right" value="{{t.SAVE}}">
+          <input type="button" class="btn btn-default save-btn pull-right" ng-click="cancel()" value="{{t.CANCEL}}">
         </div>
         <div ng-show="error" class="text-danger">
           <strong ng-bind="error"></strong>
