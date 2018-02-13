@@ -179,7 +179,7 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
       Places.query(function (data) {
         $scope.places = data;
         $scope.places.unshift({
-          name: 'Все'
+          name: 'Всі'
         });
         $scope.selectedStatus = $scope.listStatuses[4];
         $scope.selectedPlace = $scope.places[0];

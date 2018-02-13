@@ -72,6 +72,7 @@ angular.module('core').factory('t', [function () {
     TOTAL_PAY: 'Сума до сплати: ',
     ADDITIONAL: 'Додатково %',
     ADD: 'Додати',
+    ENTER_KEY_FOR_SEARCH: 'Введіть ключ для пошуку',
     P_FIRST: '<<',
     P_LAST: '>>',
     P_PREV: '<',

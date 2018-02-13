@@ -27,7 +27,7 @@
                    ng-model="order.client"
                    typeahead-editable="true"
                    ng-disabled="order._id"
-                   placeholder="Введите ключ для поиска существующего"
+                   placeholder="{{t.ENTER_KEY_FOR_SEARCH}}"
                    typeahead="client as client.name ? client.name : client.lastName + ' ' + client.phone for client in clients | filter:$viewValue"
                    class="form-control">
           </div>
