@@ -92,9 +92,7 @@
                    name="place"
                    ng-model="order.place"
                    typeahead-editable="false"
-                   ng-disabled="order.placeDescription"
                    typeahead="place as place.name for place in places | filter:$viewValue | limitTo:8"
-                   required
                    class="form-control">
             </select>
           </div>
@@ -110,7 +108,6 @@
                     id="placeDescription"
                     class="form-control"
                     cols="30" rows="5"
-                    required
                     placeholder="{{t.ADDRESS}}">
           </textarea>
           <div ng-messages="orderForm.placeDescriptions.$error" role="alert">
