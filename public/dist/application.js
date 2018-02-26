@@ -1005,8 +1005,9 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
     $scope.updateList = function () {
       var place = $scope.selectedPlace ? $scope.selectedPlace._id : undefined;
       var status = $scope.selectedStatus ? $scope.selectedStatus.value : undefined;
+      var payed = _.get($scope.selectedType, 'payed');
       $scope.ordersResolved = Orders.query({
-        payed: $scope.selectedType.payed,
+        payed: payed,
         place: place,
         status: status,
         page: $scope.currentPage,
@@ -1047,14 +1048,14 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
     $scope.remove = function (order) {
       if (order) {
         Confirm.show($scope.t.CONFIRM, $scope.t.REMOVE_ORDER_CONF, function () {
-          order.$remove();
-
-          for (var i in $scope.orders) {
-            if ($scope.orders[i] === order) {
-              $scope.orders.splice(i, 1);
+          Orders.remove({ orderId: order._id }, function () {
+            for (var i in $scope.orders) {
+              if ($scope.orders[i] === order) {
+                $scope.orders.splice(i, 1);
+              }
             }
-          }
-          $scope.buildPager();
+            $scope.buildPager();
+          });
         });
       } else {
         $scope.order.$remove(function () {

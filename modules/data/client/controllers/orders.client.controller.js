@@ -99,7 +99,7 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
     $scope.remove = function (order) {
       if (order) {
         Confirm.show($scope.t.CONFIRM, $scope.t.REMOVE_ORDER_CONF, function () {
-          Orders.remove({orderId: order._id}, function () {
+          Orders.remove({ orderId: order._id }, function () {
             for (var i in $scope.orders) {
               if ($scope.orders[i] === order) {
                 $scope.orders.splice(i, 1);
