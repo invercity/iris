@@ -87,7 +87,11 @@ exports.update = (req, res) => {
     sale,
     credit,
     total,
-    extra
+    extra,
+    client: {
+      phone,
+      _id
+    }
   } = req.body;
 
   // TODO: replace with extend
@@ -107,7 +111,16 @@ exports.update = (req, res) => {
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      res.json(order);
+      // update client phone when updating order
+      Client.update({ _id }, { $set: { phone } }, (err) => {
+        if (err) {
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(err)
+          });
+        } else {
+          res.json(order);
+        }
+      });
     }
   });
 };
