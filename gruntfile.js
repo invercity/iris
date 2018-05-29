@@ -1,9 +1,7 @@
-'use strict';
-
 /**
  * Module dependencies.
  */
-var _ = require('lodash'),
+const _ = require('lodash'),
   defaultAssets = require('./config/assets/default'),
   testAssets = require('./config/assets/test'),
   testConfig = require('./config/env/test'),
@@ -74,7 +72,7 @@ module.exports = function (grunt) {
         }
       }
     },
-    nodemon: {
+    serv: {
       dev: {
         script: 'server.js',
         options: {
@@ -85,8 +83,7 @@ module.exports = function (grunt) {
       }
     },
     concurrent: {
-      default: ['nodemon', 'watch'],
-      debug: ['nodemon', 'watch', 'node-inspector'],
+      debug: ['node-inspect', 'watch'],
       options: {
         logConcurrentOutput: true
       }
@@ -162,19 +159,6 @@ module.exports = function (grunt) {
         }]
       }
     },
-    'node-inspector': {
-      custom: {
-        options: {
-          'web-port': 1337,
-          'web-host': 'localhost',
-          'debug-port': 5858,
-          'save-live-edit': true,
-          'no-preload': true,
-          'stack-trace-limit': 50,
-          'hidden': []
-        }
-      }
-    },
     copy: {
       localConfig: {
         src: 'config/env/local.example.js',
@@ -246,14 +230,9 @@ module.exports = function (grunt) {
   });
 
   grunt.task.registerTask('server', 'Starting the server', function () {
-    // Get the callback
-    var done = this.async();
-
-    var path = require('path');
-    var app = require(path.resolve('./config/lib/app'));
-    var server = app.start(function () {
-      done();
-    });
+    const path = require('path');
+    const app = require(path.resolve('./config/lib/app'));
+    app.start();
   });
 
   // Lint CSS and JavaScript files.
@@ -263,11 +242,11 @@ module.exports = function (grunt) {
   grunt.registerTask('build', ['env:dev', 'lint', 'ngAnnotate', 'uglify', 'cssmin']);
 
   // Run the project in development mode
-  grunt.registerTask('default', ['env:dev', 'lint', 'mkdir:upload', 'copy:localConfig', 'concurrent:default']);
+  grunt.registerTask('default', ['env:dev', 'lint', 'mkdir:upload', 'copy:localConfig', 'server']);
 
   // Run the project in debug mode
   grunt.registerTask('debug', ['env:dev', 'lint', 'mkdir:upload', 'copy:localConfig', 'concurrent:debug']);
 
   // Run the project in production mode
-  grunt.registerTask('prod', ['build', 'env:prod', 'mkdir:upload', 'copy:localConfig', 'concurrent:default']);
+  grunt.registerTask('prod', ['build', 'env:prod', 'mkdir:upload', 'copy:localConfig', 'server']);
 };

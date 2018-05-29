@@ -11,7 +11,7 @@
   },
   "engines": {
     "node": "~8",
-    "npm": "~5.6.0"
+    "npm": ">=5.6.0"
   },
   "scripts": {
     "start": "grunt",
@@ -70,8 +70,6 @@
     "grunt-env": "~0.4.4",
     "grunt-eslint": "~19.0.0",
     "grunt-ng-annotate": "~3.0.0",
-    "grunt-node-inspector": "~0.4.2",
-    "grunt-nodemon": "~0.4.0",
     "grunt-protractor-coverage": "~0.2.15",
     "grunt-protractor-runner": "~4.0.0",
     "load-grunt-tasks": "^3.2.0",
