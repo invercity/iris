@@ -246,6 +246,11 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
       return 0 + $scope.currency;
     };
 
+    $scope.getPhoneForPreview = function() {
+      var phone = $scope.order.client.phone || 'XX';
+      return 'XXX XXX XX ' + phone.substring(phone.length - 2, phone.length);
+    };
+
     $scope.addItem = function () {
       var defaultItem = {
         count: 1,

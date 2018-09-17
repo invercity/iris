@@ -28,10 +28,10 @@
         </a>-->
       </div>
       <small ui-sref="goods.edit({goodId: good._id})">
-        <p class="lead">Осталось: {{good.count}}</p>
+        <p class="lead">{{t.ITEMS_LEFT}}: {{good.count}}</p>
         <em class="text-muted list-item-footer">
           <span>{{t.PRICE}}: {{good.price}} {{t.UAH}}</span>
-          <span class="pull-right">Добавлен: {{good.created | date: "dd-MM-yyyy HH:mm" }}</span>
+          <span class="pull-right">{{t.ADDED}}: {{good.created | date: "dd-MM-yyyy HH:mm" }}</span>
         </em>
       </small>
     </div>

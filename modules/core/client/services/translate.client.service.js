@@ -22,10 +22,10 @@ angular.module('core').factory('t', [function () {
     ORDER_TYPE_ALL: 'Всі',
     ORDER_STATUS_NEW: 'Нові',
     ORDER_STATUS_READY: 'Готові',
-    ORDER_STATUS_TOGO: 'Можно збирати',
+    ORDER_STATUS_TOGO: 'Можна збирати',
     ORDER_STATUS_DONE: 'Зібрані',
     OK: 'Так',
-    CANCEL: 'Відміна',
+    CANCEL: 'Відмінити',
     CONFIRM: 'Підтвердження',
     REMOVE_ORDER_CONF: 'Видалити дане замовлення?',
     PAY_ORDER_CONF: 'Оплатити дане замовлення?',
@@ -81,6 +81,8 @@ angular.module('core').factory('t', [function () {
     P_FIRST: '<<',
     P_LAST: '>>',
     P_PREV: '<',
-    P_NEXT: '>'
+    P_NEXT: '>',
+    ADDED: 'Доданий',
+    ITEMS_LEFT: 'Залишилося'
   };
 }]);
