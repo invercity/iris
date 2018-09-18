@@ -248,6 +248,9 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
 
     $scope.getPhoneForPreview = function() {
       var phone = $scope.order.client.phone || 'XX';
+      if ($scope.authentication.user && $scope.authentication.user.roles.includes('admin')) {
+        return $scope.order.client.phone;
+      }
       return 'XXX XXX XX ' + phone.substring(phone.length - 2, phone.length);
     };
 
