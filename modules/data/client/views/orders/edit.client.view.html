@@ -13,7 +13,6 @@
             <a target="_blank" ng-href="{{order.link}}">{{t.LINK_TO_ORDER}}</a>
           </label>
           <input name="link"
-                 type="text"
                  ng-model="order.link"
                  id="link"
                  class="form-control"
@@ -23,12 +22,15 @@
         <div class="form-group" ng-if="!order._id">
           <label for="name">{{t.CLIENT_SELECT_CREATE}}</label>
           <div>
-            <select id="name"
-                    class="form-control"
-                    ng-model="order.client"
-                    ng-disabled="order._id"
-                    ng-options="client.lastName + ' ' + client.phone for client in clients track by client._id">
-            </select>
+            <input type="text"
+                   autocomplete="off"
+                   id="name"
+                   ng-model="order.client"
+                   typeahead-editable="true"
+                   ng-disabled="order._id"
+                   placeholder="{{t.ENTER_KEY_FOR_SEARCH}}"
+                   typeahead="client as client.name ? client.name : client.firstName + ' ' + client.phone for client in clients | filter:$viewValue"
+                   class="form-control">
           </div>
         </div>
 
@@ -46,7 +48,6 @@
         <div class="form-group" show-errors>
           <label for="firstName">{{t.P_NAME}} *</label>
           <input name="firstName"
-                 type="text"
                  ng-model="order.client.firstName"
                  id="firstName"
                  class="form-control"
@@ -61,7 +62,6 @@
         <div class="form-group" show-errors>
           <label for="firstName">{{t.SURNAME}}</label>
           <input name="lastName"
-                 type="text"
                  ng-model="order.client.lastName"
                  id="lastName"
                  class="form-control"
@@ -72,12 +72,10 @@
         <div class="form-group" show-errors>
           <label for="phone">{{t.PHONE}} *</label>
           <input name="phone"
-                 type="tel"
                  ng-model="order.client.phone"
                  id="phone"
                  class="form-control"
                  placeholder="{{t.PHONE}}"
-                 ng-disabled="order.client._id || order._id"
                  required>
           <div ng-messages="orderForm.phone.$error" role="alert">
             <p class="help-block error-text" ng-message="required">{{t.PHONE}} {{t.REQUIRED}}</p>
@@ -93,9 +91,7 @@
                    name="place"
                    ng-model="order.place"
                    typeahead-editable="false"
-                   ng-disabled="order.placeDescription"
                    typeahead="place as place.name for place in places | filter:$viewValue | limitTo:8"
-                   required
                    class="form-control">
             </select>
           </div>
@@ -104,14 +100,13 @@
           </div>
         </div>
 
-        <div class="form-group" show-errors ng-if="order.place && !order.place._id">
+        <div class="form-group" show-errors>
           <label for="placeDescription">{{t.ADDRESS}}</label>
           <textarea name="placeDescription"
                     ng-model="order.placeDescription"
                     id="placeDescription"
                     class="form-control"
                     cols="30" rows="5"
-                    required
                     placeholder="{{t.ADDRESS}}">
           </textarea>
           <div ng-messages="orderForm.placeDescriptions.$error" role="alert">
@@ -132,17 +127,15 @@
           <tbody>
             <tr ng-repeat="item in order.items">
               <td class="col-md-5">
-                <input type="text"
-                       ng-model="item.good"
+                <input ng-model="item.good"
                        typeahead-editable="true"
-                       typeahead="good as good.name for good in calcArray(item.good) | filter:$viewValue | limitTo:8"
+                       typeahead="good as good.name for good in calcArray(item.good) | filter:$viewValue"
                        class="form-control">
               </td>
               <td class="col-md-1">
-                <input type="text"
-                       class="form-control"
+                <input class="form-control"
                        ng-value="calculateLeft(item.good)"
-                       readony>
+                       readonly>
               </td>
               <td class="col-md-1">
                 <input class="form-control"
@@ -205,7 +198,7 @@
           <input name="extra"
                  type="number"
                  max="100"
-                 min="0"
+                 min="-100"
                  step="1"
                  ng-model="order.extra"
                  id="extra"

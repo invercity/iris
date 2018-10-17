@@ -22,10 +22,10 @@ angular.module('core').factory('t', [function () {
     ORDER_TYPE_ALL: 'Всі',
     ORDER_STATUS_NEW: 'Нові',
     ORDER_STATUS_READY: 'Готові',
-    ORDER_STATUS_TOGO: 'Можно збирати',
+    ORDER_STATUS_TOGO: 'Можна збирати',
     ORDER_STATUS_DONE: 'Зібрані',
     OK: 'Так',
-    CANCEL: 'Відміна',
+    CANCEL: 'Відмінити',
     CONFIRM: 'Підтвердження',
     REMOVE_ORDER_CONF: 'Видалити дане замовлення?',
     PAY_ORDER_CONF: 'Оплатити дане замовлення?',
@@ -48,6 +48,7 @@ angular.module('core').factory('t', [function () {
     SEARCH: 'Пошук',
     LINK_TO_ORDER: 'Посилання на замовлення',
     CLIENT_SELECT_CREATE: 'Клієнт (створити нового якщо не вибрано)',
+    CLIENT: 'Клієнт',
     STATUS: 'Статус',
     SELECT_NAME: 'Введіть ім\'я або виберіть зі списку',
     SELECT_PLACE: 'Введіть місце або виберіть зі списку',
@@ -72,9 +73,16 @@ angular.module('core').factory('t', [function () {
     TOTAL_PAY: 'Сума до сплати: ',
     ADDITIONAL: 'Додатково %',
     ADD: 'Додати',
+    CREATED: 'Створений',
+    ENTER_KEY_FOR_SEARCH: 'Введіть ключ для пошуку',
+    AUTH: 'Авторизація',
+    LOGIN: 'Логін',
+    PASS: 'Пароль',
     P_FIRST: '<<',
     P_LAST: '>>',
     P_PREV: '<',
-    P_NEXT: '>'
+    P_NEXT: '>',
+    ADDED: 'Доданий',
+    ITEMS_LEFT: 'Залишилося'
   };
 }]);

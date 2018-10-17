@@ -56,8 +56,9 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
     $scope.updateList = function () {
       var place = $scope.selectedPlace ? $scope.selectedPlace._id : undefined;
       var status = $scope.selectedStatus ? $scope.selectedStatus.value : undefined;
-      Orders.query({
-        payed: $scope.selectedType.payed,
+      var payed = _.get($scope.selectedType, 'payed');
+      $scope.ordersResolved = Orders.query({
+        payed: payed,
         place: place,
         status: status,
         page: $scope.currentPage,
@@ -80,13 +81,13 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
     };
 
     $scope.$watch('selectedPlace', function () {
-      if ($scope.selectedType) {
+      if ($scope.selectedType && $scope.selectedPlace && $scope.ordersResolved.$resolved) {
         $scope.changeType($scope.selectedType);
       }
     });
 
     $scope.$watch('selectedStatus', function () {
-      if ($scope.selectedType) {
+      if ($scope.selectedType && $scope.selectedStatus && $scope.ordersResolved.$resolved) {
         $scope.changeType($scope.selectedType);
       }
     });
@@ -98,14 +99,14 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
     $scope.remove = function (order) {
       if (order) {
         Confirm.show($scope.t.CONFIRM, $scope.t.REMOVE_ORDER_CONF, function () {
-          order.$remove();
-
-          for (var i in $scope.orders) {
-            if ($scope.orders[i] === order) {
-              $scope.orders.splice(i, 1);
+          Orders.remove({ orderId: order._id }, function () {
+            for (var i in $scope.orders) {
+              if ($scope.orders[i] === order) {
+                $scope.orders.splice(i, 1);
+              }
             }
-          }
-          $scope.buildPager();
+            $scope.buildPager();
+          });
         });
       } else {
         $scope.order.$remove(function () {
@@ -124,6 +125,7 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
       }
 
       var order = useOrder || $scope.order;
+      order.total = $scope.calculateTotal(order);
 
       if (order._id) {
         order.$update(function () {
@@ -150,12 +152,26 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
 
     $scope.pay = function (isValid, order, update) {
       Confirm.show($scope.t.CONFIRM, $scope.t.PAY_ORDER_CONF, function () {
-        order.payed = true;
-        $scope.update(isValid, order, function () {
-          if (update) {
-            $scope.changeType($scope.selectedType);
-          }
-        });
+        // TODO: optimise this
+        if (order._id) {
+          order.payed = true;
+          $scope.update(isValid, order, function () {
+            if (update) {
+              $scope.changeType($scope.selectedType);
+            }
+          });
+        } else {
+          Orders.get({
+            orderId: order
+          }, function (data) {
+            data.payed = true;
+            $scope.update(isValid, data, function () {
+              if (update) {
+                $scope.changeType($scope.selectedType);
+              }
+            });
+          });
+        }
       });
     };
 
@@ -164,7 +180,7 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
       Places.query(function (data) {
         $scope.places = data;
         $scope.places.unshift({
-          name: 'Все'
+          name: 'Всі'
         });
         $scope.selectedStatus = $scope.listStatuses[4];
         $scope.selectedPlace = $scope.places[0];
@@ -207,13 +223,14 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
       else {
         $scope.order = new Orders();
         $scope.title = $scope.t.NEW_ORDER;
-        $scope.order.client = 0;
         $scope.order.status = $scope.statuses[0].value;
         $scope.calcArray = calcArray;
       }
 
       $scope.goods = Goods.query();
-      $scope.clients = Clients.query();
+      Clients.query(function (data) {
+        $scope.clients = data;
+      });
       Places.query(function (data) {
         $scope.places = data;
         $scope.places.unshift({
@@ -227,6 +244,14 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
         return (price * count).toFixed(2) + $scope.currency;
       }
       return 0 + $scope.currency;
+    };
+
+    $scope.getPhoneForPreview = function() {
+      var phone = $scope.order.client.phone || 'XX';
+      if ($scope.authentication.user) {
+        return $scope.order.client.phone;
+      }
+      return 'XXX XXX XX ' + phone.substring(phone.length - 2, phone.length);
     };
 
     $scope.addItem = function () {
@@ -255,11 +280,11 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
       if (order.credit) {
         total += order.credit;
       }
-      let totalPrice = Math.max(0, total.toFixed(2));
+      var totalPrice = Math.max(0, total);
       if (order.extra) {
-        totalPrice += +((order.extra * totalPrice)/100).toFixed(2);
+        return (totalPrice * (1 + order.extra/100)).toFixed(2);
       }
-      return totalPrice + $scope.currency;
+      return totalPrice.toFixed(2);
     };
 
     $scope.calculateLeft = function (good) {

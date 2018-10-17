@@ -47,7 +47,8 @@ a:hover .header-profile-image {
 }
 
 .add-btn:hover {
-  color: black;
+  color: dodgerblue;
+  text-decoration: none;
 }
 
 @media screen and (max-width: 991px) {
@@ -58,6 +59,10 @@ a:hover .header-profile-image {
   .list-select-filter {
     margin-top: 2em;
   }
+}
+
+.list-item-footer {
+  font-size: 10px;
 }
 
 .hero-widget { text-align: center; padding-top: 20px; padding-bottom: 20px; }

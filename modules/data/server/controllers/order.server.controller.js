@@ -15,6 +15,7 @@ exports.create = (req, res) => {
     status,
     sale,
     credit,
+    total,
     extra = 0
   } = req.body;
   const orderData = {
@@ -25,6 +26,7 @@ exports.create = (req, res) => {
     status,
     sale,
     credit,
+    total,
     extra
   };
   const clientData = req.body.client;
@@ -84,7 +86,12 @@ exports.update = (req, res) => {
     status,
     sale,
     credit,
-    extra
+    total,
+    extra,
+    client: {
+      phone,
+      _id
+    }
   } = req.body;
 
   // TODO: replace with extend
@@ -95,6 +102,7 @@ exports.update = (req, res) => {
   order.status = status;
   order.sale = sale;
   order.credit = credit;
+  order.total = total;
   order.extra = extra;
 
   order.save((err) => {
@@ -103,7 +111,16 @@ exports.update = (req, res) => {
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      res.json(order);
+      // update client phone when updating order
+      Client.update({ _id }, { $set: { phone } }, (err) => {
+        if (err) {
+          return res.status(400).send({
+            message: errorHandler.getErrorMessage(err)
+          });
+        } else {
+          res.json(order);
+        }
+      });
     }
   });
 };

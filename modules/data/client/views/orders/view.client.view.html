@@ -1,13 +1,13 @@
 <section ng-controller="OrdersController" ng-init="findOne()">
   <div class="col-md-6">
     <div class="page-header">
-      <h3>Заказ #{{order.code}}</h3>
-      <h5>Добавлен: {{order.created | date:'mediumDate'}}</h5>
-      <h5>Клиент: {{order.client.firstName}}</h5>
-      <h5>Телефон: {{order.client.phone}}</h5>
-      <h5>Место выдачи: {{order.place ? order.place.name + ' (' + order.place.address + ')' : order.placeDescription}}</h5>
+      <h3>Замовлення #{{order.code}}</h3>
+      <h5>Додано: {{order.created | date:'mediumDate'}}</h5>
+      <h5>Клієнт: {{order.client.firstName}}</h5>
+      <h5>Телефон: {{getPhoneForPreview()}}</h5>
+      <h5>Місце видачі: {{order.place ? order.place.name + ' (' + order.place.address + ')' : order.placeDescription}}</h5>
       <h5>Статус:
-        <span style="color: {{order.payed ? 'green': 'red'}}">
+        <span style="color: {{order.payed ? 'green' : 'red'}}">
           {{order.payed ? t.IS_PAYED : t.IS_NOT_PAYED}}
         </span>
       </h5>
