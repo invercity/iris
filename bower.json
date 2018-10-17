@@ -1,7 +1,5 @@
 {
   "name": "iris",
-  "description": "Good keeper",
-  "license": "MIT",
   "dependencies": {
     "bootstrap": "~3",
     "angular": "~1.3",
