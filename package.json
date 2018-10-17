@@ -14,7 +14,8 @@
   },
   "scripts": {
     "start": "grunt",
-    "postinstall": "bower install --config.interactive=false && grunt build"
+    "postinstall": "bower install --config.interactive=false",
+    "heroku-postbuild": "npm i sass && grunt build"
   },
   "dependencies": {
     "acl": "~0.4.4",
