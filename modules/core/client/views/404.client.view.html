@@ -1,5 +1,7 @@
-<h1>Page Not Found</h1>
-<div class="alert alert-danger" role="alert">
-  <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-  <span class="sr-only">Error:</span> Page Not Found
+<div ng-controller="ExceptionController">
+  <h1>{{t.ERR}}</h1>
+  <div class="alert alert-danger" role="alert">
+    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+    <span class="sr-only">{{t.ERR}}:</span> {{t.ERR_404}}
+  </div>
 </div>
