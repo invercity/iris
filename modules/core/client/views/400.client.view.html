@@ -1,6 +1,8 @@
-<h1>Bad Request</h1>
-<div class="alert alert-danger" role="alert">
-  <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-  <span class="sr-only">Error:</span>
-  You made a bad request
+<div ng-controller="ExceptionController">
+  <h1>{{t.BAD_REQUEST}}</h1>
+  <div class="alert alert-danger" role="alert">
+    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+    <span class="sr-only">{{t.ERR}}:</span>
+    {{t.ERR_400}}
+  </div>
 </div>
