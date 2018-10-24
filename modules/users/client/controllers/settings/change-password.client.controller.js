@@ -1,7 +1,8 @@
 'use strict';
 
-angular.module('users').controller('ChangePasswordController', ['$scope', '$http', 'Authentication', 'PasswordValidator',
-  function ($scope, $http, Authentication, PasswordValidator) {
+angular.module('users').controller('ChangePasswordController', ['$scope', '$http', 'Authentication', 'PasswordValidator', 't',
+  function ($scope, $http, Authentication, PasswordValidator, t) {
+    $scope.t = t;
     $scope.user = Authentication.user;
     $scope.popoverMsg = PasswordValidator.getPopoverMsg();
 

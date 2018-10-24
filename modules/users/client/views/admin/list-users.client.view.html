@@ -2,10 +2,10 @@
   <div class="page-header">
     <div class="row">
       <div class="col-md-4">
-        <h1>Пользователи</h1>
+        <h1>{{t.USERS}}</h1>
       </div>
       <div class="col-md-4" style="margin-top: 2em">
-        <input class="form-control col-md-4" type="text" ng-model="search" placeholder="Search" ng-change="figureOutItemsToDisplay()" />
+        <input class="form-control col-md-4" type="text" ng-model="search" placeholder="{{t.SEARCH}}" ng-change="figureOutItemsToDisplay()" />
       </div>
     </div>
   </div>
@@ -21,6 +21,10 @@
               max-size="8"
               items-per-page="itemsPerPage"
               total-items="filterLength"
+              first-text="{{t.P_FIRST}}"
+              last-text="{{t.P_LAST}}"
+              previous-text="{{t.P_PREV}}"
+              next-text="{{t.P_NEXT}}"
               ng-model="currentPage"
               ng-change="pageChanged()">
   </pagination>

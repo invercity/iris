@@ -88,6 +88,25 @@ angular.module('core').factory('t', [function () {
     P_PREV: '<',
     P_NEXT: '>',
     ADDED: 'Доданий',
-    ITEMS_LEFT: 'Залишилося'
+    ITEMS_LEFT: 'Залишилося',
+    ROLES: 'Ролі',
+    USERS: 'Користувачі',
+    USER: 'Користувач',
+    ERR_ADD_ROLE: 'Додайте хоча б одну роль',
+    SETTINGS: 'Налаштування',
+    EDIT_PROFILE: 'Редагувати профідь',
+    EDIT_PHOTO: 'Редагувати фото',
+    EDIT_PASS: 'Редагувати пароль',
+    INVALID_EMAIL: 'Невырний e-mail',
+    PROFILE_SAVED_SUCCESSFULLY: 'Профіль успішно збережений',
+    CHOOSE_PHOTO: 'Виберіть фото',
+    PHOTO_SAVED_SUCCESSFULLY: 'Фотографія успішно збережена',
+    CURRENT_PASS: 'Поточний пароль',
+    NEW_PASS: 'Новий пароль',
+    CONFIRM_PASS: 'Підтвердіть новий пароль',
+    CONFIRM_PASS_HELP: 'Введіть новий пароль ще раз',
+    CONFIRM_PASS_ERR: 'Паролі не співпадають',
+    PASS_REQUIREMENTS: 'Вимоги до пароля',
+    PASS_SAVED_SUCCESSFULLY: 'Пароль успішно збережений'
   };
 }]);
