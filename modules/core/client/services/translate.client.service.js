@@ -113,6 +113,7 @@ angular.module('core').factory('t', [function () {
     PASS_SAVED_SUCCESSFULLY: 'Пароль успішно збережений',
     ADD_SALES: 'Додати знижки',
     ADD_CLIENT: 'Додати клієнта',
-    EDIT_CLIENT: 'Редагувати клієнта'
+    EDIT_CLIENT: 'Редагувати клієнта',
+    PLACE_DELIVER_DEFAULT: 'Місце отримання за замовчуванням'
   };
 }]);

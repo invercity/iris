@@ -33,6 +33,21 @@
         </div>
 
         <div class="form-group" show-errors>
+          <label for="place">{{t.PLACE_DELIVER_DEFAULT}}</label>
+          <div>
+            <input type="text"
+                   autocomplete="off"
+                   id="place"
+                   name="place"
+                   ng-model="client.defaultPlace"
+                   typeahead-editable="false"
+                   typeahead="place as place.name for place in places | filter:$viewValue | limitTo:8"
+                   class="form-control">
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group" show-errors>
           <div class="form-group">
             <input type="submit" class="btn btn-default save-btn pull-right" value="{{t.SAVE}}">
             <input type="button" class="btn btn-default save-btn pull-right" ng-click="cancel()" value="{{t.CANCEL}}">

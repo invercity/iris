@@ -1,8 +1,8 @@
 'use strict';
 
 // Clients controller
-angular.module('data').controller('ClientsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Clients', 't',
-  function ($scope, $stateParams, $location, Authentication, Clients, t) {
+angular.module('data').controller('ClientsController', ['$scope', '$stateParams', '$location', 'Authentication', 'Clients', 'Places', 't',
+  function ($scope, $stateParams, $location, Authentication, Clients, Places, t) {
     $scope.t = t;
     $scope.authentication = Authentication;
 
@@ -59,16 +59,19 @@ angular.module('data').controller('ClientsController', ['$scope', '$stateParams'
     };
 
     $scope.findOne = function () {
-      if ($stateParams.clientId) {
-        $scope.client = Clients.get({
-          clientId: $stateParams.clientId
-        });
-        $scope.title = $scope.t.EDIT_CLIENT;
-      }
-      else {
-        $scope.client = new Clients();
-        $scope.title = $scope.t.ADD_CLIENT;
-      }
+      Places.query(function (data) {
+        $scope.places = data;
+        if ($stateParams.clientId) {
+          $scope.client = Clients.get({
+            clientId: $stateParams.clientId
+          });
+          $scope.title = $scope.t.EDIT_CLIENT;
+        }
+        else {
+          $scope.client = new Clients();
+          $scope.title = $scope.t.ADD_CLIENT;
+        }
+      });
     };
 
     $scope.cancel = function () {
