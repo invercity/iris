@@ -98,7 +98,7 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
     });
 
     $scope.$watch('order.client', function () {
-      if ($scope.order.client && $scope.order.client.defaultPlace && !$scope.order.place) {
+      if ($scope.order && $scope.order.client && $scope.order.client.defaultPlace && !$scope.order.place) {
         $scope.order.place = $scope.order.client.defaultPlace;
       }
     });

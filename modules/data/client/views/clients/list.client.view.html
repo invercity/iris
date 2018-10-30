@@ -1,10 +1,10 @@
 <section ng-controller="ClientsController" ng-init="find()">
   <div class="page-header row">
     <div class="col-md-3">
-      <h1>
+      <h2>
         {{t.MENU_CLIENTS}}
         <a ui-sref="clients.create" class="add-btn">+</a>
-      </h1>
+      </h2>
     </div>
     <div class="col-md-3" style="margin-top: 2em">
       <input class="form-control col-md-4" type="text" ng-model="search" placeholder="{{t.SEARCH}}" ng-change="figureOutItemsToDisplay()" />

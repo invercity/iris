@@ -51,7 +51,7 @@ angular.module('core').factory('t', [function () {
     TYPE: 'Тип',
     SAVE: 'Зберегти',
     GOODS: 'Товари',
-    ORDERS: 'Списки',
+    ORDERS: 'Замовлення',
     ORDERS_LIST: 'Замовлення',
     SEARCH: 'Пошук',
     LINK_TO_ORDER: 'Посилання на замовлення',
