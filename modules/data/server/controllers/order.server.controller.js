@@ -31,7 +31,8 @@ exports.create = (req, res) => {
   };
   async.parallel([
     (callback) => {
-      const clientData = { ...req.body.client, defaultPlace: place };
+      const clientData = req.body.client;
+      clientData.defaultPlace = place;
       if (!clientData._id) {
         const client = new Client(clientData);
         client.save((err) => {
