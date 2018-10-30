@@ -8,9 +8,9 @@ angular.module('core').controller('HomeController', ['$scope', '$q', 'Authentica
 
     var goodsData = Goods.query();
     var ordersData = Orders.query();
-    var clientsData = Clients.query();
+    // var clientsData = Clients.query();
 
-    $q.all([goodsData.$promise, ordersData.$promise, clientsData.$promise])
+    $q.all([goodsData.$promise, ordersData.$promise, /*clientsData.$promise */])
       .then(function () {
         $scope.tabs = [
           {
@@ -31,7 +31,7 @@ angular.module('core').controller('HomeController', ['$scope', '$q', 'Authentica
             actionIcon: 'plus',
             count: goodsData.length,
           },
-          {
+          /*{
             icon: 'user',
             title: t.MENU_CLIENTS,
             state: 'clients.list',
@@ -39,7 +39,7 @@ angular.module('core').controller('HomeController', ['$scope', '$q', 'Authentica
             actionState: 'clients.create',
             actionIcon: 'plus',
             count: clientsData.length,
-          }
+          }*/
         ];
       });
   }

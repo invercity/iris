@@ -101,7 +101,7 @@
 
       <div class="row">
         <label  style="padding-right: 15px" class="pull-right">Знайдено замовлень: {{ordersCount}}</label>
-        <div class="col-md-8" ng-if="totalItems > itemsPerPage">
+        <div class="col-md-8" ng-if="ordersCount > itemsPerPage">
           <pagination boundary-links="true"
                       max-size="8"
                       items-per-page="itemsPerPage"
