@@ -97,6 +97,12 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
       $scope.updateList();
     });
 
+    $scope.$watch('order.client', function () {
+      if ($scope.order.client && $scope.order.client.defaultPlace && !$scope.order.place) {
+        $scope.order.place = $scope.order.client.defaultPlace;
+      }
+    });
+
     $scope.remove = function (order) {
       if (order) {
         Confirm.show($scope.t.CONFIRM, $scope.t.REMOVE_ORDER_CONF, function () {

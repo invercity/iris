@@ -56,15 +56,17 @@ exports.delete = (req, res) => {
 };
 
 exports.list = (req, res) => {
-  Client.find().exec((err, clients) => {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      res.json(clients);
-    }
-  });
+  Client.find()
+    .populate('defaultPlace')
+    .exec((err, clients) => {
+      if (err) {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
+      } else {
+        res.json(clients);
+      }
+    });
 };
 
 exports.clientByID = (req, res, next, id) => {
@@ -75,15 +77,17 @@ exports.clientByID = (req, res, next, id) => {
     });
   }
 
-  Client.findById(id).exec((err, client) => {
-    if (err) {
-      return next(err);
-    } else if (!client) {
-      return res.status(404).send({
-        message: 'No client with that identifier has been found'
-      });
-    }
-    req.client = client;
-    next();
-  });
+  Client.findById(id)
+    .populate('defaultPlace')
+    .exec((err, client) => {
+      if (err) {
+        return next(err);
+      } else if (!client) {
+        return res.status(404).send({
+          message: 'No client with that identifier has been found'
+        });
+      }
+      req.client = client;
+      next();
+    });
 };
