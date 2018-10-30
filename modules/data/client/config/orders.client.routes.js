@@ -13,7 +13,7 @@ angular.module('data').config(['$stateProvider',
         url: '',
         templateUrl: 'modules/data/client/views/orders/list.client.view.html',
         data: {
-          roles: ['user']
+          roles: ['admin']
         }
       })
       .state('orders.create', {

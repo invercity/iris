@@ -46,7 +46,10 @@
         </div> -->
 
         <div class="form-group" show-errors>
-          <label for="name">{{t.P_NAME}} *</label>
+          <label for="name" ng-if="!order._id">{{t.P_NAME}} *</label>
+          <label for="name" ng-if="order._id">
+            <a ui-sref="clients.edit({ clientId: order.client._id })">{{t.EDIT_CLIENT}}</a>
+          </label>
           <input name="name"
                  ng-model="order.client.firstName"
                  id="name"
@@ -172,7 +175,7 @@
         <button type="button"
                 class="btn btn-info"
                 ng-show="!isSalesShown"
-                ng-click="isSalesShown = !isSalesShown">
+                ng-click="isSalesShown = true">
           {{t.ADD_SALES}}
         </button>
 

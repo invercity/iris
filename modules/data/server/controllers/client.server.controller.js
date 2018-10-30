@@ -23,9 +23,11 @@ exports.read = (req, res) => {
 
 exports.update = (req, res) => {
   const { client } = req;
+  const { body: { firstName, lastName, phone } } = req;
 
-  client.firstName = req.body.firstName;
-  client.lastName = req.body.lastName;
+  client.firstName = firstName;
+  client.lastName = lastName;
+  client.phone = phone;
   // TODO: default address
 
   client.save((err) => {
