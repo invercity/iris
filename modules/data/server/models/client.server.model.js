@@ -35,7 +35,11 @@ const ClientSchema = new Schema({
   user: {
     type: Schema.ObjectId,
     ref: 'User'
-  }
+  },
+  active: {
+    type: Boolean,
+    default: true
+  },
 });
 
 mongoose.model(modelClient, ClientSchema);

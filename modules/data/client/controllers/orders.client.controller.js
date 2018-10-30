@@ -228,16 +228,16 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
         });
       }
       else {
-        $scope.order = new Orders();
-        $scope.title = $scope.t.NEW_ORDER;
-        $scope.order.status = $scope.statuses[0].value;
-        $scope.calcArray = calcArray;
+        Clients.query(function (data) {
+          $scope.clients = data;
+          $scope.order = new Orders();
+          $scope.title = $scope.t.NEW_ORDER;
+          $scope.order.status = $scope.statuses[0].value;
+          $scope.calcArray = calcArray;
+        });
       }
 
       $scope.goods = Goods.query();
-      Clients.query(function (data) {
-        $scope.clients = data;
-      });
       Places.query(function (data) {
         $scope.places = data;
         $scope.places.unshift({

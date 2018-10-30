@@ -29,6 +29,7 @@ exports.update = (req, res) => {
   client.lastName = lastName;
   client.phone = phone;
   client.defaultPlace = defaultPlace;
+  client.active = true;
 
   client.save((err) => {
     if (err) {
@@ -56,7 +57,7 @@ exports.delete = (req, res) => {
 };
 
 exports.list = (req, res) => {
-  Client.find()
+  Client.find({ active: true })
     .populate('defaultPlace')
     .exec((err, clients) => {
       if (err) {
