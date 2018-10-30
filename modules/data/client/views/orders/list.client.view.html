@@ -15,7 +15,7 @@
           <!-- SEARCH -->
           <div class="form-group">
             <label for="search">{{t.SEARCH}}</label>
-            <label for="search" role="button" ng-click="some1 = !some1" class="pull-right">Фільтри  <span class="glyphicon glyphicon-filter"></span> </label>
+            <label for="search" role="button" class="pull-right">Фільтри  <span class="glyphicon glyphicon-filter"></span> </label>
             <input class="form-control col-md-4"
                    type="text"
                    id="search"
@@ -24,7 +24,7 @@
                    ng-change="figureOutItemsToDisplay()" />
           </div>
           <!-- PLACE -->
-          <div class="form-group" collapse="some1">
+          <div class="form-group">
             <label for="place" class="list-select-filter">{{t.PLACE_DELIVER}}</label>
             <input type="text"
                    id="place"
@@ -34,7 +34,7 @@
                    class="form-control">
           </div>
           <!-- STATUS -->
-          <div class="form-group" collapse="some1">
+          <div class="form-group">
             <label for="type" class="list-select-filter">{{t.ORDER_STATUS}}</label>
             <div>
               <select id="type"
@@ -45,7 +45,7 @@
             </div>
           </div>
           <!-- PAYMENT TYPE -->
-          <div class="form-group" collapse="some1">
+          <div class="form-group">
             <label for="orderType" class="list-select-filter">Стан замовлення</label>
             <div>
               <div class="btn-group" role="group" aria-label="{{t.ORDER_TYPES}}">
@@ -100,7 +100,7 @@
       </div>
 
       <div class="row">
-        <label style="padding: 15px">Знайдено замовлень: {{ordersCount}}</label>
+        <label  style="padding-right: 15px" class="pull-right">Знайдено замовлень: {{ordersCount}}</label>
         <div class="col-md-8" ng-if="totalItems > itemsPerPage">
           <pagination boundary-links="true"
                       max-size="8"
