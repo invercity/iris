@@ -7,6 +7,7 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
     $scope.authentication = Authentication;
     $scope.currency = ' ' + $scope.t.UAH;
     $scope.currentPage = 1;
+    $scope.isSalesShown = false;
 
     var toZero = function (val) {
       return Math.max(0, val);

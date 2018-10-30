@@ -20,11 +20,11 @@
         </div>
 
         <div class="form-group" ng-if="!order._id">
-          <label for="name">{{t.CLIENT_SELECT_CREATE}}</label>
+          <label for="client">{{t.CLIENT_SELECT_CREATE}}</label>
           <div>
             <input type="text"
                    autocomplete="off"
-                   id="name"
+                   id="client"
                    ng-model="order.client"
                    typeahead-editable="true"
                    ng-disabled="order._id"
@@ -34,7 +34,7 @@
           </div>
         </div>
 
-        <div class="form-group">
+        <!--<div class="form-group">
           <label for="status">{{t.STATUS}}</label>
           <div>
             <select id="status"
@@ -43,13 +43,13 @@
                     ng-options="status.value as status.name for status in statuses">
             </select>
           </div>
-        </div>
+        </div> -->
 
         <div class="form-group" show-errors>
-          <label for="firstName">{{t.P_NAME}} *</label>
-          <input name="firstName"
+          <label for="name">{{t.P_NAME}} *</label>
+          <input name="name"
                  ng-model="order.client.firstName"
-                 id="firstName"
+                 id="name"
                  class="form-control"
                  placeholder="{{t.P_NAME}}"
                  ng-disabled="order.client._id || order._id"
@@ -59,15 +59,15 @@
           </div>
         </div>
 
-        <div class="form-group" show-errors>
-          <label for="firstName">{{t.SURNAME}}</label>
+        <!--<div class="form-group" show-errors>
+          <label for="lastName">{{t.SURNAME}}</label>
           <input name="lastName"
                  ng-model="order.client.lastName"
                  id="lastName"
                  class="form-control"
                  placeholder="{{t.SURNAME}}"
                  ng-disabled="order.client._id || order._id">
-        </div>
+        </div> -->
 
         <div class="form-group" show-errors>
           <label for="phone">{{t.PHONE}} *</label>
@@ -169,7 +169,14 @@
           {{t.ADD}}
         </button>
 
-        <div class="form-group" show-errors style="margin-top: 20px">
+        <button type="button"
+                class="btn btn-info"
+                ng-show="!isSalesShown"
+                ng-click="isSalesShown = !isSalesShown">
+          {{t.ADD_SALES}}
+        </button>
+
+        <div class="form-group" collapse="!isSalesShown" show-errors style="margin-top: 20px">
           <label for="sale">{{t.SALE}}</label>
           <input name="sale"
                  type="number"
@@ -181,7 +188,7 @@
                  placeholder="{{t.SALE}}">
         </div>
 
-        <div class="form-group" show-errors style="margin-top: 20px">
+        <div class="form-group" collapse="!isSalesShown" show-errors style="margin-top: 20px">
           <label for="credit">{{t.DEBT}}</label>
           <input name="credit"
                  type="number"
@@ -193,7 +200,7 @@
                  placeholder="{{t.DEBT}}">
         </div>
 
-        <div class="form-group" show-errors style="margin-top: 20px">
+        <div class="form-group" collapse="!isSalesShown" show-errors style="margin-top: 20px">
           <label for="extra">{{t.ADDITIONAL}}</label>
           <input name="extra"
                  type="number"

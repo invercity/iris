@@ -107,6 +107,7 @@ angular.module('core').factory('t', [function () {
     CONFIRM_PASS_HELP: 'Введіть новий пароль ще раз',
     CONFIRM_PASS_ERR: 'Паролі не співпадають',
     PASS_REQUIREMENTS: 'Вимоги до пароля',
-    PASS_SAVED_SUCCESSFULLY: 'Пароль успішно збережений'
+    PASS_SAVED_SUCCESSFULLY: 'Пароль успішно збережений',
+    ADD_SALES: 'Додати знижки'
   };
 }]);

@@ -1,19 +1,19 @@
 <section ng-controller="OrdersController" ng-init="find()">
   <div class="page-header row">
-    <div class="col-md-2">
+    <div class="col-md-3">
       <h1>
         {{t.ORDERS}}
         <a ui-sref="orders.create" class="add-btn">+</a>
       </h1>
     </div>
-    <div class="col-md-3" style="margin-top: 2em">
+    <div class="col-md-4" style="margin-top: 2em">
       <input class="form-control col-md-4"
              type="text"
              ng-model="search"
              placeholder="{{t.SEARCH}}"
              ng-change="figureOutItemsToDisplay()" />
     </div>
-    <div class="col-md-3" style="margin-top: 2em">
+    <!-- <div class="col-md-3" style="margin-top: 2em">
       <div class="btn-group" role="group" aria-label="{{t.ORDER_TYPES}}">
         <button type="button"
                 ng-repeat="type in orderTypes"
@@ -22,9 +22,9 @@
                 ng-click="changeType(type)">{{type.name}}
         </button>
       </div>
-    </div>
+    </div> -->
 
-    <div class="col-md-2">
+    <!-- <div class="col-md-2">
       <div class="form-group">
         <label for="type" class="list-select-filter">{{t.ORDER_STATUS}}</label>
         <div>
@@ -35,9 +35,9 @@
           </select>
         </div>
       </div>
-    </div>
+    </div> -->
 
-    <div class="col-md-2">
+    <div class="col-md-4">
       <div class="form-group">
         <label for="place" class="list-select-filter">{{t.PLACE_DELIVER}}</label>
         <div>
