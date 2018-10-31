@@ -1,38 +1,38 @@
 <section>
   <div class="page-header">
-    <h1>Пользователь <span ng-bind="user.username"></span></h1>
+    <h1>{{t.USER}} <span ng-bind="user.username"></span></h1>
   </div>
   <div class="col-md-12">
     <form name="userForm" ng-submit="update(userForm.$valid)" novalidate>
       <fieldset>
         <div class="form-group" show-errors>
-          <label for="firstName">Имя</label>
+          <label for="firstName">{{t.P_NAME}}</label>
           <input type="text"
                  id="firstName"
                  name="firstName"
                  class="form-control"
                  ng-model="user.firstName"
-                 placeholder="Имя"
+                 placeholder="{{t.P_NAME}}"
                  required />
           <div ng-messages="userForm.firstName.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">Введите имя.</p>
+            <p class="help-block error-text" ng-message="required">{{t.P_NAME}} {{t.REQUIRED}}</p>
           </div>
         </div>
         <div class="form-group" show-errors>
-          <label for="lastName">Фамилия</label>
+          <label for="lastName">{{t.SURNAME}}</label>
           <input type="text"
                  id="lastName"
                  name="lastName"
                  class="form-control"
                  ng-model="user.lastName"
-                 placeholder="Фамилия"
+                 placeholder="{{t.SURNAME}}"
                  required />
           <div ng-messages="userForm.lastName.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">Введите фамилию.</p>
+            <p class="help-block error-text" ng-message="required">{{t.SURNAME}} {{t.REQUIRED}}</p>
           </div>
         </div>
         <div class="form-group" show-errors>
-          <label class="control-label" for="roles">Роли</label>
+          <label class="control-label" for="roles">{{t.ROLES}}</label>
           <div class="controls">
             <input class="form-control"
                    type="text"
@@ -42,12 +42,12 @@
                    ng-list
                    required/>
             <div ng-messages="userForm.roles.$error" role="alert">
-              <p class="help-block error-text" ng-message="required">Добавьте как минимум одну роль.</p>
+              <p class="help-block error-text" ng-message="required">{{t.ERR_ADD_ROLE}}</p>
             </div>
           </div>
         </div>
         <div class="form-group">
-          <input type="submit" value="Сохранить" class="btn btn-default">
+          <input type="submit" value="{{t.SAVE}}" class="btn btn-default">
         </div>
         <div ng-show="error" class="text-danger">
           <strong ng-bind="error"></strong>

@@ -5,8 +5,11 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
   function ($scope, $stateParams, $location, Authentication, Orders, Goods, Clients, Places, Confirm, t) {
     $scope.t = t;
     $scope.authentication = Authentication;
-    $scope.currency = ' ' + $scope.t.UAH;
+    $scope.currency = $scope.t.UAH;
     $scope.currentPage = 1;
+    $scope.itemsPerPage = 20;
+
+    $scope.isSalesShown = false;
 
     var toZero = function (val) {
       return Math.max(0, val);
@@ -67,7 +70,7 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
       }, function (data) {
         $scope.orders = data.orders;
         $scope.ordersCount = data.count;
-        $scope.buildPager();
+        $scope.figureOutItemsToDisplay();
       });
     };
 
@@ -96,6 +99,12 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
       $scope.updateList();
     });
 
+    $scope.$watch('order.client', function () {
+      if ($scope.order && $scope.order.client && $scope.order.client.defaultPlace && !$scope.order.place) {
+        $scope.order.place = $scope.order.client.defaultPlace;
+      }
+    });
+
     $scope.remove = function (order) {
       if (order) {
         Confirm.show($scope.t.CONFIRM, $scope.t.REMOVE_ORDER_CONF, function () {
@@ -105,7 +114,7 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
                 $scope.orders.splice(i, 1);
               }
             }
-            $scope.buildPager();
+            $scope.figureOutItemsToDisplay();
           });
         });
       } else {
@@ -221,16 +230,16 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
         });
       }
       else {
-        $scope.order = new Orders();
-        $scope.title = $scope.t.NEW_ORDER;
-        $scope.order.status = $scope.statuses[0].value;
-        $scope.calcArray = calcArray;
+        Clients.query(function (data) {
+          $scope.clients = data;
+          $scope.order = new Orders();
+          $scope.title = $scope.t.NEW_ORDER;
+          $scope.order.status = $scope.statuses[0].value;
+          $scope.calcArray = calcArray;
+        });
       }
 
       $scope.goods = Goods.query();
-      Clients.query(function (data) {
-        $scope.clients = data;
-      });
       Places.query(function (data) {
         $scope.places = data;
         $scope.places.unshift({
@@ -349,11 +358,6 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
       });
 
       return disable;
-    };
-
-    $scope.buildPager = function () {
-      $scope.itemsPerPage = 20;
-      $scope.figureOutItemsToDisplay();
     };
 
     $scope.figureOutItemsToDisplay = function () {

@@ -4,28 +4,28 @@
 angular.module('data').config(['$stateProvider',
   function ($stateProvider) {
     $stateProvider
-      .state('goods', {
+      .state('clients', {
         abstract: true,
-        url: '/goods',
+        url: '/clients',
         template: '<ui-view/>'
       })
-      .state('goods.list', {
+      .state('clients.list', {
         url: '',
-        templateUrl: 'modules/data/client/views/goods/list.client.view.html',
+        templateUrl: 'modules/data/client/views/clients/list.client.view.html',
         data: {
           roles: ['admin']
         }
       })
-      .state('goods.create', {
+      .state('clients.create', {
         url: '/create',
-        templateUrl: 'modules/data/client/views/goods/edit.client.view.html',
+        templateUrl: 'modules/data/client/views/clients/edit.client.view.html',
         data: {
           roles: ['admin']
         }
       })
-      .state('goods.edit', {
-        url: '/:goodId/edit',
-        templateUrl: 'modules/data/client/views/goods/edit.client.view.html',
+      .state('clients.edit', {
+        url: '/:clientId/edit',
+        templateUrl: 'modules/data/client/views/clients/edit.client.view.html',
         data: {
           roles: ['admin']
         }

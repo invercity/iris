@@ -1,0 +1,48 @@
+<section ng-controller="ClientsController" ng-init="find()">
+  <div class="page-header row">
+    <div class="col-md-3">
+      <h2>
+        {{t.MENU_CLIENTS}}
+        <a ui-sref="clients.create" class="add-btn">+</a>
+      </h2>
+    </div>
+    <div class="col-md-3" style="margin-top: 2em">
+      <input class="form-control col-md-4" type="text" ng-model="search" placeholder="{{t.SEARCH}}" ng-change="figureOutItemsToDisplay()" />
+    </div>
+  </div>
+  <div class="list-group">
+    <div ng-repeat="client in pagedItems" class="list-group-item" style="margin-bottom: 10px">
+      <div>
+        <h4>
+          <a class="add-btn" ui-sref="clients.edit({clientId: client._id})">
+            {{client.firstName}}
+          </a>
+        </h4>
+      </div>
+      <div class="pull-right">
+        <a class="btn btn-primary" ng-click="remove(client);" disabled>
+          <i class="glyphicon glyphicon-trash"></i>
+        </a>
+      </div>
+      <small ui-sref="clients.edit({clientId: client._id})">
+        <p class="lead">{{client.phone}}</p>
+      </small>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <pagination boundary-links="true"
+                  max-size="8"
+                  items-per-page="itemsPerPage"
+                  total-items="filterLength"
+                  ng-model="currentPage"
+                  first-text="{{t.P_FIRST}}"
+                  last-text="{{t.P_LAST}}"
+                  previous-text="{{t.P_PREV}}"
+                  next-text="{{t.P_NEXT}}"
+                  ng-change="pageChanged()">
+      </pagination>
+    </div>
+  </div>
+</section>

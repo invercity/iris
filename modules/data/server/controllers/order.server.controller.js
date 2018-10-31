@@ -29,10 +29,10 @@ exports.create = (req, res) => {
     total,
     extra
   };
-  const clientData = req.body.client;
-
   async.parallel([
     (callback) => {
+      const clientData = req.body.client;
+      clientData.defaultPlace = place;
       if (!clientData._id) {
         const client = new Client(clientData);
         client.save((err) => {
@@ -112,7 +112,7 @@ exports.update = (req, res) => {
       });
     } else {
       // update client phone when updating order
-      Client.update({ _id }, { $set: { phone } }, (err) => {
+      Client.update({ _id }, { $set: { phone, defaultPlace: place, active: true } }, (err) => {
         if (err) {
           return res.status(400).send({
             message: errorHandler.getErrorMessage(err)
