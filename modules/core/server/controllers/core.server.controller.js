@@ -21,7 +21,6 @@ exports.renderServerError = (req, res) => {
  * Performs content-negotiation on the Accept HTTP header
  */
 exports.renderNotFound = (req, res) => {
-
   res.status(404).format({
     'text/html': () => res.render('modules/core/server/views/404', {
       url: req.originalUrl
@@ -31,4 +30,10 @@ exports.renderNotFound = (req, res) => {
     }),
     'default': () => res.send('Path not found'),
   });
+};
+
+exports.version = (req, res) => {
+  const path = require('path');
+  const { version } = require(path.resolve(__dirname, '../../../../package'));
+  res.send({ version });
 };

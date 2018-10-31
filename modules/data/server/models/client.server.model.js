@@ -28,10 +28,18 @@ const ClientSchema = new Schema({
     default: '',
     trim: true,
   },
+  defaultPlace: {
+    type: Schema.ObjectId,
+    ref: 'Place'
+  },
   user: {
     type: Schema.ObjectId,
     ref: 'User'
-  }
+  },
+  active: {
+    type: Boolean,
+    default: true
+  },
 });
 
 mongoose.model(modelClient, ClientSchema);

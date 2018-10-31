@@ -1,15 +1,16 @@
 'use strict';
 
-angular.module('core').controller('HomeController', ['$scope', '$q', 'Authentication', 'Goods', 'Orders', 't',
-  function ($scope, $q, Authentication, Goods, Orders, t) {
+angular.module('core').controller('HomeController', ['$scope', '$q', 'Authentication', 'Goods', 'Orders', 'Clients', 't',
+  function ($scope, $q, Authentication, Goods, Orders, Clients, t) {
     $scope.t = t;
     // This provides Authentication context.
     $scope.authentication = Authentication;
 
     var goodsData = Goods.query();
     var ordersData = Orders.query();
+    var clientsData = Clients.query();
 
-    $q.all([goodsData.$promise, ordersData.$promise])
+    $q.all([goodsData.$promise, ordersData.$promise, clientsData.$promise])
       .then(function () {
         $scope.tabs = [
           {
@@ -30,6 +31,15 @@ angular.module('core').controller('HomeController', ['$scope', '$q', 'Authentica
             actionIcon: 'plus',
             count: goodsData.length,
           },
+          {
+            icon: 'user',
+            title: t.MENU_CLIENTS,
+            state: 'clients.list',
+            actionTitle: t.ADD,
+            actionState: 'clients.create',
+            actionIcon: 'plus',
+            count: clientsData.length,
+          }
         ];
       });
   }

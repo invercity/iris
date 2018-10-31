@@ -6,7 +6,8 @@ angular.module('data').run(['Menus', 't',
     Menus.addMenuItem('topbar', {
       title: t.MENU_GOODS,
       state: 'goods.list',
-      roles: ['user']
+      roles: ['admin'],
+      position: 1
     });
   }
 ]);

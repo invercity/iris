@@ -17,6 +17,7 @@ angular.module('core').factory('t', [function () {
     MENU_GOODS: 'Товари',
     MENU_PLACES: 'Місця',
     MENU_ORDERS: 'Замовлення',
+    MENU_CLIENTS: 'Клієнти',
     ENTER_COUNT: 'Введіть кількість',
     GOOD_EDIT: 'Редагувати товар',
     GOOD_NEW: 'Створити товар',
@@ -29,6 +30,8 @@ angular.module('core').factory('t', [function () {
     ORDER_STATUS_READY: 'Готові',
     ORDER_STATUS_TOGO: 'Можна збирати',
     ORDER_STATUS_DONE: 'Зібрані',
+    CLIENT_NEW: 'Додати клієнта',
+    CLIENT_EDIT: 'Редагувати клыэнта',
     OK: 'Так',
     CANCEL: 'Відмінити',
     CONFIRM: 'Підтвердження',
@@ -48,7 +51,7 @@ angular.module('core').factory('t', [function () {
     TYPE: 'Тип',
     SAVE: 'Зберегти',
     GOODS: 'Товари',
-    ORDERS: 'Списки',
+    ORDERS: 'Замовлення',
     ORDERS_LIST: 'Замовлення',
     SEARCH: 'Пошук',
     LINK_TO_ORDER: 'Посилання на замовлення',
@@ -59,7 +62,7 @@ angular.module('core').factory('t', [function () {
     SELECT_PLACE: 'Введіть місце або виберіть зі списку',
     SURNAME: 'Прізвище',
     PHONE: 'Телефон',
-    PLACE_DELIVER: 'Місце видачі',
+    PLACE_DELIVER: 'Місця видачі',
     ADDRESS: 'Адреса',
     LEFT: 'Залишок',
     TOTAL: 'Сума',
@@ -107,6 +110,12 @@ angular.module('core').factory('t', [function () {
     CONFIRM_PASS_HELP: 'Введіть новий пароль ще раз',
     CONFIRM_PASS_ERR: 'Паролі не співпадають',
     PASS_REQUIREMENTS: 'Вимоги до пароля',
-    PASS_SAVED_SUCCESSFULLY: 'Пароль успішно збережений'
+    PASS_SAVED_SUCCESSFULLY: 'Пароль успішно збережений',
+    ADD_SALES: 'Додати знижки',
+    ADD_CLIENT: 'Додати клієнта',
+    EDIT_CLIENT: 'Редагувати клієнта',
+    PLACE_DELIVER_DEFAULT: 'Місце отримання за замовчуванням',
+    TOTAL_ORDERS: 'Всього замовлень',
+    ACTIVE: 'Активний'
   };
 }]);
