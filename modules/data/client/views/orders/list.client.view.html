@@ -75,25 +75,27 @@
                 <span class="glyphicon glyphicon-ok"
                       ng-if="order.payed"
                       style="color: green">
-            </span>
+                </span>
               </h4>
+              <div class="pull-right"
+                   ng-show="authentication.user._id == order.user._id || authentication.user.roles.includes('admin')">
+                <a ng-if="!order.payed" class="btn btn-success" ng-click="pay(true, order._id, true);">
+                  <i class="glyphicon glyphicon-usd"></i>
+                </a>
+                <a class="btn btn-primary" ng-click="remove(order);">
+                  <i class="glyphicon glyphicon-trash"></i>
+                </a>
+              </div>
             </div>
-          </div>
-          <div class="pull-right"
-               ng-show="authentication.user._id == order.user._id || authentication.user.roles.includes('admin')">
-            <a ng-if="!order.payed" class="btn btn-success" ng-click="pay(true, order._id, true);">
-              <i class="glyphicon glyphicon-usd"></i>
-            </a>
-            <a class="btn btn-primary" ng-click="remove(order);">
-              <i class="glyphicon glyphicon-trash"></i>
-            </a>
           </div>
           <small ui-sref="orders.edit({orderId: order._id})">
             <p class="lead">{{t.CLIENT}}: {{order.client.firstName}} {{order.client.lastName}}, тел: {{order.client.phone}}</p>
             <em class="text-muted list-item-footer">
-              <span>{{t.ADDRESS}}: {{order.place ? order.place.name : order.placeDescription}}</span>
-              <span ng-if="order.total"></br>{{t.TOTAL}}: {{order.total}}{{currency}}</span>
-              <span class="pull-right">{{t.CREATED}}: {{order.created | date: "dd-MM-yyyy HH:mm" }}</span>
+              <span>
+                <b>{{t.ADDRESS}}: </b> {{order.place ? order.place.name : order.placeDescription}}
+                <b>{{t.TOTAL}}: </b> {{order.total || 0}}{{currency}}
+              </span>
+              <span class="pull-right"><b>{{t.CREATED}}: </b> {{order.created | date: "dd-MM-yyyy HH:mm" }}</span>
             </em>
           </small>
         </div>

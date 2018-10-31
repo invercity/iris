@@ -5,7 +5,7 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
   function ($scope, $stateParams, $location, Authentication, Orders, Goods, Clients, Places, Confirm, t) {
     $scope.t = t;
     $scope.authentication = Authentication;
-    $scope.currency = ' ' + $scope.t.UAH;
+    $scope.currency = $scope.t.UAH;
     $scope.currentPage = 1;
     $scope.itemsPerPage = 20;
 
