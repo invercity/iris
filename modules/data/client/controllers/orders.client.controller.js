@@ -7,6 +7,8 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
     $scope.authentication = Authentication;
     $scope.currency = ' ' + $scope.t.UAH;
     $scope.currentPage = 1;
+    $scope.itemsPerPage = 20;
+
     $scope.isSalesShown = false;
 
     var toZero = function (val) {
@@ -68,7 +70,7 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
       }, function (data) {
         $scope.orders = data.orders;
         $scope.ordersCount = data.count;
-        $scope.buildPager();
+        $scope.figureOutItemsToDisplay();
       });
     };
 
@@ -112,7 +114,7 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
                 $scope.orders.splice(i, 1);
               }
             }
-            $scope.buildPager();
+            $scope.figureOutItemsToDisplay();
           });
         });
       } else {
@@ -356,11 +358,6 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
       });
 
       return disable;
-    };
-
-    $scope.buildPager = function () {
-      $scope.itemsPerPage = 20;
-      $scope.figureOutItemsToDisplay();
     };
 
     $scope.figureOutItemsToDisplay = function () {

@@ -100,8 +100,7 @@
       </div>
 
       <div class="row">
-        <label  style="padding-right: 15px" class="pull-right">Знайдено замовлень: {{ordersCount}}</label>
-        <div class="col-md-8" ng-if="ordersCount > itemsPerPage">
+        <div class="col-md-8" ng-show="ordersCount > itemsPerPage">
           <pagination boundary-links="true"
                       max-size="8"
                       items-per-page="itemsPerPage"
@@ -111,9 +110,11 @@
                       last-text="{{t.P_LAST}}"
                       previous-text="{{t.P_PREV}}"
                       next-text="{{t.P_NEXT}}"
+                      style="display: inline"
                       ng-change="pageChanged()">
           </pagination>
         </div>
+        <label style="padding-right: 15px; display: inline-block" class="pull-right">{{t.TOTAL_ORDERS}}: {{ordersCount}}</label>
       </div>
     </div>
   </div>
