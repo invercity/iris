@@ -7,6 +7,9 @@
       <fieldset>
         <div class="form-group" show-errors>
           <label for="name">{{t.P_NAME}} *</label>
+          <label class="pull-right" style="color: green" ng-if="client.active">
+            {{t.ACTIVE}} <span class="glyphicon glyphicon-ok"></span>
+          </label>
           <input name="name"
                  type="text"
                  ng-model="client.firstName"

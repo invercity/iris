@@ -50,6 +50,9 @@
           <label for="name" ng-if="order._id">
             <a ui-sref="clients.edit({ clientId: order.client._id })">{{t.EDIT_CLIENT}}</a>
           </label>
+          <label class="pull-right" style="color: green" ng-if="order.client.active">
+            {{t.ACTIVE}} <span class="glyphicon glyphicon-ok"></span>
+          </label>
           <input name="name"
                  ng-model="order.client.firstName"
                  id="name"
@@ -122,7 +125,7 @@
             <tr>
               <td class="col-md-5">{{t.NAME}}</td>
               <td class="col-md-1">{{t.LEFT}}</td>
-              <td class="col-md-1">{{t.COUNT}}</td>
+              <td class="col-md-2">{{t.COUNT}}</td>
               <td class="col-md-2">{{t.TOTAL}}</td>
               <td class="col-md-2" ng-if="!order.payed"></td>
             </tr>
@@ -140,7 +143,7 @@
                        ng-value="calculateLeft(item.good)"
                        readonly>
               </td>
-              <td class="col-md-1">
+              <td class="col-md-2">
                 <input class="form-control"
                        type="number"
                        min="1"
