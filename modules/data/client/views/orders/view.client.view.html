@@ -27,7 +27,7 @@
           <td>{{item.good.name}}</td>
           <td>{{item.count}}</td>
           <td>{{item.good.price}} {{t.UAH}}</td>
-          <td>{{item.count * item.good.price}} {{t.UAH}}</td>
+          <td>{{calculate(item.good.price, item.count)}}</td>
         </tr>
       </tbody>
     </table>
