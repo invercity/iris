@@ -239,7 +239,9 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
         });
       }
 
-      $scope.goods = Goods.query();
+      Goods.query(function (data) {
+        $scope.goods = data.goods;
+      });
       Places.query(function (data) {
         $scope.places = data;
         $scope.places.unshift({

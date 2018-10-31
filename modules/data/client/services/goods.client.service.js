@@ -7,7 +7,10 @@ angular.module('data').factory('Goods', ['$resource',
     }, {
       update: {
         method: 'PUT'
-      }
+      },
+      query: {
+        method: 'GET', isArray:false
+      },
     });
   }
 ]);
