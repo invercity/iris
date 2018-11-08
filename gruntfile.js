@@ -1,12 +1,11 @@
 /**
  * Module dependencies.
  */
-const _ = require('lodash'),
-  defaultAssets = require('./config/assets/default'),
-  testAssets = require('./config/assets/test'),
-  testConfig = require('./config/env/test'),
-  fs = require('fs'),
-  path = require('path');
+const fs = require('fs');
+const path = require('path');
+const _ = require('lodash');
+const defaultAssets = require('./config/assets/default');
+const testAssets = require('./config/assets/test');
 
 module.exports = function (grunt) {
   // Project Configuration
@@ -170,20 +169,9 @@ module.exports = function (grunt) {
     }
   });
 
-  grunt.event.on('coverage', function(lcovFileContents, done) {
-    // Set coverage config so karma-coverage knows to run coverage
-    testConfig.coverage = true;
-    require('coveralls').handleInput(lcovFileContents, function(err) {
-      if (err) {
-        return done(err);
-      }
-      done();
-    });
-  });
-
   // Load NPM tasks
   require('load-grunt-tasks')(grunt);
-  grunt.loadNpmTasks('grunt-protractor-coverage');
+  // grunt.loadNpmTasks('grunt-protractor-coverage');
 
   // Make sure upload directory exists
   grunt.task.registerTask('mkdir:upload', 'Task that makes sure upload directory exists.', function () {

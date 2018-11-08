@@ -151,7 +151,6 @@ exports.list = (req, res) => {
       if (q) {
         const fields = [
           'firstName',
-          'lastName',
           'phone',
         ];
         const $or = _.map(fields, field => ({ [field]: { $regex: new RegExp(q, 'i') } }));
