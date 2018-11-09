@@ -1,29 +1,25 @@
-'use strict';
+const path = require('path');
+const express = require('express');
+const morgan = require('morgan');
+const bodyParser = require('body-parser');
+const boolParser = require('express-query-boolean');
+const session = require('express-session');
+const MongoStore = require('connect-mongo')(session);
+const favicon = require('serve-favicon');
+const compress = require('compression');
+const methodOverride = require('method-override');
+const cookieParser = require('cookie-parser');
+const helmet = require('helmet');
+const flash = require('connect-flash');
+const consolidate = require('consolidate');
 
-/**
- * Module dependencies.
- */
-var config = require('../config'),
-  express = require('express'),
-  morgan = require('morgan'),
-  logger = require('./logger'),
-  bodyParser = require('body-parser'),
-  boolParser = require('express-query-boolean'),
-  session = require('express-session'),
-  MongoStore = require('connect-mongo')(session),
-  favicon = require('serve-favicon'),
-  compress = require('compression'),
-  methodOverride = require('method-override'),
-  cookieParser = require('cookie-parser'),
-  helmet = require('helmet'),
-  flash = require('connect-flash'),
-  consolidate = require('consolidate'),
-  path = require('path');
+const config = require('../config');
+const logger = require('./logger');
 
 /**
  * Initialize local variables
  */
-module.exports.initLocalVariables = function (app) {
+module.exports.initLocalVariables = (app) => {
   // Setting application local variables
   app.locals.title = config.app.title;
   app.locals.description = config.app.description;
@@ -40,7 +36,7 @@ module.exports.initLocalVariables = function (app) {
   app.locals.favicon = config.favicon;
 
   // Passing the request url to environment locals
-  app.use(function (req, res, next) {
+  app.use((req, res, next) => {
     res.locals.host = req.protocol + '://' + req.hostname;
     res.locals.url = req.protocol + '://' + req.headers.host + req.originalUrl;
     next();
@@ -50,7 +46,7 @@ module.exports.initLocalVariables = function (app) {
 /**
  * Initialize application middleware
  */
-module.exports.initMiddleware = function (app) {
+module.exports.initMiddleware = (app) => {
   // Showing stack errors
   app.set('showStackError', true);
 
@@ -95,7 +91,7 @@ module.exports.initMiddleware = function (app) {
 /**
  * Configure view engine
  */
-module.exports.initViewEngine = function (app) {
+module.exports.initViewEngine = (app) => {
   // Set swig as the template engine
   app.engine('server.view.html', consolidate[config.templateEngine]);
 
@@ -120,7 +116,7 @@ module.exports.initSession = function (app, db) {
     },
     key: config.sessionKey,
     store: new MongoStore({
-      mongooseConnection: db.connection,
+      mongooseConnection: db,
       collection: config.sessionCollection
     })
   }));
@@ -220,7 +216,7 @@ module.exports.configureSocketIO = function (app, db) {
  */
 module.exports.init = function (db) {
   // Initialize express app
-  var app = express();
+  let app = express();
 
   // Initialize local variables
   this.initLocalVariables(app);

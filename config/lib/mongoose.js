@@ -22,20 +22,18 @@ module.exports.loadModels = function (callback) {
 
 // Initialize Mongoose
 module.exports.connect = function (cb) {
-  var _this = this;
-
-  var db = mongoose.connect(config.db.uri, config.db.options, function (err) {
+  mongoose.connect(config.db.uri, config.db.options, (err) => {
     // Log Error
     if (err) {
       console.error(chalk.red('Could not connect to MongoDB!'));
       console.log(err);
     } else {
-
       // Enabling mongoose debug mode if required
       mongoose.set('debug', config.db.debug);
-
       // Call callback FN
-      if (cb) cb(db);
+      if (cb) {
+        cb(mongoose.connection);
+      }
     }
   });
 };
