@@ -27,7 +27,7 @@
                    id="client"
                    ng-model="order.client"
                    typeahead-editable="true"
-                   ng-disabled="order._id"
+                   ng-readonly="order._id"
                    placeholder="{{t.ENTER_KEY_FOR_SEARCH}}"
                    typeahead="client as client.name ? client.name : client.firstName + ' ' + client.phone for client in clients | filter:$viewValue"
                    class="form-control">
@@ -58,7 +58,7 @@
                  id="name"
                  class="form-control"
                  placeholder="{{t.P_NAME}}"
-                 ng-disabled="order.client._id || order._id"
+                 ng-readonly="order.client._id || order._id"
                  required>
           <div ng-messages="orderForm.firstName.$error" role="alert">
             <p class="help-block error-text" ng-message="required">{{t.SELECT_NAME}}</p>

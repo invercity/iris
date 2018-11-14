@@ -1,14 +1,13 @@
 /**
  * Module dependencies.
  */
-const _ = require('lodash'),
-  defaultAssets = require('./config/assets/default'),
-  testAssets = require('./config/assets/test'),
-  testConfig = require('./config/env/test'),
-  fs = require('fs'),
-  path = require('path');
+const fs = require('fs');
+const path = require('path');
+const _ = require('lodash');
+const defaultAssets = require('./config/assets/default');
+const testAssets = require('./config/assets/test');
 
-module.exports = function (grunt) {
+module.exports = (grunt) => {
   // Project Configuration
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
@@ -64,13 +63,6 @@ module.exports = function (grunt) {
           livereload: true
         }
       },
-      clientLESS: {
-        files: defaultAssets.client.less,
-        tasks: ['less', 'csslint'],
-        options: {
-          livereload: true
-        }
-      }
     },
     serv: {
       dev: {
@@ -141,20 +133,8 @@ module.exports = function (grunt) {
           expand: true,
           src: defaultAssets.client.sass,
           ext: '.css',
-          rename: function (base, src) {
+          rename: (base, src) => {
             return src.replace('/scss/', '/css/');
-          }
-        }]
-      }
-    },
-    less: {
-      dist: {
-        files: [{
-          expand: true,
-          src: defaultAssets.client.less,
-          ext: '.css',
-          rename: function (base, src) {
-            return src.replace('/less/', '/css/');
           }
         }]
       }
@@ -163,62 +143,46 @@ module.exports = function (grunt) {
       localConfig: {
         src: 'config/env/local.example.js',
         dest: 'config/env/local.js',
-        filter: function () {
+        filter: () => {
           return !fs.existsSync('config/env/local.js');
         }
       }
     }
   });
 
-  grunt.event.on('coverage', function(lcovFileContents, done) {
-    // Set coverage config so karma-coverage knows to run coverage
-    testConfig.coverage = true;
-    require('coveralls').handleInput(lcovFileContents, function(err) {
-      if (err) {
-        return done(err);
-      }
-      done();
-    });
-  });
-
   // Load NPM tasks
   require('load-grunt-tasks')(grunt);
-  grunt.loadNpmTasks('grunt-protractor-coverage');
+  // grunt.loadNpmTasks('grunt-protractor-coverage');
 
   // Make sure upload directory exists
-  grunt.task.registerTask('mkdir:upload', 'Task that makes sure upload directory exists.', function () {
+  grunt.task.registerTask('mkdir:upload', 'Task that makes sure upload directory exists.', () => {
     // Get the callback
-    var done = this.async();
-
+    const done = this.async();
     grunt.file.mkdir(path.normalize(__dirname + '/modules/users/client/img/profile/uploads'));
-
     done();
   });
 
   // Connect to the MongoDB instance and load the models
-  grunt.task.registerTask('mongoose', 'Task that connects to the MongoDB instance and loads the application models.', function () {
+  grunt.task.registerTask('mongoose', 'Task that connects to the MongoDB instance and loads the application models.', () => {
     // Get the callback
-    var done = this.async();
-
+    const done = this.async();
     // Use mongoose configuration
-    var mongoose = require('./config/lib/mongoose.js');
-
+    const mongoose = require('./config/lib/mongoose.js');
     // Connect to database
-    mongoose.connect(function (db) {
+    mongoose.connect(() =>{
       done();
     });
   });
 
   // Drops the MongoDB database, used in e2e testing
-  grunt.task.registerTask('dropdb', 'drop the database', function () {
+  grunt.task.registerTask('dropdb', 'drop the database', () => {
     // async mode
-    var done = this.async();
-
+    const done = this.async();
     // Use mongoose configuration
-    var mongoose = require('./config/lib/mongoose.js');
+    const mongoose = require('./config/lib/mongoose.js');
 
-    mongoose.connect(function (db) {
-      db.connection.db.dropDatabase(function (err) {
+    mongoose.connect((db) => {
+      db.connection.db.dropDatabase((err) => {
         if (err) {
           console.log(err);
         } else {
@@ -229,14 +193,14 @@ module.exports = function (grunt) {
     });
   });
 
-  grunt.task.registerTask('server', 'Starting the server', function () {
+  grunt.task.registerTask('server', 'Starting the server', () => {
     const path = require('path');
     const app = require(path.resolve('./config/lib/app'));
     app.start();
   });
 
   // Lint CSS and JavaScript files.
-  grunt.registerTask('lint', ['sass', 'less', 'jshint', 'eslint', 'csslint']);
+  grunt.registerTask('lint', ['sass', 'jshint', 'eslint', 'csslint']);
 
   // Lint project files and minify them into two production files.
   grunt.registerTask('build', ['env:dev', 'lint', 'ngAnnotate', 'uglify', 'cssmin']);

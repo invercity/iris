@@ -19,7 +19,6 @@ exports.signup = (req, res) => {
 
   // Init Variables
   const user = new User(req.body);
-  let message = null;
 
   // Add missing user fields
   user.provider = 'local';

@@ -1,18 +1,17 @@
-﻿'use strict';
+﻿const fs = require('fs');
+const _ = require('lodash');
+const chalk = require('chalk');
+const fileStreamRotator = require('file-stream-rotator');
 
-var _ = require('lodash'),
-  config = require('../config'),
-  chalk = require('chalk'),
-  fileStreamRotator = require('file-stream-rotator'),
-  fs = require('fs');
+const config = require('../config');
 
 // list of valid formats for the logging
-var validFormats = ['combined', 'common', 'dev', 'short', 'tiny'];
+const validFormats = ['combined', 'common', 'dev', 'short', 'tiny'];
 
 // build logger service
-var logger = {
-  getFormat: getLogFormat, // log format to use
-  getOptions: getLogOptions // log options to use
+const logger = {
+  getFormat, // log format to use
+  getOptions // log options to use
 };
 
 // export the logger service
@@ -23,8 +22,8 @@ module.exports = logger;
  *
  * Returns the log.format option set in the current environment configuration
  */
-function getLogFormat () {
-  var format = config.log && config.log.format ? config.log.format.toString() : 'combined';
+function getFormat () {
+  let format = config.log && config.log.format ? config.log.format.toString() : 'combined';
 
   // make sure we have a valid format
   if (!_.includes(validFormats, format)) {
@@ -46,8 +45,8 @@ function getLogFormat () {
  * Returns the log.options object set in the current environment configuration.
  * NOTE: Any options, requiring special handling (e.g. 'stream'), that encounter an error will be removed from the options.
  */
-function getLogOptions () {
-  var options = config.log && config.log.options ? _.clone(config.log.options, true) : {};
+function getOptions () {
+  const options = config.log && config.log.options ? _.clone(config.log.options, true) : {};
 
   // check if the current environment config has the log stream option set
   if (_.has(options, 'stream')) {

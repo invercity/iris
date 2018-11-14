@@ -52,7 +52,7 @@ angular.module('data').controller('GoodsController', ['$scope', '$stateParams', 
 
     $scope.find = function () {
       Goods.query(function (data) {
-        $scope.goods = data;
+        $scope.goods = data.goods;
         $scope.buildPager();
       });
     };

@@ -57,17 +57,23 @@ exports.delete = (req, res) => {
 };
 
 exports.list = (req, res) => {
-  Good.find()
+  const { limit, page } = req.query;
+  const goods = Good.find()
+    .limit(+limit)
+    .skip((page - 1) * limit)
     .sort('-created')
-    .populate('user', 'displayName')
-    .exec((err, goods) => {
-      if (err) {
-        return res.status(400).send({
-          message: errorHandler.getErrorMessage(err)
-        });
-      } else {
-        res.json(goods);
-      }
+    .populate('user', 'displayName');
+
+  const count = Good.count();
+  return Promise.props({
+    goods, count
+  })
+    .then(data => res.json(data))
+    .catch((err) => {
+      console.log(err);
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
     });
 };
 

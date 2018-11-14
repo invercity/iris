@@ -1,6 +1,4 @@
-'use strict';
-
-var defaultEnvConfig = require('./default');
+const defaultEnvConfig = require('./default');
 
 module.exports = {
   db: {
@@ -77,9 +75,9 @@ module.exports = {
     }
   },
   seedDB: {
-    seed: process.env.MONGO_SEED === 'true' ? true : false,
+    seed: process.env.MONGO_SEED === 'true',
     options: {
-      logResults: process.env.MONGO_SEED_LOG_RESULTS === 'false' ? false : true,
+      logResults: process.env.MONGO_SEED_LOG_RESULTS !== 'false',
       seedUser: {
         username: process.env.MONGO_SEED_USER_USERNAME || 'user',
         provider: 'local',
