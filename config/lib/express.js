@@ -55,7 +55,7 @@ module.exports.initMiddleware = (app) => {
 
   // Should be placed before express.static
   app.use(compress({
-    filter: function (req, res) {
+    filter: (req, res) => {
       return (/json|text|javascript|css|font|svg/).test(res.getHeader('Content-Type'));
     },
     level: 9
@@ -103,8 +103,7 @@ module.exports.initViewEngine = (app) => {
 /**
  * Configure Express session
  */
-module.exports.initSession = function (app, db) {
-  // Express MongoDB session storage
+module.exports.initSession = (app, db) => {
   app.use(session({
     saveUninitialized: true,
     resave: true,
@@ -125,18 +124,16 @@ module.exports.initSession = function (app, db) {
 /**
  * Invoke modules server configuration
  */
-module.exports.initModulesConfiguration = function (app, db) {
-  config.files.server.configs.forEach(function (configPath) {
-    require(path.resolve(configPath))(app, db);
-  });
+module.exports.initModulesConfiguration = (app, db) => {
+  config.files.server.configs.forEach((configPath) => require(path.resolve(configPath))(app, db));
 };
 
 /**
  * Configure Helmet headers configuration
  */
-module.exports.initHelmetHeaders = function (app) {
+module.exports.initHelmetHeaders = (app) => {
   // Use helmet to secure Express headers
-  var SIX_MONTHS = 15778476000;
+  const SIX_MONTHS = 15778476000;
   app.use(helmet.frameguard());
   app.use(helmet.xssFilter());
   app.use(helmet.noSniff());
@@ -149,44 +146,23 @@ module.exports.initHelmetHeaders = function (app) {
   app.disable('x-powered-by');
 };
 
-/**
- * Configure the modules static routes
- */
-module.exports.initModulesClientRoutes = function (app) {
+module.exports.initModulesClientRoutes = (app) => {
   // Setting the app router and static folder
   app.use('/', express.static(path.resolve('./public')));
 
-  // Globbing static routing
-  config.folders.client.forEach(function (staticPath) {
-    app.use(staticPath, express.static(path.resolve('./' + staticPath)));
-  });
+  config.folders.client.forEach(staticPath => app.use(staticPath, express.static(path.resolve('./' + staticPath))))
 };
 
-/**
- * Configure the modules ACL policies
- */
-module.exports.initModulesServerPolicies = function (app) {
-  // Globbing policy files
-  config.files.server.policies.forEach(function (policyPath) {
-    require(path.resolve(policyPath)).invokeRolesPolicies();
-  });
+module.exports.initModulesServerPolicies = (app) => {
+  config.files.server.policies.forEach(policyPath => require(path.resolve(policyPath)).invokeRolesPolicies());
 };
 
-/**
- * Configure the modules server routes
- */
-module.exports.initModulesServerRoutes = function (app) {
-  // Globbing routing files
-  config.files.server.routes.forEach(function (routePath) {
-    require(path.resolve(routePath))(app);
-  });
+module.exports.initModulesServerRoutes = (app) => {
+  config.files.server.routes.forEach(routePath => require(path.resolve(routePath))(app));
 };
 
-/**
- * Configure error handling
- */
-module.exports.initErrorRoutes = function (app) {
-  app.use(function (err, req, res, next) {
+module.exports.initErrorRoutes = (app) => {
+  app.use((err, req, res, next) => {
     // If the error object doesn't exists
     if (!err) {
       return next();
@@ -200,21 +176,9 @@ module.exports.initErrorRoutes = function (app) {
   });
 };
 
-/**
- * Configure Socket.io
- */
-module.exports.configureSocketIO = function (app, db) {
-  // Load the Socket.io configuration
-  var server = require('./socket.io')(app, db);
+module.exports.configureSocketIO = (app, db) => require('./socket.io')(app, db);
 
-  // Return server object
-  return server;
-};
-
-/**
- * Initialize the Express application
- */
-module.exports.init = function (db) {
+module.exports.init = (db) => {
   // Initialize express app
   let app = express();
 

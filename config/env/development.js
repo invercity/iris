@@ -1,6 +1,4 @@
-'use strict';
-
-var defaultEnvConfig = require('./default');
+const defaultEnvConfig = require('./default');
 
 module.exports = {
   db: {
@@ -8,7 +6,8 @@ module.exports = {
     options: {
       user: '',
       pass: '',
-      useNewUrlParser: true
+      useNewUrlParser: true,
+      useCreateIndex: true
     },
     // Enable mongoose debug mode
     debug: process.env.MONGODB_DEBUG || false

@@ -1,20 +1,17 @@
-'use strict';
+const config = require('../config');
+const path = require('path');
+const fs = require('fs');
+const http = require('http');
+const https = require('https');
+// const session = require('express-session');
 
-const config = require('../config'),
-  path = require('path'),
-  fs = require('fs'),
-  http = require('http'),
-  https = require('https'),
-  session = require('express-session');
-
-// Define the Socket.io configuration method
-module.exports = function (app, db) {
-  var server;
+module.exports = (app, db) => {
+  let server;
   if (config.secure && config.secure.ssl === true) {
     // Load SSL key and certificate
-    var privateKey = fs.readFileSync(path.resolve(config.secure.privateKey), 'utf8');
-    var certificate = fs.readFileSync(path.resolve(config.secure.certificate), 'utf8');
-    var options = {
+    const privateKey = fs.readFileSync(path.resolve(config.secure.privateKey), 'utf8');
+    const certificate = fs.readFileSync(path.resolve(config.secure.certificate), 'utf8');
+    const options = {
       key: privateKey,
       cert: certificate,
       //  requestCert : true,
