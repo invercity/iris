@@ -150,7 +150,7 @@ module.exports.initModulesClientRoutes = (app) => {
   // Setting the app router and static folder
   app.use('/', express.static(path.resolve('./public')));
 
-  config.folders.client.forEach(staticPath => app.use(staticPath, express.static(path.resolve('./' + staticPath))))
+  config.folders.client.forEach(staticPath => app.use(staticPath, express.static(path.resolve('./' + staticPath))));
 };
 
 module.exports.initModulesServerPolicies = (app) => {
