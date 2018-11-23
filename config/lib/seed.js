@@ -2,8 +2,6 @@ const _ = require('lodash');
 const config = require('../config');
 const mongoose = require('mongoose');
 const chalk = require('chalk');
-// TODO: remove this line
-// const crypto = require('crypto');
 
 // global seed options object
 let seedOptions = {};
