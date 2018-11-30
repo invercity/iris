@@ -177,7 +177,7 @@ exports.list = (req, res) => {
         $or.push({ client: { $in: clientIds } });
       }
       if (good) {
-        $or.push({ 'items.good': { $in: [Types.ObjectId(good)]}})
+        $or.push({ 'items.good': { $in: [Types.ObjectId(good)]}});
       }
       if ($or.length) {
         _.extend(search, { $or });
