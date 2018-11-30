@@ -1,8 +1,10 @@
 'use strict';
 
 // Order controller
-angular.module('data').controller('OrdersController', ['$scope', '$stateParams', '$location', 'Authentication', 'Orders', 'Goods', 'Clients', 'Places', 'ConfirmService', 't',
-  function ($scope, $stateParams, $location, Authentication, Orders, Goods, Clients, Places, Confirm, t) {
+angular.module('data').controller('OrdersController', [
+  '$scope', '$stateParams', '$location', '$q',
+  'Authentication', 'Orders', 'Goods', 'Clients', 'Places', 'ConfirmService', 't',
+  function ($scope, $stateParams, $location, $q, Authentication, Orders, Goods, Clients, Places, Confirm, t) {
     $scope.t = t;
     $scope.authentication = Authentication;
     $scope.currency = $scope.t.UAH;
@@ -60,12 +62,14 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
       var place = $scope.selectedPlace ? $scope.selectedPlace._id : undefined;
       var status = $scope.selectedStatus ? $scope.selectedStatus.value : undefined;
       var payed = _.get($scope.selectedType, 'payed');
+      var good = $scope.selectedGood ? $scope.selectedGood._id : undefined;
       $scope.ordersResolved = Orders.query({
         payed: payed,
         place: place,
         status: status,
         page: $scope.currentPage,
         limit: $scope.itemsPerPage,
+        good: good,
         q: $scope.search
       }, function (data) {
         $scope.orders = data.orders;
@@ -74,29 +78,33 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
       });
     };
 
-    $scope.changeType = function (type) {
-      if ($scope.selectedType) {
-        $scope.selectedType.active = false;
+    $scope.onChangeType = function (type) {
+      if (type) {
+        if ($scope.selectedType) {
+          $scope.selectedType.active = false;
+        }
+        $scope.selectedType = type;
+        $scope.selectedType.active = true;
       }
-      $scope.selectedType = type;
-      $scope.selectedType.active = true;
       $scope.updateList();
     };
 
     $scope.$watch('selectedPlace', function () {
       if ($scope.selectedType && $scope.selectedPlace && $scope.ordersResolved.$resolved) {
-        $scope.changeType($scope.selectedType);
+        $scope.onChangeType();
       }
     });
 
     $scope.$watch('selectedStatus', function () {
       if ($scope.selectedType && $scope.selectedStatus && $scope.ordersResolved.$resolved) {
-        $scope.changeType($scope.selectedType);
+        $scope.onChangeType();
       }
     });
 
-    $scope.$watch('search', function () {
-      $scope.updateList();
+    $scope.$watch('selectedGood', function () {
+      if ($scope.selectedGood && $scope.ordersResolved.$resolved) {
+        $scope.onChangeType();
+      }
     });
 
     $scope.$watch('order.client', function () {
@@ -104,6 +112,8 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
         $scope.order.place = $scope.order.client.defaultPlace;
       }
     });
+
+    $scope.$watch('search', $scope.updateList);
 
     $scope.remove = function (order) {
       if (order) {
@@ -166,7 +176,7 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
           order.payed = true;
           $scope.update(isValid, order, function () {
             if (update) {
-              $scope.changeType($scope.selectedType);
+              $scope.onChangeType($scope.selectedType);
             }
           });
         } else {
@@ -176,7 +186,7 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
             data.payed = true;
             $scope.update(isValid, data, function () {
               if (update) {
-                $scope.changeType($scope.selectedType);
+                $scope.onChangeType($scope.selectedType);
               }
             });
           });
@@ -184,16 +194,26 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
       });
     };
 
+    /**
+     * Get orders list
+     */
     $scope.find = function () {
-      $scope.changeType($scope.orderTypes[0]);
-      Places.query(function (data) {
-        $scope.places = data;
-        $scope.places.unshift({
-          name: 'Всі'
+      $scope.onChangeType($scope.orderTypes[0]);
+      var allPlaces = Places.query();
+      var allGoods = Goods.query();
+      /* var allItem = {
+        name: 'Всі'
+      }; */
+      $q.all([allPlaces.$promise, allGoods.$promise])
+        .then(function () {
+          $scope.places = allPlaces;
+          $scope.goods = allGoods.goods;
+          // $scope.places.unshift(allItem);
+          // $scope.goods.unshift(allItem);
+          $scope.selectedStatus = $scope.listStatuses[4];
+          // $scope.selectedPlace = $scope.places[0];
+          // $scope.selectedGood = $scope.goods[0];
         });
-        $scope.selectedStatus = $scope.listStatuses[4];
-        $scope.selectedPlace = $scope.places[0];
-      });
     };
 
     var calcArray = function (good) {
@@ -367,7 +387,7 @@ angular.module('data').controller('OrdersController', ['$scope', '$stateParams',
     };
 
     $scope.pageChanged = function () {
-      $scope.changeType($scope.selectedType);
+      $scope.onChangeType($scope.selectedType);
       $scope.figureOutItemsToDisplay();
     };
   }

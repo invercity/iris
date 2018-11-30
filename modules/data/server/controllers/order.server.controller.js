@@ -1,10 +1,11 @@
-const path = require('path'),
-  mongoose = require('mongoose'),
-  async = require('async'),
-  _ = require('lodash'),
-  Order = mongoose.model('Order'),
-  Client = mongoose.model('Client'),
-  errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
+const path = require('path');
+const mongoose = require('mongoose');
+const async = require('async');
+const _ = require('lodash');
+const Order = mongoose.model('Order');
+const Client = mongoose.model('Client');
+const { Types } = mongoose;
+const errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
 
 exports.create = (req, res) => {
   const {
@@ -140,7 +141,15 @@ exports.delete = (req, res) => {
 };
 
 exports.list = (req, res) => {
-  const { q, payed, place, status, page = 1, limit = 20 } = req.query;
+  const {
+    q,
+    payed,
+    place,
+    status,
+    good,
+    page = 1,
+    limit = 20
+  } = req.query;
   const search = {
     payed,
     place,
@@ -166,6 +175,9 @@ exports.list = (req, res) => {
       }
       if (clientIds) {
         $or.push({ client: { $in: clientIds } });
+      }
+      if (good) {
+        $or.push({ 'items.good': { $in: [Types.ObjectId(good)]}})
       }
       if ($or.length) {
         _.extend(search, { $or });

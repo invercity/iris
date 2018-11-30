@@ -15,7 +15,11 @@
           <!-- SEARCH -->
           <div class="form-group">
             <label for="search">{{t.SEARCH}}</label>
-            <label for="search" role="button" class="pull-right">Фільтри  <span class="glyphicon glyphicon-filter"></span> </label>
+            <!--
+            <label for="search" role="button" class="pull-right">Фільтри
+                <span class="glyphicon glyphicon-filter"></span>
+            </label>
+            -->
             <input class="form-control col-md-4"
                    type="text"
                    id="search"
@@ -29,9 +33,23 @@
             <input type="text"
                    id="place"
                    ng-model="selectedPlace"
+                   placeholder="{{t.ORDER_TYPE_ALL}}"
                    typeahead-editable="true"
                    typeahead="place as place.name for place in places | filter:$viewValue"
                    class="form-control">
+          </div>
+          <!-- GOOD -->
+          <div class="form-group">
+            <label for="type" class="list-select-filter">{{t.GOOD}}</label>
+            <div>
+              <input type="text"
+                     id="good"
+                     ng-model="selectedGood"
+                     placeholder="{{t.ORDER_TYPE_ALL}}"
+                     typeahead-editable="true"
+                     typeahead="good as good.name for good in goods | filter:$viewValue"
+                     class="form-control">
+            </div>
           </div>
           <!-- STATUS -->
           <div class="form-group">
@@ -54,7 +72,7 @@
                         ng-repeat="type in orderTypes"
                         ng-class="{active: type.active}"
                         class="btn btn-default"
-                        ng-click="changeType(type)">{{type.name}}
+                        ng-click="onChangeType(type)">{{type.name}}
                 </button>
               </div>
             </div>
@@ -116,7 +134,7 @@
                       ng-change="pageChanged()">
           </pagination>
         </div>
-        <label style="padding-right: 15px; display: inline-block" class="pull-right">{{t.TOTAL_ORDERS}}: {{ordersCount}}</label>
+        <label style="padding-right: 15px; display: inline-block" class="pull-right">{{t.TOTAL_ORDERS_TO_SHOW}}: {{pagedItems.length}} з {{ordersCount}}</label>
       </div>
     </div>
   </div>
