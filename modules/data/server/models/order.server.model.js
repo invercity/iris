@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const async = require('async');
 const autoIncrement = require('mongoose-auto-increment');
+const history = require('mongoose-history');
 
 const Good = mongoose.model('Good');
 const{ Schema } = mongoose;
@@ -77,6 +78,8 @@ OrderSchema.plugin(autoIncrement.plugin, {
   startAt: 1,
   incrementBy: 1
 });
+
+OrderSchema.plugin(history,{ customCollectionName: "OrderHistory" });
 
 OrderSchema.pre('save', function (next) {
   async.parallel([

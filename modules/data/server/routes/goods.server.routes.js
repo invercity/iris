@@ -2,7 +2,6 @@ const goodsPolicy = require('../policies/goods.server.policy'),
   goods = require('../controllers/goods.server.controller');
 
 module.exports = (app) => {
-
   app.route('/api/goods').all(goodsPolicy.isAllowed)
     .get(goods.list)
     .post(goods.create);

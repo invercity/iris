@@ -1,8 +1,8 @@
 const _ = require('lodash');
-let acl = require('acl');
+const Acl = require('acl');
 
 // Using the memory backend
-acl = new acl(new acl.memoryBackend());
+const acl = new Acl(new Acl.memoryBackend());
 
 exports.invokeRolesPolicies = () => {
   acl.allow([{

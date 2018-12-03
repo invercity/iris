@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const autoIncrement = require('mongoose-auto-increment');
+const history = require('mongoose-history');
 
 const{ Schema } = mongoose;
 autoIncrement.initialize(mongoose);
@@ -60,5 +61,7 @@ GoodSchema.plugin(autoIncrement.plugin, {
   startAt: 1,
   incrementBy: 1
 });
+
+GoodSchema.plugin(history, { customCollectionName: "GoodHistory" });
 
 mongoose.model(modelGood, GoodSchema);
