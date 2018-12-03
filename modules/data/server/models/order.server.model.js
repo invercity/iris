@@ -1,9 +1,9 @@
-const mongoose = require('mongoose'),
-  { Schema } = mongoose,
-  async = require('async'),
-  Good = mongoose.model('Good'),
-  autoIncrement = require('mongoose-auto-increment');
+const mongoose = require('mongoose');
+const async = require('async');
+const autoIncrement = require('mongoose-auto-increment');
 
+const Good = mongoose.model('Good');
+const{ Schema } = mongoose;
 autoIncrement.initialize(mongoose);
 
 const modelOrder = 'Order';
