@@ -79,7 +79,7 @@ OrderSchema.plugin(autoIncrement.plugin, {
   incrementBy: 1
 });
 
-OrderSchema.plugin(history,{ customCollectionName: "OrderHistory" });
+// OrderSchema.plugin(history,{ customCollectionName: "OrderHistory" });
 
 OrderSchema.pre('save', function (next) {
   async.parallel([

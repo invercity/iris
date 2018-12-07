@@ -62,6 +62,6 @@ GoodSchema.plugin(autoIncrement.plugin, {
   incrementBy: 1
 });
 
-GoodSchema.plugin(history, { customCollectionName: "GoodHistory" });
+// GoodSchema.plugin(history, { customCollectionName: "GoodHistory" });
 
 mongoose.model(modelGood, GoodSchema);
