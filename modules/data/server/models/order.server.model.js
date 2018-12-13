@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const async = require('async');
 const autoIncrement = require('mongoose-auto-increment');
-const history = require('mongoose-history');
+// const history = require('mongoose-history');
 
 const Good = mongoose.model('Good');
 const{ Schema } = mongoose;

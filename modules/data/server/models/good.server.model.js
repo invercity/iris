@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const autoIncrement = require('mongoose-auto-increment');
-const history = require('mongoose-history');
+// const history = require('mongoose-history');
 
 const{ Schema } = mongoose;
 autoIncrement.initialize(mongoose);
