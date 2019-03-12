@@ -1,5 +1,5 @@
-const goodsPolicy = require('../policies/goods.server.policy'),
-  goods = require('../controllers/goods.server.controller');
+const goodsPolicy = require('../policies/goods.server.policy');
+const goods = require('../controllers/goods.server.controller');
 
 module.exports = (app) => {
   app.route('/api/goods').all(goodsPolicy.isAllowed)
@@ -11,5 +11,5 @@ module.exports = (app) => {
     .put(goods.update)
     .delete(goods.delete);
 
-  app.param('goodId', goods.goodByID);
+  app.param('goodId', goods.get);
 };
