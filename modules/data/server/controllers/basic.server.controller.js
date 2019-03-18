@@ -8,9 +8,10 @@ const OPERATION_TYPE = {
 };
 
 class BasicController {
-  constructor(modelName) {
+  constructor(modelName, options = {}) {
     this.model = mongoose.model(modelName);
     this.modelNameAttr = modelName.toLowerCase();
+    this.options = options;
   }
 
   read(req, res) {
@@ -37,8 +38,10 @@ class BasicController {
   }
 
   list(req, res) {
-    const { limit, page } = req.query;
-    const items = this.model.find()
+    const { limit, page, q = '' } = req.query;
+    const { fieldNames = [] } = this.options;
+    const $or = fieldNames.map(field => ({ [field]: { $regex: new RegExp(q, 'i') } }));
+    const items = this.model.find({ $or })
       .limit(parseInt(limit, 10))
       .skip((page - 1) * limit)
       .sort('-created')

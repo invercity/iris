@@ -101,8 +101,14 @@ angular.module('data').controller('OrdersController', [
       }
     });
 
-    $scope.$watch('selectedGood', function () {
-      if ($scope.selectedGood && $scope.ordersResolved.$resolved) {
+    $scope.$watch('selectedGood', function (newV, oldV) {
+      if (!($scope.selectedGood && $scope.selectedGood._id)) {
+        getGoods($scope.selectedGood)
+          .then(function(response) {
+            $scope.goods = response.items;
+          });
+      }
+      else if (newV._id || oldV._id) {
         $scope.onChangeType();
       }
     });
@@ -199,20 +205,10 @@ angular.module('data').controller('OrdersController', [
      */
     $scope.find = function () {
       $scope.onChangeType($scope.orderTypes[0]);
-      var allPlaces = Places.query();
-      var allGoods = Goods.query();
-      /* var allItem = {
-        name: 'Всі'
-      }; */
-      $q.all([allPlaces.$promise, allGoods.$promise])
-        .then(function () {
+      Places.query().$promise
+        .then(function (allPlaces) {
           $scope.places = allPlaces;
-          $scope.goods = allGoods.goods;
-          // $scope.places.unshift(allItem);
-          // $scope.goods.unshift(allItem);
           $scope.selectedStatus = $scope.listStatuses[4];
-          // $scope.selectedPlace = $scope.places[0];
-          // $scope.selectedGood = $scope.goods[0];
         });
     };
 
@@ -390,5 +386,13 @@ angular.module('data').controller('OrdersController', [
       $scope.onChangeType($scope.selectedType);
       $scope.figureOutItemsToDisplay();
     };
+
+    function getGoods(q) {
+      return Goods.query({
+        q: q,
+        page: 1,
+        limit: 20
+      }).$promise;
+    }
   }
 ]);

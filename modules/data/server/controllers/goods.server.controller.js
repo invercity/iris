@@ -2,7 +2,12 @@ const BasicController = require('./basic.server.controller');
 
 class GoodsController extends BasicController {
   constructor() {
-    super('Good');
+    super('Good', {
+      fieldNames: [
+        'name',
+        'details'
+      ]
+    });
   }
 
   preUpdateHandler(req, item) {
