@@ -39,12 +39,12 @@ class BasicController {
   list(req, res) {
     const { limit, page } = req.query;
     const items = this.model.find()
-      .limit(limit)
+      .limit(parseInt(limit, 10))
       .skip((page - 1) * limit)
       .sort('-created')
       .populate('user', 'displayName');
 
-    const count = this.model.count();
+    const count = this.model.countDocuments();
     return Promise.props({
       items,
       count
