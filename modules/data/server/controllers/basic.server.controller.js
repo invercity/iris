@@ -22,7 +22,7 @@ class BasicController {
     const item = new this.model(req.body);
     item.user = req.user;
     const updatedItem = this.preCreateHandler(req, item);
-    this[save](OPERATION_TYPE.SAVE, updatedItem, res);
+    this[operation](OPERATION_TYPE.SAVE, updatedItem, res);
   }
 
   update(req, res) {

@@ -3,7 +3,7 @@
   "mocha": true, // Enable globals available when code is running inside of the Mocha tests.
   "jasmine": true, // Enable globals available when code is running inside of the Jasmine tests.
   "browser": true, // Standard browser globals e.g. `window`, `document`.
-  "esnext": true, // Allow ES.next specific features such as `const` and `let`.
+  "esversion": 8, // Allow ES.next specific features such as `const` and `let`.
   "bitwise": false, // Prohibit bitwise operators (&, |, ^, etc.).
   "curly": false, // Require {} for every new block or scope.
   "eqeqeq": true, // Require triple equals i.e. `===`.
@@ -24,5 +24,5 @@
     "browser",
     "element"
   ],
-  "devel": true // Allow development statements e.g. `console.log();`.
+  "devel": true // Allow development statements e.g. `console.log();`
 }
