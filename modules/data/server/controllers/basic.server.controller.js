@@ -15,7 +15,7 @@ class BasicController {
   }
 
   read(req, res) {
-    return res.json(req[this.modelNameAttr])
+    return res.json(req[this.modelNameAttr]);
   }
 
   create(req, res) {
@@ -104,7 +104,7 @@ class BasicController {
       } else {
         return res.json(item);
       }
-    })
+    });
   }
 }
 

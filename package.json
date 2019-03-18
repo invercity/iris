@@ -16,7 +16,7 @@
     "start": "node server",
     "postinstall": "bower install --config.interactive=false",
     "heroku-postbuild": "npm i sass && grunt build",
-    "test": "grunt lint"
+    "test": ""
   },
   "dependencies": {
     "acl": "~0.4.4",
