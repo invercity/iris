@@ -33,7 +33,7 @@ angular.module('core').factory('t', [function () {
     CLIENT_NEW: 'Додати клієнта',
     CLIENT_EDIT: 'Редагувати клыэнта',
     OK: 'Так',
-    CANCEL: 'Відмінити',
+    CANCEL: 'Скасувати',
     CONFIRM: 'Підтвердження',
     REMOVE_ORDER_CONF: 'Видалити дане замовлення?',
     PAY_ORDER_CONF: 'Оплатити дане замовлення?',

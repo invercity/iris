@@ -2,7 +2,8 @@ const defaultEnvConfig = require('./default');
 
 module.exports = {
   db: {
-    uri: process.env.MONGOHQ_URL || process.env.MONGOLAB_URI || 'mongodb://' + (process.env.DB_1_PORT_27017_TCP_ADDR || 'localhost') + '/mean-dev',
+    uri: 'mongodb://heroku_3hqz03xz:76nuh4lgr2v2dghuu0lfbujreb@ds157839.mlab.com:57839/heroku_3hqz03xz',
+    // uri: process.env.MONGOHQ_URL || process.env.MONGOLAB_URI || 'mongodb://' + (process.env.DB_1_PORT_27017_TCP_ADDR || 'localhost') + '/mean-dev',
     options: {
       user: '',
       pass: '',
@@ -23,7 +24,7 @@ module.exports = {
       //  directoryPath: process.cwd(),
       //  fileName: 'access.log',
       //  rotatingLogs: { // for more info on rotating logs - https://github.com/holidayextras/file-stream-rotator#usage
-      //    active: false, // activate to use rotating logs 
+      //    active: false, // activate to use rotating logs
       //    fileName: 'access-%DATE%.log', // if rotating logs are active, this fileName setting will be used
       //    frequency: 'daily',
       //    verbose: false
