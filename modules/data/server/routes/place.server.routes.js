@@ -1,7 +1,6 @@
 const place = require('../controllers/place.server.controller');
 
 module.exports = (app) => {
-
   app.route('/api/places')
     .get(place.list)
     .post(place.create);

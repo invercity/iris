@@ -33,7 +33,7 @@ angular.module('core').factory('t', [function () {
     CLIENT_NEW: 'Додати клієнта',
     CLIENT_EDIT: 'Редагувати клыэнта',
     OK: 'Так',
-    CANCEL: 'Відмінити',
+    CANCEL: 'Скасувати',
     CONFIRM: 'Підтвердження',
     REMOVE_ORDER_CONF: 'Видалити дане замовлення?',
     PAY_ORDER_CONF: 'Оплатити дане замовлення?',
@@ -115,7 +115,7 @@ angular.module('core').factory('t', [function () {
     ADD_CLIENT: 'Додати клієнта',
     EDIT_CLIENT: 'Редагувати клієнта',
     PLACE_DELIVER_DEFAULT: 'Місце отримання за замовчуванням',
-    TOTAL_ORDERS: 'Всього замовлень',
+    TOTAL_ORDERS_TO_SHOW: 'Показано замовлень',
     ACTIVE: 'Активний'
   };
 }]);

@@ -103,15 +103,21 @@ module.exports.initViewEngine = (app) => {
 /**
  * Configure Express session
  */
+
+console.log(' ----------------------------------------');
+console.log(' session cookie: ', config.sessionCookie);
+console.log(' ----------------------------------------');
+
 module.exports.initSession = (app, db) => {
   app.use(session({
     saveUninitialized: true,
     resave: true,
+    rolling: true,
     secret: config.sessionSecret,
     cookie: {
       maxAge: config.sessionCookie.maxAge,
       httpOnly: config.sessionCookie.httpOnly,
-      secure: config.sessionCookie.secure && config.secure.ssl
+      secure: config.sessionCookie.secure && config.secure.ssl,
     },
     key: config.sessionKey,
     store: new MongoStore({

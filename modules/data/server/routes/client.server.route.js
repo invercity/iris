@@ -1,7 +1,6 @@
 const client = require('../controllers/client.server.controller');
 
 module.exports = (app) => {
-
   app.route('/api/clients')
     .get(client.list)
     .post(client.create);

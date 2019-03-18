@@ -1,7 +1,7 @@
 'use strict';
 
 // Order controller
-angular.module('data').controller('OrdersController', [
+angular.module('data').controller('OrdersEditController', [
   '$scope', '$stateParams', '$location', '$q',
   'Authentication', 'Orders', 'Goods', 'Clients', 'Places', 'ConfirmService', 't',
   function ($scope, $stateParams, $location, $q, Authentication, Orders, Goods, Clients, Places, Confirm, t) {
@@ -13,139 +13,17 @@ angular.module('data').controller('OrdersController', [
 
     $scope.isSalesShown = false;
 
-    var toZero = function (val) {
-      return Math.max(0, val);
-    };
-
-    $scope.orderTypes = [
-      {
-        name: $scope.t.ORDER_TYPE_NEW,
-        payed: false,
-        active: true
-      },
-      {
-        name: $scope.t.ORDER_TYPE_PAYED,
-        payed: true,
-        active: false
-      },
-      {
-        name: $scope.t.ORDER_TYPE_ALL,
-        payed: undefined,
-        active: false
-      }
-    ];
-
-    $scope.statuses = [
-      {
-        name: $scope.t.ORDER_STATUS_NEW,
-        value: 'work',
-      },
-      {
-        name: $scope.t.ORDER_STATUS_READY,
-        value: 'ready'
-      },
-      {
-        name: $scope.t.ORDER_STATUS_TOGO,
-        value: 'togo'
-      },
-      {
-        name: $scope.t.ORDER_STATUS_DONE,
-        value: 'done'
-      },
-    ];
-
-    $scope.listStatuses = $scope.statuses.concat({
-      name: $scope.t.ORDER_TYPE_ALL,
-    });
-
-    $scope.updateList = function () {
-      var place = $scope.selectedPlace ? $scope.selectedPlace._id : undefined;
-      var status = $scope.selectedStatus ? $scope.selectedStatus.value : undefined;
-      var payed = _.get($scope.selectedType, 'payed');
-      var good = $scope.selectedGood ? $scope.selectedGood._id : undefined;
-      $scope.ordersResolved = Orders.query({
-        payed: payed,
-        place: place,
-        status: status,
-        page: $scope.currentPage,
-        limit: $scope.itemsPerPage,
-        good: good,
-        q: $scope.search
-      }, function (data) {
-        $scope.orders = data.orders;
-        $scope.ordersCount = data.count;
-        $scope.figureOutItemsToDisplay();
-      });
-    };
-
-    $scope.onChangeType = function (type) {
-      if (type) {
-        if ($scope.selectedType) {
-          $scope.selectedType.active = false;
-        }
-        $scope.selectedType = type;
-        $scope.selectedType.active = true;
-      }
-      $scope.updateList();
-    };
-
-    $scope.$watch('selectedPlace', function () {
-      if ($scope.selectedType && $scope.selectedPlace && $scope.ordersResolved.$resolved) {
-        $scope.onChangeType();
-      }
-    });
-
-    $scope.$watch('selectedStatus', function () {
-      if ($scope.selectedType && $scope.selectedStatus && $scope.ordersResolved.$resolved) {
-        $scope.onChangeType();
-      }
-    });
-
-    $scope.$watch('selectedGood', function (newV, oldV) {
-      if (!($scope.selectedGood && $scope.selectedGood._id)) {
-        getGoods($scope.selectedGood)
-          .then(function(response) {
-            $scope.goods = response.items;
-          });
-      }
-      else if (newV._id || oldV._id) {
-        $scope.onChangeType();
-      }
-    });
-
     $scope.$watch('order.client', function () {
+      console.log($scope.order.client);
       if ($scope.order && $scope.order.client && $scope.order.client.defaultPlace && !$scope.order.place) {
         $scope.order.place = $scope.order.client.defaultPlace;
       }
     });
 
-    $scope.$watch('search', $scope.updateList);
-
-    $scope.remove = function (order) {
-      if (order) {
-        Confirm.show($scope.t.CONFIRM, $scope.t.REMOVE_ORDER_CONF, function () {
-          Orders.remove({ orderId: order._id }, function () {
-            for (var i in $scope.orders) {
-              if ($scope.orders[i] === order) {
-                $scope.orders.splice(i, 1);
-              }
-            }
-            $scope.figureOutItemsToDisplay();
-          });
-        });
-      } else {
-        $scope.order.$remove(function () {
-          $location.path('orders');
-        });
-      }
-    };
-
     $scope.update = function (isValid, useOrder, callback) {
       $scope.error = null;
-
       if (!isValid) {
         $scope.$broadcast('show-errors-check-validity', 'orderForm');
-
         return false;
       }
 
@@ -175,41 +53,21 @@ angular.module('data').controller('OrdersController', [
       }
     };
 
-    $scope.pay = function (isValid, order, update) {
+    $scope.pay = function (isValid, order) {
       Confirm.show($scope.t.CONFIRM, $scope.t.PAY_ORDER_CONF, function () {
         // TODO: optimise this
         if (order._id) {
           order.payed = true;
-          $scope.update(isValid, order, function () {
-            if (update) {
-              $scope.onChangeType($scope.selectedType);
-            }
-          });
+          $scope.update(isValid, order);
         } else {
           Orders.get({
             orderId: order
           }, function (data) {
             data.payed = true;
-            $scope.update(isValid, data, function () {
-              if (update) {
-                $scope.onChangeType($scope.selectedType);
-              }
-            });
+            $scope.update(isValid, data);
           });
         }
       });
-    };
-
-    /**
-     * Get orders list
-     */
-    $scope.find = function () {
-      $scope.onChangeType($scope.orderTypes[0]);
-      Places.query().$promise
-        .then(function (allPlaces) {
-          $scope.places = allPlaces;
-          $scope.selectedStatus = $scope.listStatuses[4];
-        });
     };
 
     var calcArray = function (good) {
@@ -256,7 +114,7 @@ angular.module('data').controller('OrdersController', [
       }
 
       Goods.query(function (data) {
-        $scope.goods = data.goods;
+        $scope.goods = data.items;
       });
       Places.query(function (data) {
         $scope.places = data;
@@ -271,14 +129,6 @@ angular.module('data').controller('OrdersController', [
         return (price * count).toFixed(2) + $scope.currency;
       }
       return 0 + $scope.currency;
-    };
-
-    $scope.getPhoneForPreview = function() {
-      var phone = $scope.order.client.phone || 'XX';
-      if ($scope.authentication.user) {
-        return $scope.order.client.phone;
-      }
-      return 'XXX XXX XX ' + phone.substring(phone.length - 2, phone.length);
     };
 
     $scope.addItem = function () {
@@ -378,21 +228,27 @@ angular.module('data').controller('OrdersController', [
       return disable;
     };
 
-    $scope.figureOutItemsToDisplay = function () {
-      $scope.pagedItems = $scope.orders;
-    };
+    $scope.statuses = [
+      {
+        name: $scope.t.ORDER_STATUS_NEW,
+        value: 'work',
+      },
+      {
+        name: $scope.t.ORDER_STATUS_READY,
+        value: 'ready'
+      },
+      {
+        name: $scope.t.ORDER_STATUS_TOGO,
+        value: 'togo'
+      },
+      {
+        name: $scope.t.ORDER_STATUS_DONE,
+        value: 'done'
+      },
+    ];
 
-    $scope.pageChanged = function () {
-      $scope.onChangeType($scope.selectedType);
-      $scope.figureOutItemsToDisplay();
-    };
-
-    function getGoods(q) {
-      return Goods.query({
-        q: q,
-        page: 1,
-        limit: 20
-      }).$promise;
+    function toZero(val) {
+      return Math.max(0, val);
     }
   }
 ]);

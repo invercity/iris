@@ -1,9 +1,32 @@
-const path = require('path'),
-  mongoose = require('mongoose'),
-  Good = mongoose.model('Good'),
-  errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
+const BasicController = require('./basic.server.controller');
 
-exports.create = (req, res) => {
+class GoodsController extends BasicController {
+  constructor() {
+    super('Good', {
+      fieldNames: [
+        'name',
+        'details'
+      ]
+    });
+  }
+
+  preUpdateHandler(req, item) {
+    item.name = req.body.name;
+    item.count = req.body.count;
+    item.price = req.body.price;
+    item.details = req.body.details;
+    item.type = req.body.type;
+    return item;
+  }
+}
+
+module.exports = new GoodsController();
+
+// const mongoose = require('mongoose');
+// const Good = mongoose.model('Good');
+// const errorHandler = require('../../../core/server/controllers/errors.server.controller');
+
+/* exports.create = (req, res) => {
   const good = new Good(req.body);
   good.user = req.user;
 
@@ -97,3 +120,4 @@ exports.goodByID = (req, res, next, id) => {
     next();
   });
 };
+*/

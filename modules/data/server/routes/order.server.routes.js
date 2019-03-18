@@ -1,7 +1,6 @@
 const order = require('../controllers/order.server.controller');
 
 module.exports = (app) => {
-
   app.route('/api/orders')
     .get(order.list)
     .post(order.create);
