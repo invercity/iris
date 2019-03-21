@@ -17,6 +17,8 @@ module.exports.loadModels = (callback) => {
 // Initialize Mongoose
 module.exports.connect = (cb) => {
   const { uri, options, debug } = db;
+  console.log('Mongo URI: ', uri);
+  console.log('Mongo DB: ', db);
   mongoose.connect(uri, options, (err) => {
     // Log Error
     if (err) {
