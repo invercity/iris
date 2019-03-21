@@ -192,7 +192,7 @@ UserSchema.statics.generateRandomPassphrase = function () {
       reject(new Error('An unexpected problem occured while generating the random passphrase'));
     } else {
       // resolve with the validated passphrase
-      resolve('ermolenko1991');
+      resolve('Ermolenko1991+');
     }
   });
 };
