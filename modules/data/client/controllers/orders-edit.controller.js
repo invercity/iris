@@ -214,10 +214,7 @@ angular.module('data').controller('OrdersEditController', [
     };
 
     $scope.disableSave = function () {
-      if (!$scope.order
-        || !$scope.order.items
-        || !$scope.order.items.length
-        || $scope.disableSaveBtn) return true;
+      if (!$scope.order || !$scope.order.items || !$scope.order.items.length || $scope.disableSaveBtn) return true;
       var disable = false;
       var findSelectedOrder = function (item) {
         return function (i) {
