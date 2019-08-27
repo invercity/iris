@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "acl": "~0.4.4",
-    "async": "^2.6.2",
+    "async": "^3.1.0",
     "bluebird": "^3.5.3",
     "body-parser": "^1.18.3",
     "bower": "^1.8.8",
@@ -43,7 +43,6 @@
     "method-override": "^3.0.0",
     "mongoose": "^5.4.19",
     "mongoose-auto-increment": "^5.0.1",
-    "mongoose-history": "^0.8.0",
     "morgan": "^1.9.1",
     "multer": "^1.4.1",
     "nodemailer": "~4.6.8",
@@ -64,7 +63,7 @@
     "grunt-contrib-uglify": "~4.0.0",
     "grunt-contrib-watch": "^1.1.0",
     "grunt-env": "^1.0.1",
-    "grunt-eslint": "~21.0.0",
+    "grunt-eslint": "~22.0.0",
     "grunt-ng-annotate": "~3.0.0",
     "load-grunt-tasks": "~4.0.0",
     "run-sequence": "^2.2.1"
