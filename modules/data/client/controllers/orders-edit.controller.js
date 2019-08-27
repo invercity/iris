@@ -29,25 +29,30 @@ angular.module('data').controller('OrdersEditController', [
 
       var order = useOrder || $scope.order;
       order.total = $scope.calculateTotal(order);
+      $scope.disableSaveBtn = true;
 
       if (order._id) {
         order.$update(function () {
+          $scope.disableSaveBtn = false;
           $location.path('orders');
           if (callback) {
             callback();
           }
         }, function (errorResponse) {
+          $scope.disableSaveBtn = false;
           $scope.error = errorResponse.data.message;
         });
       }
 
       else {
         order.$save(function () {
+          $scope.disableSaveBtn = false;
           $location.path('orders');
           if (callback) {
             callback();
           }
         }, function (errorResponse) {
+          $scope.disableSaveBtn = false;
           $scope.error = errorResponse.data.message;
         });
       }
@@ -209,7 +214,7 @@ angular.module('data').controller('OrdersEditController', [
     };
 
     $scope.disableSave = function () {
-      if (!$scope.order || !$scope.order.items || !$scope.order.items.length) return true;
+      if (!$scope.order || !$scope.order.items || !$scope.order.items.length || $scope.disableSaveBtn) return true;
       var disable = false;
       var findSelectedOrder = function (item) {
         return function (i) {

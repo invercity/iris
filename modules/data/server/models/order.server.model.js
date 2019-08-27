@@ -85,6 +85,7 @@ OrderSchema.pre('save', function (next) {
   async.parallel([
     (next) => {
       if (this._id) {
+        console.log('Update existing order');
         mongoose.model('Order').findById(this._id)
           .populate('items.good')
           .exec((err, order) => {
@@ -93,11 +94,15 @@ OrderSchema.pre('save', function (next) {
                 return (next) => {
                   // TODO: fix with missing good
                   if (!item.good || !item.good._id) {
+                    console.log('Good is missing');
                     return next();
                   }
                   Good.findById(item.good._id)
                     .exec((err, good) => {
+                      console.log('Found good _id:', good._id);
+                      console.log('Good count: ', good.count);
                       good.count += item.count;
+                      console.log('Good count after: ', good.count);
                       good.save(() => {
                         next();
                       });
@@ -124,7 +129,10 @@ OrderSchema.pre('save', function (next) {
         const id = item.good._id || item.good;
         Good.findById(id)
           .exec((err, good) => {
+            console.log('Minus good _id:', good._id);
+            console.log('Good cound: ', good.count);
             good.count -= item.count;
+            console.log('good count after: ', good.count);
             good.save(() => {
               next();
             });
