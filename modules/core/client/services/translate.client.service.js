@@ -116,6 +116,7 @@ angular.module('core').factory('t', [function () {
     EDIT_CLIENT: 'Редагувати клієнта',
     PLACE_DELIVER_DEFAULT: 'Місце отримання за замовчуванням',
     TOTAL_ORDERS_TO_SHOW: 'Показано замовлень',
-    ACTIVE: 'Активний'
+    ACTIVE: 'Активний',
+    BAR: 'Склад'
   };
 }]);
