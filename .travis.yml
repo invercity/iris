@@ -1,18 +1,19 @@
 language: node_js
 sudo: required
 node_js:
-- "8"
-- "10"
+  - "8"
+  - "10"
+  - "12"
 env:
-- NODE_ENV=travis
+  - NODE_ENV=travis
 services:
-- mongodb
+  - mongodb
 before_install:
-- gem update --system
-- gem install sass --version "=3.3.7"
-- npm i nsp -g
+  - gem update --system
+  - gem install sass --version "=3.3.7"
+  - npm i nsp -g
 after_script:
-- nsp audit-package
+  - nsp audit-package
 notifications:
   webhooks:
     urls:
