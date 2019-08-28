@@ -1,4 +1,4 @@
-FROM node:0.12
+FROM node:10.3.0
 
 # Install gem sass for  grunt-contrib-sass
 RUN apt-get update -qq && apt-get install -y build-essential
@@ -9,7 +9,6 @@ WORKDIR /home/mean
 
 # Install Mean.JS Prerequisites
 RUN npm install -g grunt-cli
-RUN npm install -g bower
 
 # Install Mean.JS packages
 ADD package.json /home/mean/package.json
