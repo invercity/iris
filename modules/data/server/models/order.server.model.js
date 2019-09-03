@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
-const async = require('async');
+// const async = require('async');
 const autoIncrement = require('mongoose-auto-increment');
-// const history = require('mongoose-history');
 
 const Good = mongoose.model('Good');
 const{ Schema } = mongoose;
@@ -79,9 +78,48 @@ OrderSchema.plugin(autoIncrement.plugin, {
   incrementBy: 1
 });
 
-// OrderSchema.plugin(history,{ customCollectionName: "OrderHistory" });
+OrderSchema.pre('save', () => {
+  return Promise.resolve()
+    .then(() => {
+      if (!this._id) {
+        return null;
+      }
+      console.log('Update existing order');
+      return mongoose.model('Order')
+        .findById(this._id)
+        .populate('items.good');
+    })
+    .then((order) => {
+      if (!order || !order.items) {
+        return null;
+      }
+      const ids = order.items.map((item) => {
+        if (item.good && item.good._id) {
+          return item.good._id;
+        }
+        return null;
+      }).filter(item => item);
+      return Promise.props({
+        goods: Good.find({ _id: { $in: ids } }),
+        order
+      });
+    })
+    .then((results) => {
+      if (!results) {
+        return null;
+      }
+      const { goods, order } = results;
+      const { items } = this;
+      return Promise.map(goods, (good) => {
+        const after = items.find(item => item.good && item.good._id === good._id);
+        const before = order.items.find(item => item.good && item.good.id === good._id);
+        good.count += (before.count - after.count);
+        return good.save();
+      });
+    });
+});
 
-OrderSchema.pre('save', function (next) {
+/* OrderSchema.pre('save', function (next) {
   async.parallel([
     (next) => {
       if (this._id) {
@@ -144,9 +182,30 @@ OrderSchema.pre('save', function (next) {
       next();
     });
   });
+}); */
+
+OrderSchema.post('remove', (order) => {
+  return Promise.resolve()
+    .then(() => {
+      if (order.payed) {
+        return null;
+      }
+      const ids = order.items.map(item => item._id);
+      return Good.find({ _id: { $in: ids } });
+    })
+    .then((goods) => {
+      if (!goods) {
+        return null;
+      }
+      return Promise.map(goods, (good) => {
+        const orderGood = order.goods.find(orderGood => orderGood._id === good._id);
+        good.count += orderGood.count;
+        return good.save();
+      });
+    });
 });
 
-OrderSchema.post('remove', function (order) {
+/* OrderSchema.post('remove', function (order) {
   const functions = order.items.map(item => {
     return (next) => {
       Good.findById(item.good._id)
@@ -162,6 +221,6 @@ OrderSchema.post('remove', function (order) {
   if (!order.payed) {
     async.parallel(functions, () => {});
   }
-});
+}); */
 
 mongoose.model(modelOrder, OrderSchema);
