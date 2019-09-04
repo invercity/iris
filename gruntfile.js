@@ -1,9 +1,6 @@
-/**
- * Module dependencies.
- */
 const fs = require('fs');
 const path = require('path');
-const _ = require('lodash');
+const { union } = require('./config/lib/util');
 const defaultAssets = require('./config/assets/default');
 const testAssets = require('./config/assets/test');
 
@@ -30,7 +27,7 @@ module.exports = (grunt) => {
         }
       },
       serverJS: {
-        files: _.union(defaultAssets.server.gruntConfig, defaultAssets.server.allJS),
+        files: union(defaultAssets.server.gruntConfig, defaultAssets.server.allJS),
         tasks: ['jshint'],
         options: {
           livereload: true
@@ -70,7 +67,7 @@ module.exports = (grunt) => {
         options: {
           nodeArgs: ['--inspect'],
           ext: 'js,html',
-          watch: _.union(defaultAssets.server.gruntConfig, defaultAssets.server.views, defaultAssets.server.allJS, defaultAssets.server.config)
+          watch: union(defaultAssets.server.gruntConfig, defaultAssets.server.views, defaultAssets.server.allJS, defaultAssets.server.config)
         }
       }
     },
@@ -82,7 +79,7 @@ module.exports = (grunt) => {
     },
     jshint: {
       all: {
-        src: _.union(defaultAssets.server.gruntConfig, defaultAssets.server.allJS, defaultAssets.client.js, testAssets.tests.server, testAssets.tests.client, testAssets.tests.e2e),
+        src: union(defaultAssets.server.gruntConfig, defaultAssets.server.allJS, defaultAssets.client.js, testAssets.tests.server, testAssets.tests.client, testAssets.tests.e2e),
         options: {
           jshintrc: true,
           node: true,
@@ -93,7 +90,7 @@ module.exports = (grunt) => {
     },
     eslint: {
       options: {},
-      target: _.union(defaultAssets.server.gruntConfig, defaultAssets.server.allJS, defaultAssets.client.js, testAssets.tests.server, testAssets.tests.client, testAssets.tests.e2e)
+      target: union(defaultAssets.server.gruntConfig, defaultAssets.server.allJS, defaultAssets.client.js, testAssets.tests.server, testAssets.tests.client, testAssets.tests.e2e)
     },
     csslint: {
       options: {
