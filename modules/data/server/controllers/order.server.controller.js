@@ -7,6 +7,14 @@ const Client = mongoose.model('Client');
 const { Types } = mongoose;
 const errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
 
+const BasicController = require('./basic.server.controller');
+
+class OrderController extends BasicController {
+  constructor() {
+    super('Order', {});
+  }
+}
+
 exports.create = (req, res) => {
   const {
     items,
