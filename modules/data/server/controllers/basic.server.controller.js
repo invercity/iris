@@ -16,7 +16,8 @@ class BasicController {
    * Basic controller constructor
    * @param {string} modelName
    * @param {object} options
-   * @param {string[]} [options.fieldNames]
+   * @param {string[]} options.fieldNames
+   * @param {string[]} [options.fieldNamesSearch]
    */
   constructor(modelName, options = {}) {
     this.model = mongoose.model(modelName);
@@ -41,10 +42,13 @@ class BasicController {
    * @returns {Promise<void>}
    */
   async create(req, res) {
-    const item = new this.model(req.body);
+    const { fieldNames } = this.options;
+    const itemData = {};
+    fieldNames.forEach(field => itemData[field] = req.body[field]);
+    const item = new this.model(itemData);
     item.user = req.user;
     const updatedItem = this.preCreateHandler(req, item);
-    this[operation](OPERATION_TYPE.SAVE, updatedItem, res);
+    return this[operation](OPERATION_TYPE.SAVE, updatedItem, res);
   }
 
   /**
@@ -56,7 +60,7 @@ class BasicController {
   async update(req, res) {
     const item = req[this.modelNameAttr];
     const updatedItem = this.preUpdateHandler(req, item);
-    this[operation](OPERATION_TYPE.SAVE, updatedItem, res);
+    return this[operation](OPERATION_TYPE.SAVE, updatedItem, res);
   }
 
   /**
@@ -68,7 +72,7 @@ class BasicController {
   async delete(req, res) {
     const item = req[this.modelNameAttr];
     const updatedItem = this.preDeleteHandler(req, item);
-    this[operation](OPERATION_TYPE.DELETE, updatedItem, res);
+    return this[operation](OPERATION_TYPE.DELETE, updatedItem, res);
   }
 
   /**
@@ -79,8 +83,8 @@ class BasicController {
    */
   async list(req, res) {
     const { limit, page, q = '' } = req.query;
-    const { fieldNames = [] } = this.options;
-    const $or = fieldNames.map(field => ({ [field]: { $regex: new RegExp(q, 'i') } }));
+    const { fieldNamesSearch = [] } = this.options;
+    const $or = fieldNamesSearch.map(field => ({ [field]: { $regex: new RegExp(q, 'i') } }));
     const items = this.model.find({ $or })
       .limit(parseInt(limit, 10))
       .skip((page - 1) * limit)
@@ -148,6 +152,7 @@ class BasicController {
    * @returns {Promise<*>}
    */
   async preUpdateHandler(req, item) {
+    this.options.fieldNames.forEach(field => item[field] = req.body[field]);
     return item;
   }
 
@@ -161,7 +166,6 @@ class BasicController {
     return item;
   }
 
-
   /**
    * Save/delete operation
    * @param {string} operationType
@@ -170,15 +174,14 @@ class BasicController {
    * @returns {Promise<*>}
    */
   async [operation](operationType, item, res) {
-    return item[operationType]((err) => {
-      if (err) {
-        return res.status(400).send({
-          message: errorHandler.getErrorMessage(err)
-        });
-      } else {
-        return res.json(item);
-      }
-    });
+    try {
+      const saveResponse = item[operationType]();
+      return res.json(saveResponse);
+    } catch (e) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(e)
+      });
+    }
   }
 }
 
