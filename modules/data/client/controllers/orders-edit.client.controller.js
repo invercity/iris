@@ -14,7 +14,6 @@ angular.module('data').controller('OrdersEditController', [
     $scope.isSalesShown = false;
 
     $scope.$watch('order.client', function () {
-      console.log($scope.order.client);
       if ($scope.order && $scope.order.client && $scope.order.client.defaultPlace && !$scope.order.place) {
         $scope.order.place = $scope.order.client.defaultPlace;
       }

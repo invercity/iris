@@ -22,69 +22,10 @@ angular.module('data').controller('GoodsController', ['$scope', '$stateParams', 
       }
     };
 
-    $scope.update = function (isValid) {
-      $scope.error = null;
-
-      if (!isValid) {
-        $scope.$broadcast('show-errors-check-validity', 'articleForm');
-
-        return false;
-      }
-
-      var good = $scope.good;
-
-      if (good._id) {
-        good.$update(function () {
-          $location.path('goods');
-        }, function (errorResponse) {
-          $scope.error = errorResponse.data.message;
-        });
-      }
-
-      else {
-        good.$save(function () {
-          $location.path('goods');
-        }, function (errorResponse) {
-          $scope.error = errorResponse.data.message;
-        });
-      }
-    };
-
     $scope.find = function () {
       Goods.query(function (data) {
         $scope.goods = data.items;
         $scope.buildPager();
-      });
-    };
-
-    $scope.findOne = function () {
-      if ($stateParams.goodId) {
-        $scope.good = Goods.get({
-          goodId: $stateParams.goodId
-        });
-        $scope.title = $scope.t.GOOD_EDIT;
-      }
-      else {
-        $scope.good = new Goods({
-          price: 1,
-          count: 0
-        });
-        $scope.title = $scope.t.GOOD_NEW;
-      }
-    };
-
-    $scope.cancel = function () {
-      $location.path('goods');
-    };
-
-    $scope.add = function (good) {
-      Confirm.showValue({
-        title: $scope.t.GOOD_ADD,
-        text: $scope.t.GOOD_ENTER_COUNT,
-        value: true
-      }, function (count) {
-        good.count += count;
-        good.$update();
       });
     };
 

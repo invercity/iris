@@ -22,60 +22,11 @@ angular.module('data').controller('ClientsController', ['$scope', '$stateParams'
       }
     };
 
-    $scope.update = function (isValid) {
-      $scope.error = null;
-
-      if (!isValid) {
-        $scope.$broadcast('show-errors-check-validity', 'articleForm');
-
-        return false;
-      }
-
-      var client = $scope.client;
-
-      if ($scope.client._id) {
-        client.$update(function () {
-          $location.path('clients');
-        }, function (errorResponse) {
-          $scope.error = errorResponse.data.message;
-        });
-      }
-
-      else {
-        client.$save(function () {
-          $location.path('clients');
-        }, function (errorResponse) {
-          $scope.error = errorResponse.data.message;
-        });
-      }
-    };
-
     $scope.find = function () {
       Clients.query(function (data) {
         $scope.clients = data;
         $scope.buildPager();
       });
-
-    };
-
-    $scope.findOne = function () {
-      Places.query(function (data) {
-        $scope.places = data;
-        if ($stateParams.clientId) {
-          $scope.client = Clients.get({
-            clientId: $stateParams.clientId
-          });
-          $scope.title = $scope.t.EDIT_CLIENT;
-        }
-        else {
-          $scope.client = new Clients();
-          $scope.title = $scope.t.ADD_CLIENT;
-        }
-      });
-    };
-
-    $scope.cancel = function () {
-      $location.path('clients');
     };
 
     $scope.buildPager = function () {
