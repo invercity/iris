@@ -30,6 +30,10 @@ angular.module('core').factory('t', [function () {
     ORDER_STATUS_READY: 'Готові',
     ORDER_STATUS_TOGO: 'Можна збирати',
     ORDER_STATUS_DONE: 'Зібрані',
+    ORDER_STATUS_SENT: 'Відправлено',
+    ORDER_STATUS_CARE: 'Зберігання',
+    ORDER_STATUS_SELF: 'Самовивіз',
+    ORDER_STATUS_OUT: 'Роздача',
     CLIENT_NEW: 'Додати клієнта',
     CLIENT_EDIT: 'Редагувати клыэнта',
     OK: 'Так',
@@ -117,6 +121,7 @@ angular.module('core').factory('t', [function () {
     PLACE_DELIVER_DEFAULT: 'Місце отримання за замовчуванням',
     TOTAL_ORDERS_TO_SHOW: 'Показано замовлень',
     ACTIVE: 'Активний',
-    BAR: 'Склад'
+    BAR: 'Склад',
+    VOLUME: 'Об\'єм'
   };
 }]);

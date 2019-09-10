@@ -239,17 +239,21 @@ angular.module('data').controller('OrdersEditController', [
         value: 'work',
       },
       {
-        name: $scope.t.ORDER_STATUS_READY,
-        value: 'ready'
+        name: $scope.t.ORDER_STATUS_SENT,
+        value: 'sent'
       },
       {
-        name: $scope.t.ORDER_STATUS_TOGO,
-        value: 'togo'
+        name: $scope.t.ORDER_STATUS_CARE,
+        value: 'care'
       },
       {
-        name: $scope.t.ORDER_STATUS_DONE,
-        value: 'done'
+        name: $scope.t.ORDER_STATUS_OUT,
+        value: 'out'
       },
+      {
+        name: $scope.t.ORDER_STATUS_SELF,
+        value: 'self'
+      }
     ];
 
     function toZero(val) {
