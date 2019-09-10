@@ -40,6 +40,11 @@ const ClientSchema = new Schema({
     type: Boolean,
     default: true
   },
+  comments: {
+    type: String,
+    default: '',
+    trim: true,
+  }
 });
 
 mongoose.model(modelClient, ClientSchema);

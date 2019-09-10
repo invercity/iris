@@ -23,13 +23,14 @@ exports.read = (req, res) => {
 
 exports.update = (req, res) => {
   const { client } = req;
-  const { body: { firstName, lastName, phone, defaultPlace = null } } = req;
+  const { body: { firstName, lastName, phone, defaultPlace, comments = null } } = req;
 
   client.firstName = firstName;
   client.lastName = lastName;
   client.phone = phone;
   client.defaultPlace = defaultPlace;
   client.active = true;
+  client.comments = comments;
 
   client.save((err) => {
     if (err) {

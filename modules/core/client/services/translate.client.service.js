@@ -122,6 +122,7 @@ angular.module('core').factory('t', [function () {
     TOTAL_ORDERS_TO_SHOW: 'Показано замовлень',
     ACTIVE: 'Активний',
     BAR: 'Склад',
-    VOLUME: 'Об\'єм'
+    VOLUME: 'Об\'єм, мл',
+    COMMENTS: 'Коментарі'
   };
 }]);

@@ -36,6 +36,17 @@
         </div>
 
         <div class="form-group" show-errors>
+          <label for="comments">{{t.COMMENTS}}</label>
+          <textarea name="comments"
+                    ng-model="client.comments"
+                    id="comments"
+                    class="form-control"
+                    cols="30" rows="5"
+                    placeholder="{{t.COMMENTS}}">
+          </textarea>
+        </div>
+
+        <div class="form-group" show-errors>
           <label for="place">{{t.PLACE_DELIVER_DEFAULT}}</label>
           <div>
             <input type="text"
