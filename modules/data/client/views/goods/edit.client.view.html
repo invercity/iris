@@ -75,7 +75,7 @@
       </fieldset>
     </form>
     <div class="row">
-      <div class="col-md-8">
+      <div class="col-md-12">
         <div class="list-group">
           <div ng-repeat="order in orders" class="list-group-item" style="margin-bottom: 10px">
             <div style="display: inline">
@@ -114,8 +114,8 @@
           </div>
         </div>
 
-        <div class="row">
-          <div class="col-md-8" ng-show="ordersCount > itemsPerPage">
+        <div class="row" ng-show="ordersCount > itemsPerPage">
+          <div class="col-md-8">
             <pagination boundary-links="true"
                         max-size="8"
                         items-per-page="itemsPerPage"
