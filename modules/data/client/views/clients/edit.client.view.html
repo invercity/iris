@@ -72,10 +72,10 @@
         </div>
       </fieldset>
     </form>
-    <div class="page-header">
-      <h4>Список замовлень</h4>
-    </div>
     <div class="row">
+      <div class="page-header" ng-show="orders.length">
+        <h4>Список замовлень</h4>
+      </div>
       <div class="list-group">
         <div ng-repeat="order in orders" class="list-group-item" style="margin-bottom: 10px">
           <div style="display: inline">
@@ -114,7 +114,7 @@
         </div>
       </div>
 
-      <div class="row" ng-show="ordersCount > itemsPerPage">
+      <div class="row" ng-show="ordersCount > itemsPerPage" style="margin-bottom: 10px">
         <div class="col-md-8">
           <pagination boundary-links="true"
                       max-size="8"
