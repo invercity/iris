@@ -1,6 +1,8 @@
 # IRIS
+[![GitHub Release](https://github-basic-badges.herokuapp.com/release/invercity/iris.svg)]()
 [![Build Status](https://travis-ci.org/invercity/iris.svg?branch=master)](https://travis-ci.org/invercity/iris)
 [![David](https://david-dm.org/invercity/iris.svg)](https://david-dm.org/invercity/iris)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/8a4e1f8bbff64518acffcf93ec092a7e)](https://www.codacy.com/manual/andriy.ermolenko/iris?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=invercity/iris&amp;utm_campaign=Badge_Grade)
 [![Open Source Love](https://badges.frapsoft.com/os/mit/mit.svg?v=102)](https://github.com/ellerbrock/open-source-badge/)
 ## Prerequisites
 Make sure you have installed all of the following prerequisites on your development machine:
