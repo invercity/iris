@@ -73,62 +73,60 @@
       </fieldset>
     </form>
     <div class="row">
-      <div class="col-md-12">
-        <div class="list-group">
-          <div ng-repeat="order in orders" class="list-group-item" style="margin-bottom: 10px">
-            <div style="display: inline">
-              <div>
-                <h4>
-                  <a class="add-btn"
-                     ui-sref="orders.edit({orderId: order._id})">
-                    {{t.ORDER_NUM}}{{order.code}}
-                  </a>
-                  <span class="glyphicon glyphicon-ok"
-                        ng-if="order.payed"
-                        style="color: green">
+      <div class="list-group">
+        <div ng-repeat="order in orders" class="list-group-item" style="margin-bottom: 10px">
+          <div style="display: inline">
+            <div>
+              <h4>
+                <a class="add-btn"
+                   ui-sref="orders.edit({orderId: order._id})">
+                  {{t.ORDER_NUM}}{{order.code}}
+                </a>
+                <span class="glyphicon glyphicon-ok"
+                      ng-if="order.payed"
+                      style="color: green">
                 </span>
-                </h4>
-                <div class="pull-right"
-                     ng-show="authentication.user._id == order.user._id || authentication.user.roles.includes('admin')">
-                  <a ng-if="!order.payed" class="btn btn-success" ng-click="pay(true, order._id, true);">
-                    <i class="glyphicon glyphicon-usd"></i>
-                  </a>
-                  <a class="btn btn-primary" ng-click="remove(order);">
-                    <i class="glyphicon glyphicon-trash"></i>
-                  </a>
-                </div>
+              </h4>
+              <div class="pull-right"
+                   ng-show="authentication.user._id == order.user._id || authentication.user.roles.includes('admin')">
+                <a ng-if="!order.payed" class="btn btn-success" ng-click="pay(true, order._id, true);">
+                  <i class="glyphicon glyphicon-usd"></i>
+                </a>
+                <a class="btn btn-primary" ng-click="remove(order);">
+                  <i class="glyphicon glyphicon-trash"></i>
+                </a>
               </div>
             </div>
-            <small ui-sref="orders.edit({orderId: order._id})">
-              <p class="lead">{{t.CLIENT}}: {{order.client.firstName}} {{order.client.lastName}}, тел: {{order.client.phone}}</p>
-              <em class="text-muted list-item-footer">
+          </div>
+          <small ui-sref="orders.edit({orderId: order._id})">
+            <p class="lead">{{t.CLIENT}}: {{order.client.firstName}} {{order.client.lastName}}, тел: {{order.client.phone}}</p>
+            <em class="text-muted list-item-footer">
               <span>
                 <b>{{t.ADDRESS}}: </b> {{order.place ? order.place.name : order.placeDescription}}
                 <b>{{t.TOTAL}}: </b> {{order.total || 0}}{{currency}}
               </span>
-                <span class="pull-right"><b>{{t.CREATED}}: </b> {{order.created | date: "dd-MM-yyyy HH:mm" }}</span>
-              </em>
-            </small>
-          </div>
+              <span class="pull-right"><b>{{t.CREATED}}: </b> {{order.created | date: "dd-MM-yyyy HH:mm" }}</span>
+            </em>
+          </small>
         </div>
+      </div>
 
-        <div class="row" ng-show="ordersCount > itemsPerPage">
-          <div class="col-md-8">
-            <pagination boundary-links="true"
-                        max-size="8"
-                        items-per-page="itemsPerPage"
-                        total-items="ordersCount"
-                        ng-model="currentPage"
-                        first-text="{{t.P_FIRST}}"
-                        last-text="{{t.P_LAST}}"
-                        previous-text="{{t.P_PREV}}"
-                        next-text="{{t.P_NEXT}}"
-                        style="display: inline"
-                        ng-change="updateList()">
-            </pagination>
-          </div>
-          <label style="padding-right: 15px; display: inline-block" class="pull-right">{{t.TOTAL_ORDERS_TO_SHOW}}: {{orders.length}} з {{ordersCount}}</label>
+      <div class="row" ng-show="ordersCount > itemsPerPage">
+        <div class="col-md-8">
+          <pagination boundary-links="true"
+                      max-size="8"
+                      items-per-page="itemsPerPage"
+                      total-items="ordersCount"
+                      ng-model="currentPage"
+                      first-text="{{t.P_FIRST}}"
+                      last-text="{{t.P_LAST}}"
+                      previous-text="{{t.P_PREV}}"
+                      next-text="{{t.P_NEXT}}"
+                      style="display: inline"
+                      ng-change="updateList()">
+          </pagination>
         </div>
+        <label style="padding-right: 15px; display: inline-block" class="pull-right">{{t.TOTAL_ORDERS_TO_SHOW}}: {{orders.length}} з {{ordersCount}}</label>
       </div>
     </div>
   </div>
