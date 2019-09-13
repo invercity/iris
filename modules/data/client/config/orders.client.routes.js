@@ -17,7 +17,7 @@ angular.module('data').config(['$stateProvider',
         }
       })
       .state('orders.create', {
-        url: '/create',
+        url: '/create?clientId',
         templateUrl: 'modules/data/client/views/orders/edit.client.view.html',
         data: {
           roles: ['user']

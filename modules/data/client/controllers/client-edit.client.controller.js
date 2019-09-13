@@ -2,8 +2,8 @@
 
 // Clients controller
 angular.module('data').controller('ClientsEditController', [
-  '$scope', '$stateParams', '$location', 'Authentication', 'Clients', 'Places', 'Orders', 't',
-  function ($scope, $stateParams, $location, Authentication, Clients, Places, Orders, t) {
+  '$scope', '$stateParams', '$location', 'Authentication', 'Clients', 'Places', 'Orders', 'ConfirmService', 't',
+  function ($scope, $stateParams, $location, Authentication, Clients, Places, Orders, Confirm, t) {
     $scope.t = t;
     $scope.authentication = Authentication;
     $scope.currentPage = 1;
@@ -73,6 +73,20 @@ angular.module('data').controller('ClientsEditController', [
       }, function (data) {
         $scope.orders = data.orders;
         $scope.ordersCount = data.count;
+      });
+    };
+
+    $scope.pay = function (order) {
+      Confirm.show($scope.t.CONFIRM, $scope.t.PAY_ORDER_CONF, function () {
+        order.payed = true;
+        Orders.update(order);
+      });
+    };
+
+    $scope.send = function (order) {
+      Confirm.show($scope.t.CONFIRM, $scope.t.SEND_ORDER_CONF, function () {
+        order.status = 'sent';
+        Orders.update(order);
       });
     };
   }

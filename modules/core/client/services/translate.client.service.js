@@ -41,6 +41,7 @@ angular.module('core').factory('t', [function () {
     CONFIRM: 'Підтвердження',
     REMOVE_ORDER_CONF: 'Видалити дане замовлення?',
     PAY_ORDER_CONF: 'Оплатити дане замовлення?',
+    SEND_ORDER_CONF: 'Відправити дане замовлення?',
     EDIT_ORDER_NUM: 'Редагувати замовлення #',
     NEW_ORDER: 'Нове замовлення',
     EDIT_MANUALLY: 'Ввести вручну',

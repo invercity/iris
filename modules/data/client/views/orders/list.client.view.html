@@ -85,16 +85,17 @@
         <div ng-repeat="order in pagedItems" class="list-group-item" style="margin-bottom: 10px">
           <div style="display: inline">
             <div>
-              <h4>
+              <h5>
                 <a class="add-btn"
                    ui-sref="orders.edit({orderId: order._id})">
                   {{t.ORDER_NUM}}{{order.code}}
                 </a>
-                <span class="glyphicon glyphicon-ok"
+                <span class="pull-right"
                       ng-if="order.payed"
                       style="color: green">
+                  Сплачено
                 </span>
-              </h4>
+              </h5>
               <div class="pull-right"
                    ng-show="authentication.user._id == order.user._id || authentication.user.roles.includes('admin')">
                 <a ng-if="!order.payed" class="btn btn-success" ng-click="pay(true, order._id, true);">

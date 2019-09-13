@@ -46,7 +46,11 @@ angular.module('data').controller('OrdersEditController', [
       else {
         order.$save(function () {
           $scope.disableSaveBtn = false;
-          $location.path('orders');
+          if ($stateParams.clientId) {
+            $location.path('clients/' + $stateParams.clientId + '/edit');
+          } else {
+            $location.path('orders');
+          }
           if (callback) {
             callback();
           }
@@ -114,6 +118,11 @@ angular.module('data').controller('OrdersEditController', [
           $scope.title = $scope.t.NEW_ORDER;
           $scope.order.status = $scope.statuses[0].value;
           $scope.calcArray = calcArray;
+          if ($stateParams.clientId) {
+            $scope.order.client = _.find($scope.clients, function (client) {
+              return client._id === $stateParams.clientId;
+            })
+          }
         });
       }
 
