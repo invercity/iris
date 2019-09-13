@@ -121,7 +121,7 @@ angular.module('data').controller('OrdersEditController', [
           if ($stateParams.clientId) {
             $scope.order.client = _.find($scope.clients, function (client) {
               return client._id === $stateParams.clientId;
-            })
+            });
           }
         });
       }
