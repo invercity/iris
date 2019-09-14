@@ -58,15 +58,24 @@
         </div>
         <div class="form-group">
           <label for="type">{{t.TYPE}}</label>
+          <div>
+            <select id="type"
+                    class="form-control"
+                    ng-model="good.type"
+                    ng-options="type.value as type.name for type in types">
+            </select>
+          </div>
+          <!-- <label for="type">{{t.TYPE}}</label>
           <input name="type"
                  type="text"
                  ng-model="good.type"
                  id="type"
                  class="form-control"
-                 placeholder="{{t.TYPE}}">
+                 placeholder="{{t.TYPE}}"> -->
           <div class="form-group">
             <input type="submit" class="btn btn-default save-btn pull-right" value="{{t.SAVE}}">
             <input type="button" class="btn btn-default save-btn pull-right" ng-click="cancel()" value="{{t.CANCEL}}">
+            <!-- <input type="button" class="btn btn-primary save-btn pull-right" ng-click="" value="Замовлення"> -->
           </div>
           <div ng-show="error" class="text-danger">
             <strong ng-bind="error"></strong>
@@ -74,7 +83,7 @@
         </div>
       </fieldset>
     </form>
-    <div class="page-header">
+    <!-- <div class="page-header">
       <h4>Список замовлень</h4>
     </div>
     <div class="row">
@@ -133,6 +142,6 @@
         </div>
         <label style="padding-right: 15px; display: inline-block" class="pull-right">{{t.TOTAL_ORDERS_TO_SHOW}}: {{orders.length}} з {{ordersCount}}</label>
       </div>
-    </div>
+    </div> -->
   </div>
 </section>

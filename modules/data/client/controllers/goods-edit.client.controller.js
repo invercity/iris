@@ -43,7 +43,7 @@ angular.module('data').controller('GoodsEditController',
             goodId: $stateParams.goodId
           });
           $scope.title = $scope.t.GOOD_EDIT;
-          $scope.updateList();
+          // $scope.updateList();
         }
         else {
           $scope.good = new Goods({
@@ -53,6 +53,21 @@ angular.module('data').controller('GoodsEditController',
           $scope.title = $scope.t.GOOD_NEW;
         }
       };
+
+      $scope.types = [
+        {
+          name: 'Унісекс',
+          value: 'uni'
+        },
+        {
+          name: 'Чоловічий',
+          value: 'm'
+        },
+        {
+          name: 'Жіночий',
+          value: 'w'
+        }
+      ];
 
       $scope.cancel = function () {
         $location.path('goods');
@@ -69,7 +84,7 @@ angular.module('data').controller('GoodsEditController',
         });
       };
 
-      $scope.updateList = function () {
+      /* $scope.updateList = function () {
         // var place = $scope.selectedPlace ? $scope.selectedPlace._id : undefined;
         // var status = $scope.selectedStatus ? $scope.selectedStatus.value : undefined;
         // var payed = _.get($scope.selectedType, 'payed');
@@ -86,6 +101,6 @@ angular.module('data').controller('GoodsEditController',
           $scope.orders = data.orders;
           $scope.ordersCount = data.count;
         });
-      };
+      }; */
     }
   ]);
