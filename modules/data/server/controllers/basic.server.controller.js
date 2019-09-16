@@ -39,9 +39,23 @@ class BasicController {
 
   list(req, res) {
     const { limit, page, q = '' } = req.query;
-    const { fieldNames = [] } = this.options;
-    const $or = fieldNames.map(field => ({ [field]: { $regex: new RegExp(q, 'i') } }));
-    const items = this.model.find({ $or })
+    const { fieldNames = [], extraListFilters = [] } = this.options;
+    const query = {
+      $or: fieldNames.map(field => ({ [field]: { $regex: new RegExp(q, 'i') } }))
+    };
+    if (extraListFilters.length) {
+      const $and = [];
+      extraListFilters.forEach(({ key, getFilter }) => {
+        if (req.query[key]) {
+          $and.push(getFilter(req.query));
+        }
+      });
+      if ($and.length) {
+        query.$and = $and;
+      }
+    }
+    console.log(query);
+    const items = this.model.find(query)
       .limit(parseInt(limit, 10))
       .skip((page - 1) * limit)
       .sort('-created')

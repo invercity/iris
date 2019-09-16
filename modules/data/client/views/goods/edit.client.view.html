@@ -83,43 +83,39 @@
         </div>
       </fieldset>
     </form>
-    <!-- <div class="page-header">
-      <h4>Список замовлень</h4>
+    <div class="page-header" ng-if="order.length">
+      <h4>Список нових замовлень</h4>
     </div>
     <div class="row">
       <div class="list-group">
         <div ng-repeat="order in orders" class="list-group-item" style="margin-bottom: 10px">
           <div style="display: inline">
             <div>
-              <h4>
+              <h5>
                 <a class="add-btn"
                    ui-sref="orders.edit({orderId: order._id})">
                   {{t.ORDER_NUM}}{{order.code}}
                 </a>
-                <span class="glyphicon glyphicon-ok"
-                      ng-if="order.payed"
-                      style="color: green">
-                </span>
-              </h4>
+              </h5>
               <div class="pull-right"
                    ng-show="authentication.user._id == order.user._id || authentication.user.roles.includes('admin')">
-                <a ng-if="!order.payed" class="btn btn-success" ng-click="pay(true, order._id, true);">
+                <a ng-if="!order.payed" class="btn btn-success" ng-click="pay(order);">
                   <i class="glyphicon glyphicon-usd"></i>
                 </a>
-                <a class="btn btn-primary" ng-click="remove(order);">
-                  <i class="glyphicon glyphicon-trash"></i>
+                <a ng-if="order.payed && order.status !== 'sent'" class="btn btn-primary" ng-click="send(order);">
+                  <i class="glyphicon glyphicon-send"></i>
                 </a>
               </div>
             </div>
           </div>
           <small>
             <p class="lead"><a class="add-btn" ui-sref="clients.edit({clientId: order.client._id})">{{t.CLIENT}}: {{order.client.firstName}} {{order.client.lastName}}, тел: {{order.client.phone}}</a></p>
+            <p ng-repeat="item in order.items">{{item.good.name}}, {{item.count}}мл</p>
             <em class="text-muted list-item-footer">
               <span>
-                <b>{{t.ADDRESS}}: </b> {{order.place ? order.place.name : order.placeDescription}}
-                <b>{{t.TOTAL}}: </b> {{order.total || 0}}{{currency}}
+                <b>{{t.TOTAL}}: </b> {{order.total || 0}}грн
+                <b>{{t.CREATED}}: </b> {{order.created | date: "dd-MM-yyyy HH:mm" }}
               </span>
-              <span class="pull-right"><b>{{t.CREATED}}: </b> {{order.created | date: "dd-MM-yyyy HH:mm" }}</span>
             </em>
           </small>
         </div>
@@ -142,6 +138,6 @@
         </div>
         <label style="padding-right: 15px; display: inline-block" class="pull-right">{{t.TOTAL_ORDERS_TO_SHOW}}: {{orders.length}} з {{ordersCount}}</label>
       </div>
-    </div> -->
+    </div>
   </div>
 </section>

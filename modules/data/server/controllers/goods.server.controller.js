@@ -6,6 +6,12 @@ class GoodsController extends BasicController {
       fieldNames: [
         'name',
         'details'
+      ],
+      extraListFilters: [
+        {
+          key: 'type',
+          getFilter: query => ({ type: query.type })
+        }
       ]
     });
   }
