@@ -69,6 +69,10 @@ const OrderSchema = new Schema({
   extra: {
     type: Number,
     default: 0
+  },
+  // will be fully implemented in IRIS v1.4.0
+  extras: {
+    type: [Schema.Types.Mixed]
   }
 });
 

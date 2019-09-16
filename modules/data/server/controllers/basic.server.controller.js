@@ -54,7 +54,6 @@ class BasicController {
         query.$and = $and;
       }
     }
-    console.log(query);
     const items = this.model.find(query)
       .limit(parseInt(limit, 10))
       .skip((page - 1) * limit)
@@ -68,7 +67,6 @@ class BasicController {
     })
       .then(data => res.json(data))
       .catch((err) => {
-        console.log(err);
         return res.status(400).send({
           message: errorHandler.getErrorMessage(err)
         });

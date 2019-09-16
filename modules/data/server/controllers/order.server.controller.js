@@ -17,7 +17,8 @@ exports.create = (req, res) => {
     sale,
     credit,
     total,
-    extra = 0
+    extra = 0,
+    extras = []
   } = req.body;
   const orderData = {
     items,
@@ -28,7 +29,8 @@ exports.create = (req, res) => {
     sale,
     credit,
     total,
-    extra
+    extra,
+    extras
   };
   async.parallel([
     (callback) => {
@@ -89,6 +91,7 @@ exports.update = (req, res) => {
     credit,
     total,
     extra,
+    extras,
     client: {
       phone,
       _id
@@ -105,6 +108,7 @@ exports.update = (req, res) => {
   order.credit = credit;
   order.total = total;
   order.extra = extra;
+  order.extras = extras;
 
   order.save((err) => {
     if (err) {
