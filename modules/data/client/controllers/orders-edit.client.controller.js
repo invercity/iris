@@ -23,7 +23,7 @@ angular.module('data').controller('OrdersEditController', [
 
     $scope.$watch('flacon', function () {
       if ($scope.order) {
-        const extraIndex = _.findIndex($scope.order.extras, function (extra) { return extra.type === 'flacon'; });
+        var extraIndex = _.findIndex($scope.order.extras, function (extra) { return extra.type === 'flacon'; });
         if ($scope.flacon) {
           if (extraIndex === -1) {
             $scope.order.extras.push({ type: 'flacon', value: 20 });
