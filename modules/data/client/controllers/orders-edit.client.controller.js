@@ -23,22 +23,19 @@ angular.module('data').controller('OrdersEditController', [
 
     $scope.$watch('flacon', function () {
       if ($scope.order) {
-        const extraIndex = _.findIndex($scope.order.extras, function (extra) { return extra.type === 'flacon' });
+        const extraIndex = _.findIndex($scope.order.extras, function (extra) { return extra.type === 'flacon'; });
         if ($scope.flacon) {
           if (extraIndex === -1) {
             $scope.order.extras.push({ type: 'flacon', value: 20 });
-            $scope.calculateTotal($scope.order)
+            $scope.calculateTotal($scope.order);
           }
         } else {
           if (extraIndex !== -1) {
-            console.log('remove extra')
             $scope.order.extras.splice(extraIndex, extraIndex + 1);
-            $scope.calculateTotal($scope.order)
+            $scope.calculateTotal($scope.order);
           }
         }
       }
-      console.log($scope.flacon);
-      console.log($scope.order);
     });
 
     $scope.update = function (isValid, useOrder, callback) {
@@ -124,7 +121,7 @@ angular.module('data').controller('OrdersEditController', [
           orderId: $stateParams.orderId
         }, function (data) {
           $scope.order = data;
-          $scope.flacon = !!(data.extras && _.find(data.extras, function (e) { return e.type === 'flacon' }));
+          $scope.flacon = !!(data.extras && _.find(data.extras, function (e) { return e.type === 'flacon'; }));
           $scope.calcArray = calcArray;
           $scope.savedOrder = _.cloneDeep(data);
           $scope.title = $scope.t.EDIT_ORDER_NUM + data.code;
