@@ -1,6 +1,11 @@
 .content {
   margin-top: 50px;
 }
+
+.content-footer {
+  min-height: calc(100vh - 67px);
+}
+
 .undecorated-link:hover {
   text-decoration: none;
 }
@@ -69,3 +74,15 @@ a:hover .header-profile-image {
 .hero-widget var { display: block; height: 64px; font-size: 64px; line-height: 64px; font-style: normal; }
 .hero-widget label { font-size: 17px; }
 .hero-widget .options { margin-top: 10px; }
+
+.footer {
+  height: 17px;
+  text-align: center;
+}
+
+.footer-version {
+  color: #333;
+  font-weight: bold;
+  font-size: 12px;
+  font-family: Calibri;
+}

@@ -10,7 +10,8 @@ angular.module('data').controller('OrdersEditController', [
     $scope.currency = $scope.t.UAH;
     $scope.currentPage = 1;
     $scope.itemsPerPage = 20;
-    $scope.separate = false;
+    // create separate order for each good
+    $scope.separate = true;
 
     $scope.isSalesShown = false;
 
@@ -18,6 +19,26 @@ angular.module('data').controller('OrdersEditController', [
       if ($scope.order && $scope.order.client && $scope.order.client.defaultPlace && !$scope.order.place) {
         $scope.order.place = $scope.order.client.defaultPlace;
       }
+    });
+
+    $scope.$watch('flacon', function () {
+      if ($scope.order) {
+        const extraIndex = _.findIndex($scope.order.extras, function (extra) { return extra.type === 'flacon' });
+        if ($scope.flacon) {
+          if (extraIndex === -1) {
+            $scope.order.extras.push({ type: 'flacon', value: 20 });
+            $scope.calculateTotal($scope.order)
+          }
+        } else {
+          if (extraIndex !== -1) {
+            console.log('remove extra')
+            $scope.order.extras.splice(extraIndex, extraIndex + 1);
+            $scope.calculateTotal($scope.order)
+          }
+        }
+      }
+      console.log($scope.flacon);
+      console.log($scope.order);
     });
 
     $scope.update = function (isValid, useOrder, callback) {
@@ -103,6 +124,7 @@ angular.module('data').controller('OrdersEditController', [
           orderId: $stateParams.orderId
         }, function (data) {
           $scope.order = data;
+          $scope.flacon = !!(data.extras && _.find(data.extras, function (e) { return e.type === 'flacon' }));
           $scope.calcArray = calcArray;
           $scope.savedOrder = _.cloneDeep(data);
           $scope.title = $scope.t.EDIT_ORDER_NUM + data.code;
@@ -171,6 +193,11 @@ angular.module('data').controller('OrdersEditController', [
       }
       if (order.credit) {
         total += order.credit;
+      }
+      if (order.extras) {
+        _.each(order.extras, function (e) {
+          total += e.value;
+        });
       }
       var totalPrice = Math.max(0, total);
       if (order.extra) {

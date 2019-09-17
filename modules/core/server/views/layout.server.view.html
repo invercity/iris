@@ -37,11 +37,13 @@
 
 <body class="ng-cloak">
   <header ng-include="'/modules/core/client/views/header.client.view.html'" class="navbar navbar-fixed-top navbar-inverse"></header>
-  <section class="content">
+  <section class="content content-footer">
     <section class="container">
       {% block content %}{% endblock %}
     </section>
   </section>
+
+  <footer class="footer"><div class="footer-version">IRIS v{{version}}, developed by <a href="mailto:andriy.ermolenko@gmail.com">Andrii Yermolenko</a></div></footer>
 
   <!--Embedding The User Object-->
   <script type="text/javascript">

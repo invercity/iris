@@ -2,7 +2,7 @@
   <div class="page-header" style="display: inline">
     <h3>
       {{title}}
-      <span ng-if="order.payed" class="pull-right" style="color: green"Сплачено</span>
+      <span ng-if="order.payed" class="pull-right" style="color: green">Сплачено</span>
     </h3>
   </div>
   <div class="col-md-8">
@@ -167,15 +167,15 @@
           </tbody>
         </table>
 
-        <!-- <div class="form-group">
-          <label for="flacon">Додати флакон (+20грн)</label>
-          <input type="checkbox" id="flacon">
+        <div class="form-group">
+          <label for="flacon">Флакон (+20грн)</label>
+          <input type="checkbox" id="flacon" ng-model="flacon">
         </div>
 
         <div class="form-group" ng-if="!order._id">
           <label for="separate">Окреме замовлення на кожен товар</label>
-          <input type="checkbox" id="separate">
-        </div> -->
+          <input type="checkbox" id="separate" ng-model="separate">
+        </div>
 
         <button type="button"
                 class="btn btn-info"

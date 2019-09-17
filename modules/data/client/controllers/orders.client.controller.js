@@ -212,7 +212,7 @@ angular.module('data').controller('OrdersController', [
       Places.query().$promise
         .then(function (allPlaces) {
           $scope.places = allPlaces;
-          $scope.selectedStatus = $scope.listStatuses[4];
+          $scope.selectedStatus = $scope.listStatuses[0];
         });
     };
 

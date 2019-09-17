@@ -122,7 +122,7 @@ angular.module('core').factory('t', [function () {
     PLACE_DELIVER_DEFAULT: 'Місце отримання за замовчуванням',
     TOTAL_ORDERS_TO_SHOW: 'Показано замовлень',
     ACTIVE: 'Активний',
-    BAR: 'Склад',
+    BAR: 'IRIS',
     VOLUME: 'Об\'єм, мл',
     COMMENTS: 'Коментарі'
   };
