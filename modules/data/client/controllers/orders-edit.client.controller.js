@@ -63,7 +63,7 @@ angular.module('data').controller('OrdersEditController', [
       }
 
       else {
-        var deferred = $q.defer().resolve();
+        var deferred = $q.defer();
         deferred.resolve();
         deferred
           .promise
