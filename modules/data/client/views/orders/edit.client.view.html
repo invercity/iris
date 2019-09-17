@@ -167,12 +167,12 @@
           </tbody>
         </table>
 
-        <div class="form-group">
+        <div class="form-group" ng-if="!order.payed">
           <label for="flacon">Флакон (+20грн)</label>
           <input type="checkbox" id="flacon" ng-model="flacon">
         </div>
 
-        <div class="form-group" ng-if="!order._id">
+        <div class="form-group" ng-if="!order._id && order.items.length > 1">
           <label for="separate">Окреме замовлення на кожен товар</label>
           <input type="checkbox" id="separate" ng-model="separate">
         </div>
@@ -187,6 +187,7 @@
 
         <button type="button"
                 class="btn btn-info"
+                ng-if="!order.payed"
                 ng-show="!isSalesShown"
                 ng-click="isSalesShown = true">
           {{t.ADD_SALES}}

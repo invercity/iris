@@ -63,20 +63,40 @@ angular.module('data').controller('OrdersEditController', [
       }
 
       else {
-        order.$save(function () {
-          $scope.disableSaveBtn = false;
-          if ($stateParams.clientId) {
-            $location.path('clients/' + $stateParams.clientId + '/edit');
-          } else {
-            $location.path('orders');
-          }
-          if (callback) {
-            callback();
-          }
-        }, function (errorResponse) {
-          $scope.disableSaveBtn = false;
-          $scope.error = errorResponse.data.message;
-        });
+        var deferred = $q.defer().resolve();
+        deferred.resolve();
+        deferred
+          .promise
+          .then((function () {
+            if ($scope.separate && $scope.order.items.length > 1) {
+              var orders = _.map($scope.order.items, function (item) {
+                var orderClone = _.clone($scope.order);
+                orderClone.items = [item];
+                return orderClone;
+              });
+              return $q.all(_.map(orders, function (order) {
+                return Orders.save(order).$promise;
+              }));
+            }
+            else {
+              return order.$save();
+            }
+          }))
+          .then(function () {
+            $scope.disableSaveBtn = false;
+            if ($stateParams.clientId) {
+              $location.path('clients/' + $stateParams.clientId + '/edit');
+            } else {
+              $location.path('orders');
+            }
+            if (callback) {
+              callback();
+            }
+          })
+          .catch(function(err) {
+            $scope.disableSaveBtn = false;
+            $scope.error = err.data.message;
+          });
       }
     };
 
@@ -132,7 +152,6 @@ angular.module('data').controller('OrdersEditController', [
         });
       }
       else {
-        $scope.separate = true;
         Clients.query(function (data) {
           $scope.clients = data;
           $scope.order = new Orders();
