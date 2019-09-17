@@ -10,6 +10,7 @@ angular.module('data').controller('OrdersEditController', [
     $scope.currency = $scope.t.UAH;
     $scope.currentPage = 1;
     $scope.itemsPerPage = 20;
+    $scope.separate = false;
 
     $scope.isSalesShown = false;
 
@@ -112,6 +113,7 @@ angular.module('data').controller('OrdersEditController', [
         });
       }
       else {
+        $scope.separate = true;
         Clients.query(function (data) {
           $scope.clients = data;
           $scope.order = new Orders();
