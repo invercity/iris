@@ -167,9 +167,9 @@
           </tbody>
         </table>
 
-        <div class="form-group" ng-if="!order.payed">
+        <div class="form-group" ng-if="!order.payed && order.items.length">
           <label for="flacon">Флакон (+20грн)</label>
-          <input type="checkbox" id="flacon" ng-model="flacon">
+          <input type="checkbox" id="flacon" ng-model="flacon.isAdded" ng-change="onFlaconChange()">
         </div>
 
         <div class="form-group" ng-if="!order._id && order.items.length > 1">

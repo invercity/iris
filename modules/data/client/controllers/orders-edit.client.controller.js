@@ -12,6 +12,9 @@ angular.module('data').controller('OrdersEditController', [
     $scope.itemsPerPage = 20;
     // create separate order for each good
     $scope.separate = true;
+    $scope.flacon = {
+      isAdded: false
+    };
 
     $scope.isSalesShown = false;
 
@@ -21,10 +24,10 @@ angular.module('data').controller('OrdersEditController', [
       }
     });
 
-    $scope.$watch('flacon', function () {
+    $scope.onFlaconChange = function () {
       if ($scope.order) {
         var extraIndex = _.findIndex($scope.order.extras, function (extra) { return extra.type === 'flacon'; });
-        if ($scope.flacon) {
+        if ($scope.flacon.isAdded) {
           if (extraIndex === -1) {
             $scope.order.extras.push({ type: 'flacon', value: 20 });
             $scope.calculateTotal($scope.order);
@@ -36,7 +39,7 @@ angular.module('data').controller('OrdersEditController', [
           }
         }
       }
-    });
+    };
 
     $scope.update = function (isValid, useOrder, callback) {
       $scope.error = null;
@@ -141,7 +144,7 @@ angular.module('data').controller('OrdersEditController', [
           orderId: $stateParams.orderId
         }, function (data) {
           $scope.order = data;
-          $scope.flacon = !!(data.extras && _.find(data.extras, function (e) { return e.type === 'flacon'; }));
+          $scope.flacon.isAdded = !!(data.extras && _.find(data.extras, function (e) { return e.type === 'flacon'; }));
           $scope.calcArray = calcArray;
           $scope.savedOrder = _.cloneDeep(data);
           $scope.title = $scope.t.EDIT_ORDER_NUM + data.code;
@@ -157,6 +160,7 @@ angular.module('data').controller('OrdersEditController', [
           $scope.order = new Orders();
           $scope.title = $scope.t.NEW_ORDER;
           $scope.order.status = $scope.statuses[0].value;
+          $scope.order.extras = [];
           $scope.calcArray = calcArray;
           if ($stateParams.clientId) {
             $scope.order.client = _.find($scope.clients, function (client) {
