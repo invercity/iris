@@ -9,6 +9,17 @@ angular.module('data').controller('GoodsEditController',
       $scope.currentPage = 1;
       $scope.itemsPerPage = 20;
 
+      $scope.getReport = function() {
+        html2canvas(document.getElementById("report"), {
+          onrendered: function(canvas) {
+            var a = document.createElement('a');
+            a.href = canvas.toDataURL("image/png");
+            a.download = 'Звіт за ' + new Date().toLocaleDateString() + ' по товару "' + $scope.good.name + '" .png';
+            a.click();
+          }
+        });
+      };
+
       $scope.update = function (isValid) {
         $scope.error = null;
 
@@ -96,6 +107,8 @@ angular.module('data').controller('GoodsEditController',
           page: $scope.currentPage,
           limit: $scope.itemsPerPage,
           good: $stateParams.goodId,
+          status: 'work',
+          payed: false
           // q: $scope.search
         }, function (data) {
           $scope.orders = data.orders;

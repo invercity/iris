@@ -18,6 +18,7 @@ module.exports = {
         'public/lib/angular-file-upload/angular-file-upload.min.js',
         'public/lib/owasp-password-strength-test/owasp-password-strength-test.js',
         'public/lib/lodash/dist/lodash.min.js',
+        'public/lib/html2canvas/build/html2canvas.min.js'
       ],
       tests: ['public/lib/angular-mocks/angular-mocks.js']
     },

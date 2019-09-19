@@ -75,6 +75,7 @@
           <div class="form-group">
             <input type="submit" class="btn btn-default save-btn pull-right" value="{{t.SAVE}}">
             <input type="button" class="btn btn-default save-btn pull-right" ng-click="cancel()" value="{{t.CANCEL}}">
+            <input type="button" class="btn btn-default save-btn pull-right" ng-click="getReport()" value="Експорт">
             <!-- <input type="button" class="btn btn-primary save-btn pull-right" ng-click="" value="Замовлення"> -->
           </div>
           <div ng-show="error" class="text-danger">
@@ -83,10 +84,10 @@
         </div>
       </fieldset>
     </form>
-    <div class="page-header" ng-if="order.length">
+    <div class="page-header" ng-if="orders.length">
       <h4>Список нових замовлень</h4>
     </div>
-    <div class="row">
+    <div class="row" id="report">
       <div class="list-group">
         <div ng-repeat="order in orders" class="list-group-item" style="margin-bottom: 10px">
           <div style="display: inline">
