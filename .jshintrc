@@ -16,7 +16,8 @@
     "angular": true,
     "io": true,
     "ApplicationConfiguration": true,
-    "_": true
+    "_": true,
+    "html2canvas": true
   },
   "predef": [ // Extra globals.
     "inject",
