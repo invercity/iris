@@ -75,8 +75,7 @@
           <div class="form-group">
             <input type="submit" class="btn btn-default save-btn pull-right" value="{{t.SAVE}}">
             <input type="button" class="btn btn-default save-btn pull-right" ng-click="cancel()" value="{{t.CANCEL}}">
-            <input type="button" class="btn btn-default save-btn pull-right" ng-click="getReport()" value="Експорт">
-            <!-- <input type="button" class="btn btn-primary save-btn pull-right" ng-click="" value="Замовлення"> -->
+            <input type="button" class="btn btn-default save-btn pull-right" ng-click="getReport()" ng-if="orders.length" value="Експорт">
           </div>
           <div ng-show="error" class="text-danger">
             <strong ng-bind="error"></strong>
@@ -87,58 +86,28 @@
     <div class="page-header" ng-if="orders.length">
       <h4>Список нових замовлень</h4>
     </div>
-    <div class="row" id="report">
-      <div class="list-group">
-        <div ng-repeat="order in orders" class="list-group-item" style="margin-bottom: 10px">
-          <div style="display: inline">
-            <div>
-              <h5>
-                <a class="add-btn"
-                   ui-sref="orders.edit({orderId: order._id})">
-                  {{t.ORDER_NUM}}{{order.code}}
-                </a>
-              </h5>
-              <div class="pull-right"
-                   ng-show="authentication.user._id == order.user._id || authentication.user.roles.includes('admin')">
-                <a ng-if="!order.payed" class="btn btn-success" ng-click="pay(order);">
-                  <i class="glyphicon glyphicon-usd"></i>
-                </a>
-                <a ng-if="order.payed && order.status !== 'sent'" class="btn btn-primary" ng-click="send(order);">
-                  <i class="glyphicon glyphicon-send"></i>
-                </a>
-              </div>
-            </div>
-          </div>
-          <small>
-            <p class="lead"><a class="add-btn" ui-sref="clients.edit({clientId: order.client._id})">{{t.CLIENT}}: {{order.client.firstName}} {{order.client.lastName}}, тел: {{order.client.phone}}</a></p>
-            <p ng-repeat="item in order.items">{{item.good.name}}, {{item.count}}мл</p>
-            <em class="text-muted list-item-footer">
-              <span>
-                <b>{{t.TOTAL}}: </b> {{order.total || 0}}грн
-                <b>{{t.CREATED}}: </b> {{order.created | date: "dd-MM-yyyy HH:mm" }}
-              </span>
-            </em>
-          </small>
-        </div>
-      </div>
 
-      <div class="row" ng-show="ordersCount > itemsPerPage">
-        <div class="col-md-8">
-          <pagination boundary-links="true"
-                      max-size="8"
-                      items-per-page="itemsPerPage"
-                      total-items="ordersCount"
-                      ng-model="currentPage"
-                      first-text="{{t.P_FIRST}}"
-                      last-text="{{t.P_LAST}}"
-                      previous-text="{{t.P_PREV}}"
-                      next-text="{{t.P_NEXT}}"
-                      style="display: inline"
-                      ng-change="updateList()">
-          </pagination>
-        </div>
-        <label style="padding-right: 15px; display: inline-block" class="pull-right">{{t.TOTAL_ORDERS_TO_SHOW}}: {{orders.length}} з {{ordersCount}}</label>
-      </div>
-    </div>
+    <table id="report" ng-if="orders.length" class="table table-bordered table-striped">
+      <thead>
+        <td class="info">Клієнт</td>
+        <td class="info">Об'єм, мл</td>
+        <td class="info">Сума</td>
+      </thead>
+      <tr ng-repeat="order in orders">
+        <td class="success">{{order.client.firstName}}</td>
+        <td class="success">{{order.items[0].count}}</td>
+        <td class="success">{{order.items[0].count * order.items[0].good.price}}грн</td>
+      </tr>
+      <tr>
+        <td>&nbsp;</td>
+        <td class="info">Товар</td>
+        <td class="success">{{good.name}}</td>
+      </tr>
+      <tr>
+        <td>&nbsp;</td>
+        <td class="info">Дата</td>
+        <td class="success">{{reportDate}}</td>
+      </tr>
+    </table>
   </div>
 </section>

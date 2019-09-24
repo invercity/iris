@@ -8,16 +8,13 @@ angular.module('data').controller('GoodsEditController',
       $scope.authentication = Authentication;
       $scope.currentPage = 1;
       $scope.itemsPerPage = 20;
+      $scope.reportDate = new Date().toLocaleDateString();
 
       $scope.getReport = function() {
-        html2canvas(document.getElementById("report"), {
-          onrendered: function(canvas) {
-            var a = document.createElement('a');
-            a.href = canvas.toDataURL("image/png");
-            a.download = 'Звіт за ' + new Date().toLocaleDateString() + ' по товару "' + $scope.good.name + '" .png';
-            a.click();
-          }
-        });
+        domtoimage.toBlob(document.getElementById('report'))
+          .then(function (blob) {
+            window.saveAs(blob, 'Звіт за ' + new Date().toLocaleDateString() + ' по товару "' + $scope.good.name + '" .png');
+          });
       };
 
       $scope.update = function (isValid) {
