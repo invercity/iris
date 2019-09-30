@@ -153,7 +153,7 @@ class BasicController {
    */
   async preUpdateHandler(req, item) {
     this.options.fieldNames.forEach(field => item[field] = req.body[field]);
-    return Promise.resolve(item);;
+    return Promise.resolve(item);
   }
 
   /**
