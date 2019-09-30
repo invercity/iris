@@ -47,7 +47,10 @@ class BasicController {
       const $and = [];
       extraListFilters.forEach(({ key, getFilter }) => {
         if (req.query[key]) {
-          $and.push(getFilter(req.query));
+          const filter = getFilter(req.query);
+          if (filter) {
+            $and.push(filter);
+          }
         }
       });
       if ($and.length) {

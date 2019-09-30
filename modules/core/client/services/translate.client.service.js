@@ -124,6 +124,7 @@ angular.module('core').factory('t', [function () {
     ACTIVE: 'Активний',
     BAR: 'IRIS',
     VOLUME: 'Об\'єм, мл',
-    COMMENTS: 'Коментарі'
+    COMMENTS: 'Коментарі',
+    GOOD_OLD_TYPES: 'Залишок'
   };
 }]);

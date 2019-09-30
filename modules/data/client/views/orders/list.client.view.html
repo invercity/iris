@@ -112,7 +112,7 @@
           </div>
           <small ui-sref="orders.edit({orderId: order._id})">
             <p class="lead">{{t.CLIENT}}: {{order.client.firstName}} {{order.client.lastName}}, тел: {{order.client.phone}}</p>
-            <em class="text-muted list-item-footer">
+            <em class="text-muted list-item-footer" style="font-size: 12px">
               <span>
                 <b>{{t.ADDRESS}}: </b> {{order.place ? order.place.name : order.placeDescription}}
                 <b>{{t.TOTAL}}: </b> {{order.total || 0}}{{currency}}
@@ -123,8 +123,8 @@
         </div>
       </div>
 
-      <div class="row">
-        <div class="col-md-8" ng-show="ordersCount > itemsPerPage">
+      <div class="row" ng-show="ordersCount > itemsPerPage">
+        <div class="col-md-8">
           <pagination boundary-links="true"
                       max-size="8"
                       items-per-page="itemsPerPage"
