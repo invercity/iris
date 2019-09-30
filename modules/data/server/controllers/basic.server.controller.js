@@ -14,30 +14,30 @@ class BasicController {
     this.options = options;
   }
 
-  read(req, res) {
+  async read(req, res) {
     return res.json(req[this.modelNameAttr]);
   }
 
-  create(req, res) {
+  async create(req, res) {
     const item = new this.model(req.body);
     item.user = req.user;
-    const updatedItem = this.preCreateHandler(req, item);
+    const updatedItem = await this.preCreateHandler(req, item);
     this[operation](OPERATION_TYPE.SAVE, updatedItem, res);
   }
 
-  update(req, res) {
+  async update(req, res) {
     const item = req[this.modelNameAttr];
-    const updatedItem = this.preUpdateHandler(req, item);
+    const updatedItem = await this.preUpdateHandler(req, item);
     this[operation](OPERATION_TYPE.SAVE, updatedItem, res);
   }
 
-  delete(req, res) {
+  async delete(req, res) {
     const item = req[this.modelNameAttr];
-    const updatedItem = this.preDeleteHandler(req, item);
+    const updatedItem = await this.preDeleteHandler(req, item);
     this[operation](OPERATION_TYPE.DELETE, updatedItem, res);
   }
 
-  list(req, res) {
+  async list(req, res) {
     const { limit, page, q = '' } = req.query;
     const { fieldNames = [] } = this.options;
     const $or = fieldNames.map(field => ({ [field]: { $regex: new RegExp(q, 'i') } }));
@@ -61,7 +61,7 @@ class BasicController {
       });
   }
 
-  get(req, res, next, id) {
+  async get(req, res, next, id) {
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).send({
         message: 'ID is invalid'
@@ -83,19 +83,19 @@ class BasicController {
       });
   }
 
-  preCreateHandler(req, item) {
-    return item;
+  async preCreateHandler(req, item) {
+    return Promise.resolve(item);
   }
 
-  preUpdateHandler(req, item) {
-    return item;
+  async preUpdateHandler(req, item) {
+    return Promise.resolve(item);
   }
 
-  preDeleteHandler(req, item) {
-    return item;
+  async preDeleteHandler(req, item) {
+    return Promise.resolve(item);
   }
 
-  [operation](operationType, item, res) {
+  async [operation](operationType, item, res) {
     return item[operationType]((err) => {
       if (err) {
         return res.status(400).send({
