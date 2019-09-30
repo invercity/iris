@@ -56,7 +56,8 @@ angular.module('data').controller('GoodsEditController',
         else {
           $scope.good = new Goods({
             price: 1,
-            count: 0
+            count: 0,
+            type: $scope.types[2].value
           });
           $scope.title = $scope.t.GOOD_NEW;
         }
