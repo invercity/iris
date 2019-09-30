@@ -5,18 +5,16 @@ class GoodsController extends BasicController {
     super('Good', {
       fieldNames: [
         'name',
+        'count',
+        'price',
+        'details',
+        'type'
+      ],
+      fieldNamesSearch: [
+        'name',
         'details'
       ]
     });
-  }
-
-  preUpdateHandler(req, item) {
-    item.name = req.body.name;
-    item.count = req.body.count;
-    item.price = req.body.price;
-    item.details = req.body.details;
-    item.type = req.body.type;
-    return item;
   }
 }
 

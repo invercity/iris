@@ -7,40 +7,84 @@ const OPERATION_TYPE = {
   DELETE: 'delete'
 };
 
+/**
+ * @class BasicController
+ * @version 1.0.0
+ */
 class BasicController {
+  /**
+   * Basic controller constructor
+   * @param {string} modelName
+   * @param {object} options
+   * @param {string[]} options.fieldNames
+   * @param {string[]} [options.fieldNamesSearch]
+   */
   constructor(modelName, options = {}) {
     this.model = mongoose.model(modelName);
     this.modelNameAttr = modelName.toLowerCase();
     this.options = options;
   }
 
+  /**
+   * Read item
+   * @param req
+   * @param res
+   * @returns {Promise<*>}
+   */
   async read(req, res) {
     return res.json(req[this.modelNameAttr]);
   }
 
+  /**
+   * Create item
+   * @param req
+   * @param res
+   * @returns {Promise<void>}
+   */
   async create(req, res) {
-    const item = new this.model(req.body);
+    const { fieldNames } = this.options;
+    const itemData = {};
+    fieldNames.forEach(field => itemData[field] = req.body[field]);
+    const item = new this.model(itemData);
     item.user = req.user;
-    const updatedItem = await this.preCreateHandler(req, item);
-    this[operation](OPERATION_TYPE.SAVE, updatedItem, res);
+    const updatedItem = this.preCreateHandler(req, item);
+    return this[operation](OPERATION_TYPE.SAVE, updatedItem, res);
   }
 
+  /**
+   * Update item
+   * @param req
+   * @param res
+   * @returns {Promise<void>}
+   */
   async update(req, res) {
     const item = req[this.modelNameAttr];
-    const updatedItem = await this.preUpdateHandler(req, item);
-    this[operation](OPERATION_TYPE.SAVE, updatedItem, res);
+    const updatedItem = this.preUpdateHandler(req, item);
+    return this[operation](OPERATION_TYPE.SAVE, updatedItem, res);
   }
 
+  /**
+   * Delete item
+   * @param req
+   * @param res
+   * @returns {Promise<void>}
+   */
   async delete(req, res) {
     const item = req[this.modelNameAttr];
-    const updatedItem = await this.preDeleteHandler(req, item);
-    this[operation](OPERATION_TYPE.DELETE, updatedItem, res);
+    const updatedItem = this.preDeleteHandler(req, item);
+    return this[operation](OPERATION_TYPE.DELETE, updatedItem, res);
   }
 
+  /**
+   * Get item list by params
+   * @param req
+   * @param res
+   * @returns {Promise<*>}
+   */
   async list(req, res) {
     const { limit, page, q = '' } = req.query;
-    const { fieldNames = [] } = this.options;
-    const $or = fieldNames.map(field => ({ [field]: { $regex: new RegExp(q, 'i') } }));
+    const { fieldNamesSearch = [] } = this.options;
+    const $or = fieldNamesSearch.map(field => ({ [field]: { $regex: new RegExp(q, 'i') } }));
     const items = this.model.find({ $or })
       .limit(parseInt(limit, 10))
       .skip((page - 1) * limit)
@@ -61,6 +105,14 @@ class BasicController {
       });
   }
 
+  /**
+   * Get item by id
+   * @param req
+   * @param res
+   * @param next
+   * @param id
+   * @returns {Promise<*>}
+   */
   async get(req, res, next, id) {
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).send({
@@ -83,28 +135,53 @@ class BasicController {
       });
   }
 
+  /**
+   * Pre-create item hook
+   * @param req
+   * @param item
+   * @returns {Promise<*>}
+   */
   async preCreateHandler(req, item) {
     return Promise.resolve(item);
   }
 
+  /**
+   * Pre-update item hook
+   * @param req
+   * @param item
+   * @returns {Promise<*>}
+   */
   async preUpdateHandler(req, item) {
-    return Promise.resolve(item);
+    this.options.fieldNames.forEach(field => item[field] = req.body[field]);
+    return Promise.resolve(item);;
   }
 
+  /**
+   * Pre-delete item hook
+   * @param req
+   * @param item
+   * @returns {Promise<*>}
+   */
   async preDeleteHandler(req, item) {
     return Promise.resolve(item);
   }
 
+  /**
+   * Save/delete operation
+   * @param {string} operationType
+   * @param {object} item
+   * @param res
+   * @returns {Promise<*>}
+   */
   async [operation](operationType, item, res) {
-    return item[operationType]((err) => {
-      if (err) {
-        return res.status(400).send({
-          message: errorHandler.getErrorMessage(err)
-        });
-      } else {
-        return res.json(item);
-      }
-    });
+    try {
+      const saveResponse = item[operationType]();
+      return res.json(saveResponse);
+    } catch (e) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(e)
+      });
+    }
   }
 }
 

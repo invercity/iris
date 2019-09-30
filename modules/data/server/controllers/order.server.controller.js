@@ -7,6 +7,49 @@ const Client = mongoose.model('Client');
 const { Types } = mongoose;
 const errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
 
+const BasicController = require('./basic.server.controller');
+
+class OrderController extends BasicController {
+  constructor() {
+    super('Order', {
+      fieldNames: [
+        'items',
+        'place',
+        'placeDescription',
+        'date',
+        'status',
+        'sale',
+        'credit',
+        'total',
+        'extra'
+      ]
+    });
+  }
+
+  async preCreateHandler(req, item) {
+    const { place, client } = req.body;
+    client.defaultPlace = place;
+    if (!client._id) {
+      const newClient = new Client(client);
+      await newClient.save();
+      item.client = newClient._id;
+    } else {
+      item.client = client._id;
+    }
+    if (!item.extra) {
+      item.extra = 0;
+    }
+    return item;
+  }
+
+  async preUpdateHandler(req, item) {
+    const updatedItem = super.preUpdateHandler(req, item);
+    const { client: { _id, phone }, place } = req.body;
+    await Client.update({ _id }, { $set: { $set: { phone, defaultPlace: place, active: true } } });
+    return updatedItem;
+  }
+}
+
 exports.create = (req, res) => {
   const {
     items,
