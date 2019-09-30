@@ -86,3 +86,11 @@ a:hover .header-profile-image {
   font-size: 12px;
   font-family: Calibri;
 }
+
+.item-payed {
+  background: yellow;
+}
+
+.item-send {
+  background: lightgreen;
+}

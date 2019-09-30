@@ -82,7 +82,10 @@
     </div>
     <div class="col-md-8">
       <div class="list-group" style="margin-top: 25px">
-        <div ng-repeat="order in pagedItems" class="list-group-item" style="margin-bottom: 10px">
+        <div ng-repeat="order in pagedItems"
+             class="list-group-item"
+             ng-class="{'item-payed': order.payed && order.status !== 'send', 'item-send': order.status === 'sent'}"
+             style="margin-bottom: 10px">
           <div style="display: inline">
             <div>
               <h5>
