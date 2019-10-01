@@ -195,7 +195,7 @@ exports.list = (req, res) => {
       if (client) {
         search.client = {
           $in: [Types.ObjectId(client)]
-        }
+        };
       }
       if ($or.length) {
         _.extend(search, { $or });
