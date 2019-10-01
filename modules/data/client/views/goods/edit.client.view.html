@@ -96,7 +96,7 @@
       <tr ng-repeat="order in orders">
         <td class="success">{{order.client.firstName}}</td>
         <td class="success">{{order.items[0].count}}</td>
-        <td class="success">{{order.items[0].count * order.items[0].good.price}}грн</td>
+        <td class="success">{{order.total}}грн</td>
       </tr>
       <tr>
         <td>&nbsp;</td>
