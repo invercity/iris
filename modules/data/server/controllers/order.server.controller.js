@@ -151,6 +151,7 @@ exports.list = (req, res) => {
     place,
     status,
     good,
+    client,
     page = 1,
     limit = 20
   } = req.query;
@@ -190,6 +191,11 @@ exports.list = (req, res) => {
             }
           ]
         });
+      }
+      if (client) {
+        search.client = {
+          $in: [Types.ObjectId(client)]
+        }
       }
       if ($or.length) {
         _.extend(search, { $or });
