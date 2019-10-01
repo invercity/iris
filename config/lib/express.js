@@ -146,7 +146,7 @@ module.exports.initHelmetHeaders = (app) => {
   app.use(helmet.ieNoOpen());
   app.use(helmet.hsts({
     maxAge: SIX_MONTHS,
-    includeSubdomains: true,
+    includeSubDomains: true,
     force: true
   }));
   app.disable('x-powered-by');
@@ -155,7 +155,6 @@ module.exports.initHelmetHeaders = (app) => {
 module.exports.initModulesClientRoutes = (app) => {
   // Setting the app router and static folder
   app.use('/', express.static(path.resolve('./public')));
-
   config.folders.client.forEach(staticPath => app.use(staticPath, express.static(path.resolve('./' + staticPath))));
 };
 

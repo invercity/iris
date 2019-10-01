@@ -20,6 +20,7 @@ class BasicController {
    * @param {string[]} [options.fieldNamesSearch]
    */
   constructor(modelName, options = {}) {
+    this.mongoose = mongoose;
     this.model = mongoose.model(modelName);
     this.modelNameAttr = modelName.toLowerCase();
     this.options = options;
@@ -42,12 +43,11 @@ class BasicController {
    * @returns {Promise<void>}
    */
   async create(req, res) {
-    const { fieldNames } = this.options;
     const itemData = {};
-    fieldNames.forEach(field => itemData[field] = req.body[field]);
+    this.options.fieldNames.forEach(field => itemData[field] = req.body[field]);
     const item = new this.model(itemData);
     item.user = req.user;
-    const updatedItem = this.preCreateHandler(req, item);
+    const updatedItem = await this.preCreateHandler(req, item);
     return this[operation](OPERATION_TYPE.SAVE, updatedItem, res);
   }
 
@@ -59,7 +59,7 @@ class BasicController {
    */
   async update(req, res) {
     const item = req[this.modelNameAttr];
-    const updatedItem = this.preUpdateHandler(req, item);
+    const updatedItem = await this.preUpdateHandler(req, item);
     return this[operation](OPERATION_TYPE.SAVE, updatedItem, res);
   }
 
@@ -71,7 +71,7 @@ class BasicController {
    */
   async delete(req, res) {
     const item = req[this.modelNameAttr];
-    const updatedItem = this.preDeleteHandler(req, item);
+    const updatedItem = await this.preDeleteHandler(req, item);
     return this[operation](OPERATION_TYPE.DELETE, updatedItem, res);
   }
 
@@ -90,7 +90,6 @@ class BasicController {
       .skip((page - 1) * limit)
       .sort('-created')
       .populate('user', 'displayName');
-
     const count = this.model.countDocuments();
     return Promise.props({
       items,

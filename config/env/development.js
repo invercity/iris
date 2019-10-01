@@ -7,7 +7,8 @@ module.exports = {
       user: '',
       pass: '',
       useNewUrlParser: true,
-      useCreateIndex: true
+      useCreateIndex: true,
+      useUnifiedTopology: true
     },
     // Enable mongoose debug mode
     debug: process.env.MONGODB_DEBUG || false
