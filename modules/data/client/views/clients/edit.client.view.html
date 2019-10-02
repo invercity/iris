@@ -105,6 +105,9 @@
                 <a ng-if="order.payed && order.status !== 'sent'" class="btn btn-primary" ng-click="send(order);">
                   <i class="glyphicon glyphicon-send"></i>
                 </a>
+                <a ng-if="!order.payed" class="btn btn-primary" ng-click="remove(order);">
+                  <i class="glyphicon glyphicon-trash"></i>
+                </a>
               </div>
             </div>
           </div>
