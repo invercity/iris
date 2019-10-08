@@ -6,6 +6,7 @@ angular.module('data').controller('OrdersEditController', [
   'Authentication', 'Orders', 'Goods', 'Clients', 'Places', 'ConfirmService', 't',
   function ($scope, $stateParams, $location, $q, Authentication, Orders, Goods, Clients, Places, Confirm, t) {
     $scope.t = t;
+    $scope.telRegexp = /(^\+[0-9]{2}|^\+[0-9]{2}\(0\)|^\(\+[0-9]{2}\)\(0\)|^00[0-9]{2}|^0)([0-9]{9}$|[0-9\-\s]{10}$)/;
     $scope.authentication = Authentication;
     $scope.currency = $scope.t.UAH;
     $scope.currentPage = 1;

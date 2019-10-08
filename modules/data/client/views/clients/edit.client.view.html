@@ -29,9 +29,11 @@
                  id="phone"
                  class="form-control"
                  placeholder="{{t.PHONE}}"
+                 ng-pattern="telRegexp"
                  required>
           <div ng-messages="articleForm.phone.$error" role="alert">
             <p class="help-block error-text" ng-message="required">{{t.PHONE}} {{t.REQUIRED}}</p>
+            <p class="help-block error-text" ng-message="pattern">Телефон має бути заповнений в форматі +380ХХХХХХХХХ</p>
           </div>
         </div>
 

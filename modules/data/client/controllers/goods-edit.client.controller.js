@@ -106,7 +106,8 @@ angular.module('data').controller('GoodsEditController',
           limit: $scope.itemsPerPage,
           good: $stateParams.goodId,
           status: 'work',
-          payed: false
+          payed: false,
+          sort: 'client.name'
           // q: $scope.search
         }, function (data) {
           $scope.orders = data.orders;

@@ -1,8 +1,7 @@
 <section ng-controller="OrdersEditController" ng-init="findOne()">
-  <div class="page-header" style="display: inline">
+  <div class="page-header">
     <h3>
       {{title}}
-      <span ng-if="order.payed" class="pull-right" style="color: green">Сплачено</span>
     </h3>
   </div>
   <div class="col-md-8">
@@ -80,11 +79,13 @@
           <input name="phone"
                  ng-model="order.client.phone"
                  id="phone"
+                 ng-pattern="telRegexp"
                  class="form-control"
                  placeholder="{{t.PHONE}}"
                  required>
           <div ng-messages="orderForm.phone.$error" role="alert">
             <p class="help-block error-text" ng-message="required">{{t.PHONE}} {{t.REQUIRED}}</p>
+            <p class="help-block error-text" ng-message="pattern">Телефон має бути заповнений в форматі +380ХХХХХХХХХ</p>
           </div>
         </div>
 

@@ -8,6 +8,7 @@ angular.module('data').controller('ClientsEditController', [
     $scope.authentication = Authentication;
     $scope.currentPage = 1;
     $scope.itemsPerPage = 20;
+    $scope.telRegexp = /(^\+[0-9]{2}|^\+[0-9]{2}\(0\)|^\(\+[0-9]{2}\)\(0\)|^00[0-9]{2}|^0)([0-9]{9}$|[0-9\-\s]{10}$)/;
 
     $scope.update = function (isValid) {
       $scope.error = null;
