@@ -205,7 +205,12 @@ exports.list = (req, res) => {
         .skip((page - 1) * limit)
         .sort(sort)
         .populate('user', 'displayName')
-        .populate('client')
+        .populate({
+          path: 'client',
+          options: {
+            sort: 'firstName'
+          }
+        })
         .populate('items.good')
         .populate('place');
 

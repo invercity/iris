@@ -87,16 +87,16 @@
       <h4>Список нових замовлень</h4>
     </div>
 
-    <table id="report" ng-if="orders.length" class="table table-bordered table-striped">
+    <table id="report" ng-if="orders.length" class="table table-bordered table-striped" style="font-size: 16px">
       <thead>
         <td class="info"><b>Клієнт</b></td>
         <td class="info"><b>Об'єм, мл</b></td>
         <td class="info"><b>Сума</b></td>
       </thead>
       <tr ng-repeat="order in orders">
-        <td ng-class="{ 'item-payed': isOrderPayed(order), 'item-send': isOrderSend(order) }">{{order.client.firstName}}</td>
-        <td ng-class="{ 'item-payed': isOrderPayed(order), 'item-send': isOrderSend(order) }">{{order.items[0].count}}</td>
-        <td ng-class="{ 'item-payed': isOrderPayed(order), 'item-send': isOrderSend(order) }">{{order.total}}грн</td>
+        <td ng-class="{ 'item-payed': isOrderPayed(order), 'item-send': isOrderSend(order), 'info': !order.payed }">{{order.client.firstName}}</td>
+        <td ng-class="{ 'item-payed': isOrderPayed(order), 'item-send': isOrderSend(order), 'info': !order.payed }">{{order.items[0].count}}</td>
+        <td ng-class="{ 'item-payed': isOrderPayed(order), 'item-send': isOrderSend(order), 'info': !order.payed }">{{order.total}}грн</td>
       </tr>
       <tr>
         <td>&nbsp;</td>
