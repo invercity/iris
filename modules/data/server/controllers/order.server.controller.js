@@ -186,9 +186,7 @@ exports.list = (req, res) => {
         $or.push({
           $and: [
             {
-              'items.good': { $in: [Types.ObjectId(good)] },
-              status: { $ne: 'sent' },
-              payed: false,
+              'items.good': { $in: [Types.ObjectId(good)] }
             }
           ]
         });

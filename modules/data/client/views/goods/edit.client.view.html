@@ -89,24 +89,24 @@
 
     <table id="report" ng-if="orders.length" class="table table-bordered table-striped">
       <thead>
-        <td class="info">Клієнт</td>
-        <td class="info">Об'єм, мл</td>
-        <td class="info">Сума</td>
+        <td class="info"><b>Клієнт</b></td>
+        <td class="info"><b>Об'єм, мл</b></td>
+        <td class="info"><b>Сума</b></td>
       </thead>
       <tr ng-repeat="order in orders">
-        <td class="success">{{order.client.firstName}}</td>
-        <td class="success">{{order.items[0].count}}</td>
-        <td class="success">{{order.total}}грн</td>
+        <td ng-class="{ 'item-payed': isOrderPayed(order), 'item-send': isOrderSend(order) }">{{order.client.firstName}}</td>
+        <td ng-class="{ 'item-payed': isOrderPayed(order), 'item-send': isOrderSend(order) }">{{order.items[0].count}}</td>
+        <td ng-class="{ 'item-payed': isOrderPayed(order), 'item-send': isOrderSend(order) }">{{order.total}}грн</td>
       </tr>
       <tr>
         <td>&nbsp;</td>
-        <td class="info">Товар</td>
-        <td class="success">{{good.name}}</td>
+        <td class="info"><b>Товар</b></td>
+        <td class="info">{{good.name}}</td>
       </tr>
       <tr>
         <td>&nbsp;</td>
-        <td class="info">Дата</td>
-        <td class="success">{{reportDate}}</td>
+        <td class="info"><b>Дата</b></td>
+        <td class="info">{{reportDate}}</td>
       </tr>
     </table>
   </div>

@@ -105,9 +105,7 @@ angular.module('data').controller('GoodsEditController',
           page: $scope.currentPage,
           limit: $scope.itemsPerPage,
           good: $stateParams.goodId,
-          status: 'work',
-          payed: false,
-          sort: 'client.name'
+          sort: 'client.firstName'
           // q: $scope.search
         }, function (data) {
           $scope.orders = data.orders;
@@ -135,6 +133,14 @@ angular.module('data').controller('GoodsEditController',
         $scope.orders = _.filter($scope.orders, function (order) {
           return !order.payed && order.status !== 'sent';
         });
+      };
+
+      $scope.isOrderSend = function (order) {
+        return order.status === 'sent';
+      };
+
+      $scope.isOrderPayed = function (order) {
+        return !$scope.isOrderSend(order) && order.payed;
       };
     }
   ]);
