@@ -152,7 +152,7 @@ exports.list = (req, res) => {
     status,
     good,
     client,
-    sort = '-created',
+    sort = ['created', 0],
     page = 1,
     limit = 20
   } = req.query;
@@ -203,14 +203,9 @@ exports.list = (req, res) => {
       const orders = Order.find(params)
         .limit(+limit)
         .skip((page - 1) * limit)
-        .sort(sort)
+        .sort({ [sort[0]]: sort[1] })
         .populate('user', 'displayName')
-        .populate({
-          path: 'client',
-          options: {
-            sort: 'firstName'
-          }
-        })
+        .populate('client')
         .populate('items.good')
         .populate('place');
 
