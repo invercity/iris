@@ -203,11 +203,11 @@ exports.list = (req, res) => {
       const orders = Order.find(params)
         .limit(+limit)
         .skip((page - 1) * limit)
-        .sort({ [sort[0]]: sort[1] })
         .populate('user', 'displayName')
         .populate('client')
         .populate('items.good')
-        .populate('place');
+        .populate('place')
+        .sort({ [sort[0]]: sort[1] });
 
       const count = Order.count(params);
       return Promise.props({
