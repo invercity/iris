@@ -152,7 +152,7 @@ exports.list = (req, res) => {
     status,
     good,
     client,
-    sort = ['created', 0],
+    sort = '-created',
     page = 1,
     limit = 20
   } = req.query;
@@ -207,7 +207,7 @@ exports.list = (req, res) => {
         .populate('client')
         .populate('items.good')
         .populate('place')
-        .sort({ [sort[0]]: sort[1] });
+        .sort(sort);
 
       const count = Order.count(params);
       return Promise.props({

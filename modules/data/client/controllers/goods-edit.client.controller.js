@@ -105,7 +105,7 @@ angular.module('data').controller('GoodsEditController',
           page: $scope.currentPage,
           limit: $scope.itemsPerPage,
           good: $stateParams.goodId,
-          sort: ['client.firstName', 1]
+          sort: 'client.firstName'
           // q: $scope.search
         }, function (data) {
           $scope.orders = data.orders;
