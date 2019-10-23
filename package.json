@@ -14,7 +14,8 @@
   },
   "scripts": {
     "start": "node server",
-    "postinstall": "bower install --config.interactive=false",
+    "bower": "bower install --config.interactive=false --allow-root",
+    "postinstall": "npm run bower",
     "heroku-postbuild": "grunt build",
     "test": "grunt lint"
   },
