@@ -108,7 +108,7 @@ angular.module('data').controller('GoodsEditController',
           sort: 'client.firstName'
           // q: $scope.search
         }, function (data) {
-          $scope.orders = data.orders;
+          $scope.orders = _.sortBy(data.orders, 'client.firstName');
           $scope.ordersCount = data.count;
         });
       };
