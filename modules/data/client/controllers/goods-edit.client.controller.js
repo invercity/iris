@@ -7,7 +7,7 @@ angular.module('data').controller('GoodsEditController',
       $scope.t = t;
       $scope.authentication = Authentication;
       $scope.currentPage = 1;
-      $scope.itemsPerPage = 20;
+      $scope.itemsPerPage = 9999;
       $scope.reportDate = new Date().toLocaleDateString();
 
       $scope.getReport = function() {
