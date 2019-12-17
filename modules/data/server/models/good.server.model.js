@@ -1,8 +1,7 @@
 const mongoose = require('mongoose');
 const autoIncrement = require('mongoose-auto-increment');
-// const history = require('mongoose-history');
 
-const{ Schema } = mongoose;
+const { Schema } = mongoose;
 autoIncrement.initialize(mongoose);
 
 const modelGood = 'Good';
@@ -62,6 +61,27 @@ GoodSchema.plugin(autoIncrement.plugin, {
   incrementBy: 1
 });
 
-// GoodSchema.plugin(history, { customCollectionName: "GoodHistory" });
+GoodSchema.pre('remove', () => {
+  const id = this._id;
+  const price = this.price;
+  return mongoose.model('Order')
+    .find({
+      'items.good': {
+        $in: [Schema.ObjectId(id)]
+      }
+    })
+    .then((orders) => {
+      return Promise.all(orders.map((order) => {
+        const good = order.items.find(item => item.good === id);
+        if (good) {
+          order.total -= price * good.count;
+          const index = order.items.indexOf(good);
+          order.items.splice(index, 1);
+          return order.save();
+        }
+        return null;
+      }));
+    });
+});
 
 mongoose.model(modelGood, GoodSchema);
