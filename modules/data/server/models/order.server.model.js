@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const async = require('async');
 const autoIncrement = require('mongoose-auto-increment');
-// const history = require('mongoose-history');
 
 const Good = mongoose.model('Good');
 const{ Schema } = mongoose;
@@ -73,6 +72,14 @@ const OrderSchema = new Schema({
   // will be fully implemented in IRIS v1.4.0
   extras: {
     type: [Schema.Types.Mixed]
+  },
+  archive: {
+    type: Boolean,
+    default: false
+  },
+  expired: {
+    type: Boolean,
+    default: false
   }
 });
 
@@ -82,8 +89,6 @@ OrderSchema.plugin(autoIncrement.plugin, {
   startAt: 1,
   incrementBy: 1
 });
-
-// OrderSchema.plugin(history,{ customCollectionName: "OrderHistory" });
 
 OrderSchema.pre('save', function (next) {
   async.parallel([

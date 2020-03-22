@@ -18,7 +18,9 @@ exports.create = (req, res) => {
     credit,
     total,
     extra = 0,
-    extras = []
+    extras = [],
+    archive,
+    expired
   } = req.body;
   const orderData = {
     items,
@@ -30,7 +32,9 @@ exports.create = (req, res) => {
     credit,
     total,
     extra,
-    extras
+    extras,
+    archive,
+    expired
   };
   async.parallel([
     (callback) => {
@@ -95,7 +99,9 @@ exports.update = (req, res) => {
     client: {
       phone,
       _id
-    }
+    },
+    archive,
+    expired
   } = req.body;
 
   // TODO: replace with extend
@@ -109,6 +115,8 @@ exports.update = (req, res) => {
   order.total = total;
   order.extra = extra;
   order.extras = extras;
+  order.archive = archive;
+  order.expired = expired;
 
   order.save((err) => {
     if (err) {

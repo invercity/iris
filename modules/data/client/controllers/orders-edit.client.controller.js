@@ -13,8 +13,14 @@ angular.module('data').controller('OrdersEditController', [
     $scope.itemsPerPage = 20;
     // create separate order for each good
     $scope.separate = true;
-    $scope.flacon = {
-      isAdded: false
+    $scope.extras = {
+      flacon20: false,
+      flacon30: false
+    };
+
+    var availableExtras = {
+      flacon20: 20,
+      flacon30: 30
     };
 
     $scope.isSalesShown = false;
@@ -25,12 +31,12 @@ angular.module('data').controller('OrdersEditController', [
       }
     });
 
-    $scope.onFlaconChange = function () {
+    $scope.onExtrasChange = function (extraId) {
       if ($scope.order) {
-        var extraIndex = _.findIndex($scope.order.extras, function (extra) { return extra.type === 'flacon'; });
-        if ($scope.flacon.isAdded) {
+        var extraIndex = _.findIndex($scope.order.extras, function (extra) { return extra.type === extraId; });
+        if ($scope.extras[extraId]) {
           if (extraIndex === -1) {
-            $scope.order.extras.push({ type: 'flacon', value: 20 });
+            $scope.order.extras.push({ type: extraId, value: availableExtras[extraId] });
             $scope.calculateTotal($scope.order);
           }
         } else {
