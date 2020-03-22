@@ -151,6 +151,8 @@ angular.module('data').controller('OrdersEditController', [
           orderId: $stateParams.orderId
         }, function (data) {
           $scope.order = data;
+          var extras = data.extras || [];
+          _.each(extras, function (extra) { $scope.extras[extra.type] = true; });
           $scope.flacon.isAdded = !!(data.extras && _.find(data.extras, function (e) { return e.type === 'flacon'; }));
           $scope.calcArray = calcArray;
           $scope.savedOrder = _.cloneDeep(data);
