@@ -1,6 +1,6 @@
 # IRIS
 [![Build Status](https://travis-ci.org/invercity/iris.svg?branch=master)](https://travis-ci.org/invercity/iris)
-[![Dependencies](https://img.shields.io/librariesio/github/invercity/iris.svg)](https://img.shields.io/librariesio/github/invercity/iris)
+[![Depfu](https://badges.depfu.com/badges/a266632c416c41de678053f6613a83f7/count.svg)](https://depfu.com/github/invercity/iris?project_id=12849)
 [![MIT Licence](https://badges.frapsoft.com/os/mit/mit.svg?v=103)](https://opensource.org/licenses/mit-license.php)
 ## Prerequisites
 Make sure you have installed all of the following prerequisites on your development machine:
