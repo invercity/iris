@@ -100,20 +100,13 @@ module.exports = (grunt) => {
         src: defaultAssets.client.css
       }
     },
-    ngAnnotate: {
-      production: {
-        files: {
-          'public/dist/application.js': defaultAssets.client.js
-        }
-      }
-    },
     uglify: {
       production: {
         options: {
           mangle: false
         },
         files: {
-          'public/dist/application.min.js': 'public/dist/application.js'
+          'public/dist/application.min.js': defaultAssets.client.js
         }
       }
     },
@@ -144,7 +137,7 @@ module.exports = (grunt) => {
           return !fs.existsSync('config/env/local.js');
         }
       }
-    }
+    },
   });
 
   // Load NPM tasks
@@ -199,7 +192,7 @@ module.exports = (grunt) => {
   // Lint CSS and JavaScript files.
   grunt.registerTask('lint', ['sass', 'jshint', 'eslint', 'csslint']);
   // Lint project files and minify them into two production files.
-  grunt.registerTask('build', ['env:dev', 'lint', 'ngAnnotate', 'uglify', 'cssmin']);
+  grunt.registerTask('build', ['env:dev', 'lint', 'uglify', 'cssmin']);
   // Run the project in development mode
   grunt.registerTask('default', ['env:dev', 'lint', 'mkdir:upload', 'copy:localConfig', 'server']);
   // Run the project in debug mode

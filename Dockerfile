@@ -3,17 +3,17 @@ FROM node:12.16.0
 WORKDIR /home/mean
 
 # Install Mean.JS packages
-ADD package.json /home/mean/package.json
-ADD package-lock.json /home/mean/package-lock.json
+COPY package.json /home/mean/package.json
+COPY package-lock.json /home/mean/package-lock.json
 RUN npm install
 
 # Manually trigger bower. Why doesnt this work via npm install?
-ADD .bowerrc /home/mean/.bowerrc
-ADD bower.json /home/mean/bower.json
+COPY .bowerrc /home/mean/.bowerrc
+COPY bower.json /home/mean/bower.json
 RUN npm run bower
 
 # Make everything available for start
-ADD . /home/mean
+COPY . /home/mean
 
 # Set development environment as default
 ENV NODE_ENV development
