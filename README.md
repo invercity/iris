@@ -1,7 +1,10 @@
-# IRIS
+# iris
+[![GitHub Release](https://github-basic-badges.herokuapp.com/release/invercity/iris.svg)](https://github.com/invercity/iris/releases)
 [![Build Status](https://travis-ci.org/invercity/iris.svg?branch=master)](https://travis-ci.org/invercity/iris)
 [![Depfu](https://badges.depfu.com/badges/a266632c416c41de678053f6613a83f7/count.svg)](https://depfu.com/github/invercity/iris?project_id=12849)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/8a4e1f8bbff64518acffcf93ec092a7e)](https://www.codacy.com/manual/andriy.ermolenko/iris?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=invercity/iris&amp;utm_campaign=Badge_Grade)
 [![MIT Licence](https://badges.frapsoft.com/os/mit/mit.svg?v=103)](https://opensource.org/licenses/mit-license.php)
+
 ## Prerequisites
 Make sure you have installed all of the following prerequisites on your development machine:
 * Node.js [Download & Install Node.js](https://nodejs.org/en/download/) and the npm package manager.
