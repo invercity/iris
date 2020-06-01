@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const autoIncrement = require('mongoose-auto-increment');
 
 const Good = mongoose.model('Good');
-const{ Schema } = mongoose;
+const { Schema } = mongoose;
 autoIncrement.initialize(mongoose);
 
 const modelOrder = 'Order';

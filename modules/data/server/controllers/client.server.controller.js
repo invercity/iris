@@ -3,6 +3,22 @@ const path = require('path'),
   Client = mongoose.model('Client'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
 
+const BasicController = require('./basic.server.controller');
+
+class ClientController extends BasicController {
+  constructor() {
+    super('Client', {
+      fieldNames: [
+        'firstName',
+        'lastName',
+        'phone',
+        'defaultPlace',
+        'active'
+      ]
+    });
+  }
+}
+
 exports.create = (req, res) => {
   const client = new Client(req.body);
 

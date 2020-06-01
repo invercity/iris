@@ -8,6 +8,13 @@ const OPERATION_TYPE = {
 };
 
 /**
+ * @typedef ControllerOptions
+ * @field {string[]} fieldNames
+ * @field {string[]} [populateFields]
+ * @field {string[]} [fieldNamesSearch]
+ */
+
+/**
  * @class BasicController
  * @version 1.0.0
  */
@@ -15,9 +22,7 @@ class BasicController {
   /**
    * Basic controller constructor
    * @param {string} modelName
-   * @param {object} options
-   * @param {string[]} options.fieldNames
-   * @param {string[]} [options.fieldNamesSearch]
+   * @param {ControllerOptions} options
    */
   constructor(modelName, options = {}) {
     this.mongoose = mongoose;
