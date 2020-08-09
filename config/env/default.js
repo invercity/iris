@@ -12,7 +12,8 @@ module.exports = {
       // pass: '',
       useNewUrlParser: true,
       useCreateIndex: true,
-      useUnifiedTopology: true
+      useUnifiedTopology: true,
+      useFindAndModify: false
     },
     // Enable mongoose debug mode
     debug: process.env.MONGODB_DEBUG || false
