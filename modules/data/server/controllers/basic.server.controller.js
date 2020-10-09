@@ -182,7 +182,7 @@ class BasicController {
    */
   async [operation](operationType, item, res) {
     try {
-      const saveResponse = item[operationType]();
+      const saveResponse = await item[operationType]();
       return res.json(saveResponse);
     } catch (e) {
       return res.status(400).send({
