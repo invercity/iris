@@ -90,11 +90,14 @@ class BasicController {
     const { limit, page, q = '' } = req.query;
     const { fieldNamesSearch = [] } = this.options;
     const $or = fieldNamesSearch.map(field => ({ [field]: { $regex: new RegExp(q, 'i') } }));
-    const items = this.model.find({ $or })
+    let items = this.model.find({ $or })
       .limit(parseInt(limit, 10))
       .skip((page - 1) * limit)
       .sort('-created')
       .populate('user', 'displayName');
+    if (this.options.populateFields) {
+      items = items.populate(...this.options.populateFields);
+    }
     const count = this.model.countDocuments();
     return Promise.props({
       items,

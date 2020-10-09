@@ -14,8 +14,20 @@ class ClientController extends BasicController {
         'phone',
         'defaultPlace',
         'active'
+      ],
+      populateFields: [
+        'defaultPlace'
       ]
     });
+  }
+
+  async preUpdateHandler(req, item) {
+    const updated = await super.preUpdateHandler(req, item);
+    updated.active = true;
+    if (!updated.defaultPlace) {
+      updated.defaultPlace = null;
+    }
+    return updated;
   }
 }
 
