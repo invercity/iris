@@ -12,6 +12,7 @@ const OPERATION_TYPE = {
  * @field {string[]} fieldNames
  * @field {string[]} [populateFields]
  * @field {string[]} [fieldNamesSearch]
+ * @field {object} [listExtraQuery]
  */
 
 /**
@@ -88,9 +89,10 @@ class BasicController {
    */
   async list(req, res) {
     const { limit, page, q = '' } = req.query;
-    const { fieldNamesSearch = [] } = this.options;
+    const { fieldNamesSearch = [], listExtraQuery = {} } = this.options;
     const $or = fieldNamesSearch.map(field => ({ [field]: { $regex: new RegExp(q, 'i') } }));
-    let items = this.model.find({ $or })
+    const query = Object.assign({ $or }, listExtraQuery);
+    let items = this.model.find(query)
       .limit(parseInt(limit, 10))
       .skip((page - 1) * limit)
       .sort('-created')
