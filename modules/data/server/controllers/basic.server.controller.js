@@ -13,6 +13,7 @@ const OPERATION_TYPE = {
  * @field {string[]} [populateFields]
  * @field {string[]} [fieldNamesSearch]
  * @field {object} [listExtraQuery]
+ * @field {string[]} [listExtraQueryFields]
  */
 
 /**
