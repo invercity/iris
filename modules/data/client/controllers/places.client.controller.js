@@ -51,7 +51,9 @@ angular.module('data').controller('PlacesController', ['$scope', '$stateParams',
     };
 
     $scope.find = function () {
-      $scope.places = Places.query();
+      Places.query(function (data) {
+        $scope.places = data.items;
+      });
     };
 
     $scope.findOne = function () {

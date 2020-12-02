@@ -207,7 +207,7 @@ angular.module('data').controller('OrdersController', [
       $scope.onChangeType($scope.orderTypes[0]);
       Places.query().$promise
         .then(function (allPlaces) {
-          $scope.places = allPlaces;
+          $scope.places = allPlaces.items;
           $scope.selectedStatus = $scope.listStatuses[4];
         });
     };
