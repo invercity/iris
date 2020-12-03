@@ -66,6 +66,7 @@
     "grunt-eslint": "~22.0.0",
     "grunt-ng-annotate": "~3.0.0",
     "load-grunt-tasks": "~4.0.0",
+    "nodemon": "^2.0.6",
     "run-sequence": "^2.2.1"
   }
 }
