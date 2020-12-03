@@ -40,9 +40,10 @@ class BasicController {
   list(req, res) {
     const { limit = 20, page = 1, q = '' } = req.query;
     const { fieldNames = [] } = this.options;
-    const $or = fieldNames.map(field => ({ [field]: { $regex: new RegExp(q, 'i') } }));
+    const escaped = q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const $or = fieldNames.map(field => ({ [field]: { $regex: new RegExp(escaped, 'i') } }));
     const items = this.model.find({ $or })
-      .limit(parseInt(limit, 10))
+      .limit(+limit)
       .skip((page - 1) * limit)
       .sort('-created')
       .populate('user', 'displayName');
