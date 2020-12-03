@@ -27,6 +27,11 @@ class OrderController extends BasicController {
         'payed',
         'place',
         'status'
+      ],
+      populateFields: [
+        'client',
+        'items.good',
+        'place'
       ]
     });
   }
