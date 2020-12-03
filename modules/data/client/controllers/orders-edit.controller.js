@@ -112,6 +112,7 @@ angular.module('data').controller('OrdersEditController', [
             }
           }
         });
+        console.log(items);
         return items;
       });
     };
