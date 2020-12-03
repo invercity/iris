@@ -64,7 +64,8 @@ exports.list = (req, res) => {
     active = true
   } = req.query;
   const fieldNames = ['firstName', 'lastName', 'phone'];
-  const $or = fieldNames.map(field => ({ [field]: { $regex: new RegExp(q, 'i') } }));
+  const escaped = q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const $or = fieldNames.map(field => ({ [field]: { $regex: new RegExp(escaped, 'i') } }));
   const items = Client.find({ active, $or })
     .limit(+limit)
     .skip((page - 1) * limit)
