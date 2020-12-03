@@ -51,7 +51,10 @@ angular.module('data').controller('ClientsController', ['$scope', '$stateParams'
     };
 
     $scope.find = function () {
-      Clients.query(function (data) {
+      // TODO: implement pagination component
+      Clients.query({
+        limit: 9999
+      }, function (data) {
         $scope.clients = data.items;
         $scope.buildPager();
       });

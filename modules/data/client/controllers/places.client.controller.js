@@ -51,7 +51,10 @@ angular.module('data').controller('PlacesController', ['$scope', '$stateParams',
     };
 
     $scope.find = function () {
-      Places.query(function (data) {
+      // TODO: implement pagination component
+      Places.query({
+        limit: 999
+      }, function (data) {
         $scope.places = data.items;
       });
     };

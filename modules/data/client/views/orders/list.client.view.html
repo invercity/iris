@@ -31,24 +31,30 @@
           <div class="form-group">
             <label for="place" class="list-select-filter">{{t.PLACE_DELIVER}}</label>
             <input type="text"
+                   autocomplete="off"
                    id="place"
                    ng-model="selectedPlace"
                    placeholder="{{t.ORDER_TYPE_ALL}}"
                    typeahead-editable="true"
-                   typeahead="place as place.name for place in places | filter:$viewValue"
+                   typeahead-loading="loadingPlaces"
+                   typeahead="place as place.name for place in getPlaces($viewValue) | filter:$viewValue | limitTo:8"
                    class="form-control">
+            <i ng-show="loadingPlaces" class="glyphicon glyphicon-refresh"></i>
           </div>
           <!-- GOOD -->
           <div class="form-group">
             <label for="type" class="list-select-filter">{{t.GOOD}}</label>
             <div>
               <input type="text"
+                     autocomplete="off"
                      id="good"
                      ng-model="selectedGood"
                      placeholder="{{t.ORDER_TYPE_ALL}}"
                      typeahead-editable="true"
-                     typeahead="good as good.name for good in goods"
+                     typeahead-loading="loadingGoods"
+                     typeahead="good as good.name for good in getGoods($viewValue) | filter:$viewValue | limitTo:8"
                      class="form-control">
+              <i ng-show="loadingGoods" class="glyphicon glyphicon-refresh"></i>
             </div>
           </div>
           <!-- STATUS -->

@@ -103,12 +103,9 @@ angular.module('data').controller('OrdersController', [
 
     $scope.$watch('selectedGood', function (newV, oldV) {
       if (!($scope.selectedGood && $scope.selectedGood._id)) {
-        getGoods($scope.selectedGood)
-          .then(function(response) {
-            $scope.goods = response.items;
-          });
+        return null;
       }
-      else if (newV._id || oldV._id) {
+      if (newV._id || oldV._id) {
         $scope.onChangeType();
       }
     });
@@ -200,16 +197,24 @@ angular.module('data').controller('OrdersController', [
       });
     };
 
+    $scope.getGoods = function (query) {
+      return Goods.query({
+        q: query
+      }).$promise.then(function (data) { return data.items; });
+    };
+
+    $scope.getPlaces = function (query) {
+      return Places.query({
+        q: query
+      }).$promise.then(function (data) { return data.items; });
+    };
+
     /**
      * Get orders list
      */
     $scope.find = function () {
       $scope.onChangeType($scope.orderTypes[0]);
-      Places.query().$promise
-        .then(function (allPlaces) {
-          $scope.places = allPlaces.items;
-          $scope.selectedStatus = $scope.listStatuses[4];
-        });
+      $scope.selectedStatus = $scope.listStatuses[4];
     };
 
     var calcArray = function (good) {
@@ -247,7 +252,7 @@ angular.module('data').controller('OrdersController', [
       }
       else {
         Clients.query(function (data) {
-          $scope.clients = data;
+          $scope.clients = data.items;
           $scope.order = new Orders();
           $scope.title = $scope.t.NEW_ORDER;
           $scope.order.status = $scope.statuses[0].value;
@@ -256,10 +261,10 @@ angular.module('data').controller('OrdersController', [
       }
 
       Goods.query(function (data) {
-        $scope.goods = data.goods;
+        $scope.goods = data.items;
       });
       Places.query(function (data) {
-        $scope.places = data;
+        $scope.places = data.items;
         $scope.places.unshift({
           name: $scope.t.EDIT_MANUALLY
         });

@@ -14,7 +14,6 @@ angular.module('data').controller('OrdersEditController', [
     $scope.isSalesShown = false;
 
     $scope.$watch('order.client', function () {
-      console.log($scope.order.client);
       if ($scope.order && $scope.order.client && $scope.order.client.defaultPlace && !$scope.order.place) {
         $scope.order.place = $scope.order.client.defaultPlace;
       }
@@ -58,6 +57,28 @@ angular.module('data').controller('OrdersEditController', [
       }
     };
 
+    $scope.getClients = function (query) {
+      return Clients.query({
+        q: query
+      }).$promise.then(function (data) { return data.items; });
+    };
+
+    $scope.getPlaces = function (query) {
+      return Places.query({
+        q: query
+      }).$promise.then(function (data) { return data.items; });
+    };
+
+    $scope.getClientSearchValue = function (client) {
+      if (!client || !client._id) {
+        return '';
+      }
+      if (!client.name) {
+        return client.firstName + ' ' + client.phone;
+      }
+      return client.name;
+    };
+
     $scope.pay = function (isValid, order) {
       Confirm.show($scope.t.CONFIRM, $scope.t.PAY_ORDER_CONF, function () {
         // TODO: optimise this
@@ -76,21 +97,26 @@ angular.module('data').controller('OrdersEditController', [
     };
 
     var calcArray = function (good) {
-      if (!$scope.goods) return [];
-      var items = [];
-      if (good && good._id) {
-        items.push(good);
-      }
-      $scope.goods.forEach(function (g) {
-        if (!_.find($scope.order.items, function (item) {
-          return item.good && item.good._id === g._id;
-        })) {
-          if (g.count) {
-            items.push(g);
-          }
+      // if (!$scope.goods) return [];
+      var name = good ? good.name : '';
+      return Goods.query({
+        q: name
+      }).$promise.then(function (data) {
+        var items = [];
+        if (good && good._id) {
+          items.push(good);
         }
+        data.items.forEach(function (g) {
+          if (!_.find($scope.order.items, function (item) {
+            return item.good && item.good._id === g._id;
+          })) {
+            if (g.count) {
+              items.push(g);
+            }
+          }
+        });
+        return items;
       });
-      return items;
     };
 
     $scope.findOne = function () {
@@ -106,11 +132,19 @@ angular.module('data').controller('OrdersEditController', [
           if (!$scope.order.status) {
             $scope.order.status = $scope.statuses[0].value;
           }
+          /* Places.query({ q: data.client.firstName }, function (data) {
+            $scope.clients = data.items;
+          }); */
         });
       }
       else {
-        Clients.query(function (data) {
-          $scope.clients = data;
+        $scope.order = new Orders();
+        $scope.title = $scope.t.NEW_ORDER;
+        $scope.order.status = $scope.statuses[0].value;
+        $scope.calcArray = calcArray;
+      }
+        /* Clients.query(function (data) {
+          $scope.clients = data.items;
           $scope.order = new Orders();
           $scope.title = $scope.t.NEW_ORDER;
           $scope.order.status = $scope.statuses[0].value;
@@ -122,11 +156,11 @@ angular.module('data').controller('OrdersEditController', [
         $scope.goods = data.items;
       });
       Places.query(function (data) {
-        $scope.places = data;
+        $scope.places = data.items;
         $scope.places.unshift({
           name: $scope.t.EDIT_MANUALLY
         });
-      });
+      }); */
     };
 
     $scope.calculate = function (price, count) {
