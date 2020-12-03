@@ -143,7 +143,7 @@ angular.module('data').controller('OrdersEditController', [
         $scope.order.status = $scope.statuses[0].value;
         $scope.calcArray = calcArray;
       }
-        /* Clients.query(function (data) {
+      /* Clients.query(function (data) {
           $scope.clients = data.items;
           $scope.order = new Orders();
           $scope.title = $scope.t.NEW_ORDER;
