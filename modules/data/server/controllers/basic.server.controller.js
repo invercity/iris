@@ -38,7 +38,7 @@ class BasicController {
   }
 
   list(req, res) {
-    const { limit, page, q = '' } = req.query;
+    const { limit = 20, page = 1, q = '' } = req.query;
     const { fieldNames = [] } = this.options;
     const $or = fieldNames.map(field => ({ [field]: { $regex: new RegExp(q, 'i') } }));
     const items = this.model.find({ $or })
