@@ -12,6 +12,8 @@ const OPERATION_TYPE = {
  * @field {string[]} fieldNames
  * @field {string[]} [populateFields]
  * @field {string[]} [fieldNamesSearch]
+ * @field {object} [listExtraQuery]
+ * @field {string[]} [listExtraQueryFields]
  */
 
 /**
@@ -88,10 +90,11 @@ class BasicController {
    */
   async list(req, res) {
     const { limit = 20, page = 1, q = '' } = req.query;
-    const { fieldNamesSearch = [] } = this.options;
+    const { fieldNamesSearch = [], listExtraQuery = {} } = this.options;
     const escaped = q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     const $or = fieldNamesSearch.map(field => ({ [field]: { $regex: new RegExp(escaped, 'i') } }));
-    let items = this.model.find({ $or })
+    const query = Object.assign({ $or }, listExtraQuery);
+    let items = this.model.find(query)
       .limit(+limit)
       .skip((page - 1) * limit)
       .sort('-created')
@@ -153,8 +156,15 @@ class BasicController {
     return Promise.resolve(item);
   }
 
-  preUpdateHandler(req, item) {
-    return item;
+  /**
+   * Pre-update item hook
+   * @param req
+   * @param item
+   * @returns {Promise<*>}
+   */
+  async preUpdateHandler(req, item) {
+    this.options.fieldNames.forEach(field => item[field] = req.body[field]);
+    return Promise.resolve(item);
   }
 
   /**

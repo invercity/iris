@@ -1,8 +1,3 @@
-const path = require('path'),
-  mongoose = require('mongoose'),
-  Client = mongoose.model('Client'),
-  errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
-
 const BasicController = require('./basic.server.controller');
 
 class ClientController extends BasicController {
@@ -17,7 +12,10 @@ class ClientController extends BasicController {
       ],
       populateFields: [
         'defaultPlace'
-      ]
+      ],
+      listExtraQuery: {
+        active: true
+      }
     });
   }
 
@@ -31,6 +29,9 @@ class ClientController extends BasicController {
   }
 }
 
+module.exports = new ClientController();
+
+/*
 exports.create = (req, res) => {
   const client = new Client(req.body);
 
@@ -135,3 +136,5 @@ exports.clientByID = (req, res, next, id) => {
       next();
     });
 };
+
+*/

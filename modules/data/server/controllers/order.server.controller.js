@@ -22,6 +22,11 @@ class OrderController extends BasicController {
         'credit',
         'total',
         'extra'
+      ],
+      listExtraQueryFields: [
+        'payed',
+        'place',
+        'status'
       ]
     });
   }
