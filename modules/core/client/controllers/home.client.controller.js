@@ -6,7 +6,7 @@ angular.module('core').controller('HomeController', ['$scope', '$q', 'Authentica
     // This provides Authentication context.
     $scope.authentication = Authentication;
 
-    var goodsData = Goods.query({ limit: 1, page: 1 });
+    var goodsData = Goods.query();
     var ordersData = Orders.query();
     var clientsData = Clients.query();
 
@@ -38,7 +38,7 @@ angular.module('core').controller('HomeController', ['$scope', '$q', 'Authentica
             actionTitle: t.ADD,
             actionState: 'clients.create',
             actionIcon: 'plus',
-            count: clientsData.length,
+            count: clientsData.count,
           }
         ];
       });

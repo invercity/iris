@@ -53,15 +53,28 @@ exports.delete = (req, res) => {
 };
 
 exports.list = (req, res) => {
-  Place.find().exec((err, places) => {
-    if (err) {
+  const {
+    q = '',
+    page = 1,
+    limit = 20
+  } = req.query;
+  const fieldNames = ['name', 'address'];
+  const $or = fieldNames.map(field => ({ [field]: { $regex: new RegExp(q, 'i') } }));
+  const items = Place.find({ $or })
+    .limit(+limit)
+    .skip((page - 1) * limit);
+  const count = Place.countDocuments();
+  return Promise.props({
+    items,
+    count
+  })
+    .then(data => res.json(data))
+    .catch((err) => {
+      console.log(err);
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
-    } else {
-      res.json(places);
-    }
-  });
+    });
 };
 
 exports.placeByID = (req, res, next, id) => {

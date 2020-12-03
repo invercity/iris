@@ -87,11 +87,12 @@ class BasicController {
    * @returns {Promise<*>}
    */
   async list(req, res) {
-    const { limit, page, q = '' } = req.query;
+    const { limit = 20, page = 1, q = '' } = req.query;
     const { fieldNamesSearch = [] } = this.options;
-    const $or = fieldNamesSearch.map(field => ({ [field]: { $regex: new RegExp(q, 'i') } }));
+    const escaped = q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const $or = fieldNamesSearch.map(field => ({ [field]: { $regex: new RegExp(escaped, 'i') } }));
     let items = this.model.find({ $or })
-      .limit(parseInt(limit, 10))
+      .limit(+limit)
       .skip((page - 1) * limit)
       .sort('-created')
       .populate('user', 'displayName');
@@ -152,15 +153,8 @@ class BasicController {
     return Promise.resolve(item);
   }
 
-  /**
-   * Pre-update item hook
-   * @param req
-   * @param item
-   * @returns {Promise<*>}
-   */
-  async preUpdateHandler(req, item) {
-    this.options.fieldNames.forEach(field => item[field] = req.body[field]);
-    return Promise.resolve(item);
+  preUpdateHandler(req, item) {
+    return item;
   }
 
   /**

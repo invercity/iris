@@ -29,8 +29,10 @@
                    typeahead-editable="true"
                    ng-readonly="order._id"
                    placeholder="{{t.ENTER_KEY_FOR_SEARCH}}"
-                   typeahead="client as client.name ? client.name : client.firstName + ' ' + client.phone for client in clients | filter:$viewValue"
+                   typeahead="client as client.name ? client.name : client.firstName + ' ' + client.phone for client in getClients($viewValue) | filter:$viewValue"
+                   typeahead-loading="loadingClients"
                    class="form-control">
+            <i ng-show="loadingClients" class="glyphicon glyphicon-refresh"></i>
           </div>
         </div>
 
@@ -97,9 +99,10 @@
                    name="place"
                    ng-model="order.place"
                    typeahead-editable="false"
-                   typeahead="place as place.name for place in places | filter:$viewValue | limitTo:8"
+                   typeahead="place as place.name for place in getPlaces($viewValue) | filter:$viewValue | limitTo:8"
+                   typeahead-loading="loadingPlaces"
                    class="form-control">
-            </select>
+            <i ng-show="loadingPlaces" class="glyphicon glyphicon-refresh"></i>
           </div>
           <div ng-messages="orderForm.place.$error" role="alert">
             <p class="help-block error-text" ng-message="required">{{t.PLACE_DELIVER}} {{t.REQUIRED}}</p>
@@ -134,8 +137,9 @@
             <tr ng-repeat="item in order.items">
               <td class="col-md-5">
                 <input ng-model="item.good"
+                       autocomplete="off"
                        typeahead-editable="true"
-                       typeahead="good as good.name for good in calcArray(item.good) | filter:$viewValue"
+                       typeahead="good as good.name for good in calcArray($viewValue) | limitTo:8"
                        class="form-control">
               </td>
               <td class="col-md-1">
@@ -170,7 +174,6 @@
         <button type="button"
                 class="btn btn-info"
                 ng-click="addItem()"
-                ng-disabled="!calcArray().length"
                 ng-if="!order.payed">
           {{t.ADD}}
         </button>

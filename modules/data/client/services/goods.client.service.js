@@ -10,7 +10,7 @@ angular.module('data').factory('Goods', ['$resource',
       },
       query: {
         method: 'GET', isArray:false
-      },
+      }
     });
   }
 ]);
