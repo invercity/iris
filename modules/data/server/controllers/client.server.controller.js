@@ -57,16 +57,31 @@ exports.delete = (req, res) => {
 };
 
 exports.list = (req, res) => {
-  Client.find({ active: true })
-    .populate('defaultPlace')
-    .exec((err, clients) => {
-      if (err) {
-        return res.status(400).send({
-          message: errorHandler.getErrorMessage(err)
-        });
-      } else {
-        res.json(clients);
-      }
+  const {
+    q = '',
+    page = 1,
+    limit = 20,
+    active = true
+  } = req.query;
+  const fieldNames = ['firstName', 'lastName', 'phone'];
+  const escaped = q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const $or = fieldNames.map(field => ({ [field]: { $regex: new RegExp(escaped, 'i') } }));
+  const items = Client.find({ active, $or })
+    .limit(+limit)
+    .skip((page - 1) * limit)
+    .populate('defaultPlace');
+
+  const count = Client.countDocuments();
+  return Promise.props({
+    items,
+    count
+  })
+    .then(data => res.json(data))
+    .catch((err) => {
+      console.log(err);
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
     });
 };
 

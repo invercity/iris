@@ -142,7 +142,7 @@ exports.delete = (req, res) => {
 
 exports.list = (req, res) => {
   const {
-    q,
+    q ='',
     payed,
     place,
     status,
@@ -150,6 +150,7 @@ exports.list = (req, res) => {
     page = 1,
     limit = 20
   } = req.query;
+  const escaped = q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   const search = {
     payed,
     place,
@@ -162,7 +163,7 @@ exports.list = (req, res) => {
           'firstName',
           'phone',
         ];
-        const $or = _.map(fields, field => ({ [field]: { $regex: new RegExp(q, 'i') } }));
+        const $or = _.map(fields, field => ({ [field]: { $regex: new RegExp(escaped, 'i') } }));
         return Client.find({ $or })
           .select('_id');
       }

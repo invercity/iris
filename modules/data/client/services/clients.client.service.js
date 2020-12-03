@@ -7,6 +7,9 @@ angular.module('data').factory('Clients', ['$resource',
     }, {
       update: {
         method: 'PUT'
+      },
+      query: {
+        method: 'GET', isArray:false
       }
     });
   }
