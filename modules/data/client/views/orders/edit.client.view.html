@@ -137,8 +137,9 @@
             <tr ng-repeat="item in order.items">
               <td class="col-md-5">
                 <input ng-model="item.good"
+                       autocomplete="off"
                        typeahead-editable="true"
-                       typeahead="good as good.name for good in calcArray(item.good) | filter:$viewValue"
+                       typeahead="good as good.name for good in calcArray($viewValue) | filter:$viewValue"
                        class="form-control">
               </td>
               <td class="col-md-1">
