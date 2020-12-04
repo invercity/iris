@@ -139,7 +139,7 @@
                 <input ng-model="item.good"
                        autocomplete="off"
                        typeahead-editable="true"
-                       typeahead="good as good.name for good in calcArray($viewValue) | limitTo:8"
+                       typeahead="good as good.name for good in calcArray($viewValue) | filter:$viewValue | limitTo:8"
                        class="form-control">
               </td>
               <td class="col-md-1">
