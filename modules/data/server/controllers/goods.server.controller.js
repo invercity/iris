@@ -18,6 +18,16 @@ class GoodsController extends BasicController {
     item.type = req.body.type;
     return item;
   }
+
+  preListHandler(req) {
+    const filters = super.preListHandler(req);
+    if (req.query.excludeEmpty) {
+      filters.count = {
+        $gt: 0
+      }
+    }
+    return filters;
+  }
 }
 
 module.exports = new GoodsController();

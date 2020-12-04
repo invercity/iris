@@ -42,7 +42,8 @@ class BasicController {
     const { fieldNames = [] } = this.options;
     const escaped = q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     const $or = fieldNames.map(field => ({ [field]: { $regex: new RegExp(escaped, 'i') } }));
-    const items = this.model.find({ $or })
+    const extraFilters = this.preListHandler(req);
+    const items = this.model.find({ $or, ...extraFilters })
       .limit(+limit)
       .skip((page - 1) * limit)
       .sort('-created')
@@ -94,6 +95,15 @@ class BasicController {
 
   preDeleteHandler(req, item) {
     return item;
+  }
+
+  /**
+   * Pre-list handler
+   * @param req
+   * @returns {{}}
+   */
+  preListHandler(req) {
+    return {};
   }
 
   [operation](operationType, item, res) {
