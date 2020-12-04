@@ -24,7 +24,7 @@ class GoodsController extends BasicController {
     if (req.query.excludeEmpty) {
       filters.count = {
         $gt: 0
-      }
+      };
     }
     return filters;
   }

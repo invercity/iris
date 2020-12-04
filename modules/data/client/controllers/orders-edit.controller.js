@@ -106,9 +106,7 @@ angular.module('data').controller('OrdersEditController', [
           if (!_.find($scope.order.items, function (item) {
             return item.good && item.good._id === g._id;
           })) {
-            if (g.count) {
-              items.push(g);
-            }
+            items.push(g);
           }
         });
         console.log(items);
