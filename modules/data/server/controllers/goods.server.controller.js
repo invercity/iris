@@ -17,7 +17,7 @@ class GoodsController extends BasicController {
     });
   }
 
-  preListHandler(req) {
+  async preListHandler(req) {
     const filters = super.preListHandler(req);
     if (req.query.excludeEmpty) {
       filters.count = {
