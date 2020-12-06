@@ -97,19 +97,16 @@ angular.module('data').controller('OrdersEditController', [
     };
 
     var calcArray = function (name) {
-      // if (!$scope.goods) return [];
-      // var name = good ? good.name : '';
       return Goods.query({
-        q: name
+        q: name,
+        excludeEmpty: true
       }).$promise.then(function (data) {
         var items = [];
         data.items.forEach(function (g) {
           if (!_.find($scope.order.items, function (item) {
             return item.good && item.good._id === g._id;
           })) {
-            if (g.count) {
-              items.push(g);
-            }
+            items.push(g);
           }
         });
         console.log(items);
