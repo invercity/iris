@@ -12,17 +12,16 @@
   "undef": true, // Require all non-global variables be declared before they are used.
   "unused": false, // Warn unused variables.
   "strict": false, // Don' require `use strict` pragma in every file.
-  "globals": { // Globals variables.
+  "globals": {
     "angular": true,
     "io": true,
     "ApplicationConfiguration": true,
-    "_": true
+    "_": true,
+    "domtoimage": true,
+    "inject": true,
+    "by": true,
+    "browser": true,
+    "element": true
   },
-  "predef": [ // Extra globals.
-    "inject",
-    "by",
-    "browser",
-    "element"
-  ],
   "devel": true // Allow development statements e.g. `console.log();`
 }

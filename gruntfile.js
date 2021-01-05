@@ -1,9 +1,6 @@
-/**
- * Module dependencies.
- */
 const fs = require('fs');
 const path = require('path');
-const _ = require('lodash');
+const { union } = require('./config/lib/util');
 const defaultAssets = require('./config/assets/default');
 const testAssets = require('./config/assets/test');
 
@@ -30,7 +27,7 @@ module.exports = (grunt) => {
         }
       },
       serverJS: {
-        files: _.union(defaultAssets.server.gruntConfig, defaultAssets.server.allJS),
+        files: union(defaultAssets.server.gruntConfig, defaultAssets.server.allJS),
         tasks: ['jshint'],
         options: {
           livereload: true
@@ -70,7 +67,7 @@ module.exports = (grunt) => {
         options: {
           nodeArgs: ['--inspect'],
           ext: 'js,html',
-          watch: _.union(defaultAssets.server.gruntConfig, defaultAssets.server.views, defaultAssets.server.allJS, defaultAssets.server.config)
+          watch: union(defaultAssets.server.gruntConfig, defaultAssets.server.views, defaultAssets.server.allJS, defaultAssets.server.config)
         }
       }
     },
@@ -82,7 +79,7 @@ module.exports = (grunt) => {
     },
     jshint: {
       all: {
-        src: _.union(defaultAssets.server.gruntConfig, defaultAssets.server.allJS, defaultAssets.client.js, testAssets.tests.server, testAssets.tests.client, testAssets.tests.e2e),
+        src: union(defaultAssets.server.gruntConfig, defaultAssets.server.allJS, defaultAssets.client.js, testAssets.tests.server, testAssets.tests.client, testAssets.tests.e2e),
         options: {
           jshintrc: true,
           node: true,
@@ -93,7 +90,7 @@ module.exports = (grunt) => {
     },
     eslint: {
       options: {},
-      target: _.union(defaultAssets.server.gruntConfig, defaultAssets.server.allJS, defaultAssets.client.js, testAssets.tests.server, testAssets.tests.client, testAssets.tests.e2e)
+      target: union(defaultAssets.server.gruntConfig, defaultAssets.server.allJS, defaultAssets.client.js, testAssets.tests.server, testAssets.tests.client, testAssets.tests.e2e)
     },
     csslint: {
       options: {
@@ -103,20 +100,13 @@ module.exports = (grunt) => {
         src: defaultAssets.client.css
       }
     },
-    ngAnnotate: {
-      production: {
-        files: {
-          'public/dist/application.js': defaultAssets.client.js
-        }
-      }
-    },
     uglify: {
       production: {
         options: {
           mangle: false
         },
         files: {
-          'public/dist/application.min.js': 'public/dist/application.js'
+          'public/dist/application.min.js': defaultAssets.client.js
         }
       }
     },
@@ -147,7 +137,7 @@ module.exports = (grunt) => {
           return !fs.existsSync('config/env/local.js');
         }
       }
-    }
+    },
   });
 
   // Load NPM tasks
@@ -201,16 +191,12 @@ module.exports = (grunt) => {
 
   // Lint CSS and JavaScript files.
   grunt.registerTask('lint', ['sass', 'jshint', 'eslint', 'csslint']);
-
   // Lint project files and minify them into two production files.
-  grunt.registerTask('build', ['env:dev', 'lint', 'ngAnnotate', 'uglify', 'cssmin']);
-
+  grunt.registerTask('build', ['env:dev', 'lint', 'uglify', 'cssmin']);
   // Run the project in development mode
   grunt.registerTask('default', ['env:dev', 'lint', 'mkdir:upload', 'copy:localConfig', 'server']);
-
   // Run the project in debug mode
   grunt.registerTask('debug', ['env:dev', 'lint', 'mkdir:upload', 'copy:localConfig', 'concurrent:debug']);
-
   // Run the project in production mode
   grunt.registerTask('prod', ['build', 'env:prod', 'mkdir:upload', 'copy:localConfig', 'server']);
 };

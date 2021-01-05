@@ -1,8 +1,37 @@
-const path = require('path'),
-  mongoose = require('mongoose'),
-  Client = mongoose.model('Client'),
-  errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
+const BasicController = require('./basic.server.controller');
 
+class ClientController extends BasicController {
+  constructor() {
+    super('Client', {
+      fieldNames: [
+        'firstName',
+        'lastName',
+        'phone',
+        'defaultPlace',
+        'active'
+      ],
+      populateFields: [
+        'defaultPlace'
+      ],
+      listExtraQuery: {
+        active: true
+      }
+    });
+  }
+
+  async preUpdateHandler(req, item) {
+    const updated = await super.preUpdateHandler(req, item);
+    updated.active = true;
+    if (!updated.defaultPlace) {
+      updated.defaultPlace = null;
+    }
+    return updated;
+  }
+}
+
+module.exports = new ClientController();
+
+/*
 exports.create = (req, res) => {
   const client = new Client(req.body);
 
@@ -107,3 +136,5 @@ exports.clientByID = (req, res, next, id) => {
       next();
     });
 };
+
+*/
