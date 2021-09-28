@@ -10,5 +10,5 @@ module.exports = (app) => {
     .put(client.update)
     .delete(client.delete);
 
-  app.param('clientId', client.clientByID);
+  app.param('clientId', client.get.bind(this));
 };
