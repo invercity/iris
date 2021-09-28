@@ -6,9 +6,9 @@
 [![MIT Licence](https://badges.frapsoft.com/os/mit/mit.svg?v=103)](https://opensource.org/licenses/mit-license.php)
 
 ## Prerequisites
-Make sure you have installed all of the following prerequisites on your development machine:
-* Node.js [Download & Install Node.js](https://nodejs.org/en/download/) and the npm package manager.
-* MongoDB [Download & Install MongoDB](http://www.mongodb.org/downloads), and make sure it's running on the default port (27017).
+Make sure you have installed all the following prerequisites on your development machine:
+* Node.js v14.x [Download & Install Node.js](https://nodejs.org/en/download/) and the npm package manager.
+* MongoDB [Download & Install MongoDB](https://www.mongodb.com/try/download/community), and make sure it's running on the default port (27017).
 
 ## Quick Install
 To install Node.js dependencies you're going to use npm again. In the application folder run this in the command-line:
