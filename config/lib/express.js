@@ -10,7 +10,6 @@ const compress = require('compression');
 const methodOverride = require('method-override');
 const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
-const flash = require('connect-flash');
 const consolidate = require('consolidate');
 
 const config = require('../config');
@@ -85,7 +84,6 @@ module.exports.initMiddleware = (app) => {
 
   // Add the cookie parser and flash middleware
   app.use(cookieParser());
-  app.use(flash());
 };
 
 /**
@@ -158,7 +156,7 @@ module.exports.initModulesClientRoutes = (app) => {
   config.folders.client.forEach(staticPath => app.use(staticPath, express.static(path.resolve('./' + staticPath))));
 };
 
-module.exports.initModulesServerPolicies = (app) => {
+module.exports.initModulesServerPolicies = () => {
   config.files.server.policies.forEach(policyPath => require(path.resolve(policyPath)).invokeRolesPolicies());
 };
 
