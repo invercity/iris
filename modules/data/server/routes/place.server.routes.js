@@ -10,5 +10,5 @@ module.exports = (app) => {
     .put(place.update)
     .delete(place.delete);
 
-  app.param('placeId', place.placeByID);
+  app.param('placeId', place.get.bind(place));
 };

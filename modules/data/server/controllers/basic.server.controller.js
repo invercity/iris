@@ -104,11 +104,8 @@ class BasicController {
       items = items.populate(...this.options.populateFields);
     }
     const count = this.model.countDocuments();
-    return Promise.props({
-      items,
-      count
-    })
-      .then(data => res.json(data))
+    return Promise.all([items, count])
+      .then(([items, count]) => res.json({ items, count }))
       .catch((err) => {
         console.log(err);
         return res.status(400).send({
