@@ -1,12 +1,3 @@
-const path = require('path');
-const mongoose = require('mongoose');
-const async = require('async');
-const _ = require('lodash');
-const Order = mongoose.model('Order');
-const Client = mongoose.model('Client');
-const { Types } = mongoose;
-const errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
-
 const BasicController = require('./basic.server.controller');
 
 class OrderController extends BasicController {
@@ -23,11 +14,6 @@ class OrderController extends BasicController {
         'total',
         'extra'
       ],
-      listExtraQueryFields: [
-        'payed',
-        'place',
-        'status'
-      ],
       populateFields: [
         'client',
         'items.good',
@@ -40,6 +26,7 @@ class OrderController extends BasicController {
     const { place, client } = req.body;
     client.defaultPlace = place;
     if (!client._id) {
+      const Client = this.mongoose.model('Client');
       const newClient = new Client(client);
       await newClient.save();
       item.client = newClient._id;
@@ -54,13 +41,52 @@ class OrderController extends BasicController {
 
   async preUpdateHandler(req, item) {
     const updatedItem = super.preUpdateHandler(req, item);
+    const Client = this.mongoose.model('Client');
     const { client: { _id, phone }, place } = req.body;
     await Client.update({ _id }, { $set: { $set: { phone, defaultPlace: place, active: true } } });
     return updatedItem;
   }
+
+  async preListHandler(req) {
+    const { query: { q = '', good } } = req;
+    const escaped = q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    return Promise.resolve()
+      .then(() => {
+        if (q) {
+          const fields = [
+            'firstName',
+            'phone',
+          ];
+          const $or = fields.map(field => ({ [field]: { $regex: new RegExp(escaped, 'i') } }));
+          const Client = this.mongoose.model('Client');
+          return Client.find({ $or })
+            .select('_id');
+        }
+        return null;
+      })
+      .then((clientIds) => {
+        const $or = [];
+        if (!isNaN(q)) {
+          $or.push({ code: +q });
+        }
+        if (clientIds) {
+          $or.push({ client: { $in: clientIds } });
+        }
+        if (good) {
+          const { Types } = this.mongoose;
+          $or.push({ 'items.good': { $in: [Types.ObjectId(good)] } });
+        }
+        if ($or.length) {
+          return { $or };
+        }
+        return {};
+      });
+  }
 }
 
-exports.create = (req, res) => {
+module.exports = new OrderController();
+
+/* exports.create = (req, res) => {
   const {
     items,
     place,
@@ -148,7 +174,6 @@ exports.update = (req, res) => {
     }
   } = req.body;
 
-  // TODO: replace with extend
   order.items = items;
   order.place = place;
   order.placeDescription = placeDescription;
@@ -284,5 +309,4 @@ exports.orderByID = (req, res, next, id) => {
       next();
     });
 };
-
-
+ */

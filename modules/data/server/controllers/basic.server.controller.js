@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { mergeDeep } = require('../../../../config/lib/util');
 const errorHandler = require('../../../core/server/controllers/errors.server.controller');
 
 const operation = Symbol();
@@ -6,6 +7,21 @@ const OPERATION_TYPE = {
   SAVE: 'save',
   DELETE: 'delete'
 };
+
+/**
+ * Return normalized mongoose query object
+ * @param {object} query
+ * @return {object}
+ */
+const normalizeQuery = (query) => {
+  let { $or, $and, ...rest } = query;
+  Object.keys({ $or, $and }).forEach(key => {
+    if (query[key] && query[key].length) {
+      rest = Object.assign(rest, { [key]: query[key] });
+    }
+  });
+  return rest;
+}
 
 /**
  * @typedef ControllerOptions
@@ -89,13 +105,12 @@ class BasicController {
    */
   async list(req, res) {
     const { limit = 20, page = 1, q = '' } = req.query;
-    const { fieldNamesSearch = [], listExtraQueryFields = [] } = this.options;
+    const { fieldNamesSearch = [] } = this.options;
     const escaped = q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     const $or = fieldNamesSearch.map(field => ({ [field]: { $regex: new RegExp(escaped, 'i') } }));
     const extraQuery = await this.preListHandler(req);
-    // TODO: deep map + use listExtraQueryFields
-    const query = Object.assign({ $or }, extraQuery);
-    let items = this.model.find(query)
+    const query = mergeDeep({ $or }, extraQuery);
+    let items = this.model.find(normalizeQuery(query))
       .limit(+limit)
       .skip((page - 1) * limit)
       .sort('-created')
@@ -129,19 +144,22 @@ class BasicController {
       });
     }
 
-    this.model.findById(id)
-      .populate('user', 'displayName')
-      .exec((err, item) => {
-        if (err) {
-          return next(err);
-        } else if (!item) {
-          return res.status(404).send({
-            message: 'No item with that identifier has been found'
-          });
-        }
-        req[this.modelNameAttr] = item;
-        next();
-      });
+    let item = this.model.findById(id)
+      .populate('user', 'displayName');
+    if (this.options.populateFields) {
+      item = item.populate(...this.options.populateFields);
+    }
+    item.exec((err, item) => {
+      if (err) {
+        return next(err);
+      } else if (!item) {
+        return res.status(404).send({
+          message: 'No item with that identifier has been found'
+        });
+      }
+      req[this.modelNameAttr] = item;
+      next();
+    });
   }
 
   /**

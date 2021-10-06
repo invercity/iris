@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-// const async = require('async');
 const autoIncrement = require('mongoose-auto-increment');
 
 const Good = mongoose.model('Good');
@@ -99,23 +98,21 @@ OrderSchema.pre('save', () => {
         }
         return null;
       }).filter(item => item);
-      return Promise.props({
-        goods: Good.find({ _id: { $in: ids } }),
-        order
-      });
+      const goods = Good.find({ _id: { $in: ids } });
+      return Promise.all([goods, order]);
     })
     .then((results) => {
       if (!results) {
         return null;
       }
-      const { goods, order } = results;
+      const [goods, order] = results;
       const { items } = this;
-      return Promise.map(goods, (good) => {
+      return Promise.all(goods.map((good) => {
         const after = items.find(item => item.good && item.good._id === good._id);
         const before = order.items.find(item => item.good && item.good.id === good._id);
         good.count += (before.count - after.count);
         return good.save();
-      });
+      }));
     });
 });
 
@@ -197,11 +194,11 @@ OrderSchema.post('remove', (order) => {
       if (!goods) {
         return null;
       }
-      return Promise.map(goods, (good) => {
+      return Promise.all(goods.map((good) => {
         const orderGood = order.goods.find(orderGood => orderGood._id === good._id);
         good.count += orderGood.count;
         return good.save();
-      });
+      }));
     });
 });
 
