@@ -5,13 +5,17 @@ const app = require('../config/lib/app');
 const initApp = app.start.bind(app);
 
 let appInstance;
+let user;
 
-describe('Test IRIS app', () => {
+describe('Test IRIS app', async () => {
   before((done) => {
-    initApp((instance) => {
+    initApp(async (instance, db) => {
+      if (db.name === 'mean-test') {
+        await db.dropDatabase();
+      }
       appInstance = instance;
       done();
-    })
+    });
   })
 
   it('should return empty list on GET /api/goods', async() => {
@@ -44,6 +48,16 @@ describe('Test IRIS app', () => {
     assert.strictEqual(response.status, 200);
     assert.ok(response.body);
     assert.strictEqual(response.body.items.length, 0)
+  });
+
+  it('should success on signup POST /api/auth/signup', async() => {
+    const email = `testmail-${Math.random()}@example.com`
+    const response = await request(appInstance)
+      .post('/api/auth/signup')
+      .send({ firstName: 'Test Name', lastName: 'Test Last Name', username: 'testtest', email, password: 'TESTmail11223344++'})
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.body);
+    user = response.body;
   });
 
   after(() => {
