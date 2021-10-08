@@ -1,0 +1,40 @@
+{
+  "users": [
+    {
+      "firstName": "Test Name",
+      "lastName": "Test Last",
+      "username": "testuser",
+      "email": "testtest@example.com",
+      "password": "TESTmail11223344++"
+    }
+  ],
+  "goods": [
+    {
+      "name": "TEst good",
+      "details": "Brief information about good",
+      "count": 100,
+      "price": 45.50,
+      "country": "Panama",
+      "type": "sometype"
+    }
+  ],
+  "orders": [
+    {
+      "sale": 0,
+      "credit": 0
+    }
+  ],
+  "clients": [
+    {
+      "firstName": "Test Client1",
+      "lastName": "Last last",
+      "phone": "+3809912312323"
+    }
+  ],
+  "places": [
+    {
+      "name": "Test place",
+      "address": "City, avenue 34"
+    }
+  ]
+}

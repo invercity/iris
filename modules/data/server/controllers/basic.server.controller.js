@@ -21,7 +21,7 @@ const normalizeQuery = (query) => {
     }
   });
   return rest;
-}
+};
 
 /**
  * @typedef ControllerOptions
@@ -70,6 +70,7 @@ class BasicController {
     const item = new this.model(itemData);
     item.user = req.user;
     const updatedItem = await this.preCreateHandler(req, item);
+    console.log('after pre create', updatedItem);
     return this[operation](OPERATION_TYPE.SAVE, updatedItem, res);
   }
 

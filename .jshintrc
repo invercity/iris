@@ -21,7 +21,11 @@
     "inject": true,
     "by": true,
     "browser": true,
-    "element": true
+    "element": true,
+    "before": true,
+    "beforeEach": true,
+    "describe": true,
+    "it": true
   },
   "devel": true // Allow development statements e.g. `console.log();`
 }
