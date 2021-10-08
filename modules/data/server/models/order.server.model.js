@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const autoIncrement = require('mongoose-auto-increment');
 
-const Good = mongoose.model('Good');
 const { Schema } = mongoose;
 autoIncrement.initialize(mongoose);
 
@@ -77,46 +76,13 @@ OrderSchema.plugin(autoIncrement.plugin, {
   incrementBy: 1
 });
 
+/*
 OrderSchema.pre('save', () => {
-  return Promise.resolve()
-    .then(() => {
-      if (!this._id) {
-        return null;
-      }
-      console.log('Update existing order');
-      return mongoose.model('Order')
-        .findById(this._id)
-        .populate('items.good');
-    })
-    .then((order) => {
-      if (!order || !order.items) {
-        return null;
-      }
-      const ids = order.items.map((item) => {
-        if (item.good && item.good._id) {
-          return item.good._id;
-        }
-        return null;
-      }).filter(item => item);
-      const goods = Good.find({ _id: { $in: ids } });
-      return Promise.all([goods, order]);
-    })
-    .then((results) => {
-      if (!results) {
-        return null;
-      }
-      const [goods, order] = results;
-      const { items } = this;
-      return Promise.all(goods.map((good) => {
-        const after = items.find(item => item.good && item.good._id === good._id);
-        const before = order.items.find(item => item.good && item.good.id === good._id);
-        good.count += (before.count - after.count);
-        return good.save();
-      }));
-    });
+  console.log('hook hook', OrderSchema)
+
 });
 
-/* OrderSchema.pre('save', function (next) {
+OrderSchema.pre('save', function (next) {
   async.parallel([
     (next) => {
       if (this._id) {
@@ -179,7 +145,7 @@ OrderSchema.pre('save', () => {
       next();
     });
   });
-}); */
+});
 
 OrderSchema.post('remove', (order) => {
   return Promise.resolve()

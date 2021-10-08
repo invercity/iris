@@ -70,7 +70,6 @@ class BasicController {
     const item = new this.model(itemData);
     item.user = req.user;
     const updatedItem = await this.preCreateHandler(req, item);
-    console.log('after pre create', updatedItem);
     return this[operation](OPERATION_TYPE.SAVE, updatedItem, res);
   }
 
@@ -123,7 +122,6 @@ class BasicController {
     return Promise.all([items, count])
       .then(([items, count]) => res.json({ items, count }))
       .catch((err) => {
-        console.log(err);
         return res.status(400).send({
           message: errorHandler.getErrorMessage(err)
         });

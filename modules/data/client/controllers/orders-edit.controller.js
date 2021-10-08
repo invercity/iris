@@ -109,7 +109,6 @@ angular.module('data').controller('OrdersEditController', [
             items.push(g);
           }
         });
-        console.log(items);
         return items;
       });
     };

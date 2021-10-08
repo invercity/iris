@@ -23,28 +23,20 @@ class OrderController extends BasicController {
   }
 
   async preCreateHandler(req, item) {
-    const { place, client } = req.body;
-    client.defaultPlace = place;
-    if (!client._id) {
-      const Client = this.mongoose.model('Client');
-      const newClient = new Client(client);
-      await newClient.save();
-      item.client = newClient._id;
-    } else {
-      item.client = client._id;
-    }
-    if (!item.extra) {
-      item.extra = 0;
-    }
+    await this.saveClient(req.body, item);
+    await this.updateGoodsCountOnUpdateOrder(item);
     return item;
   }
 
   async preUpdateHandler(req, item) {
-    const updatedItem = super.preUpdateHandler(req, item);
-    const Client = this.mongoose.model('Client');
-    const { client: { _id, phone }, place } = req.body;
-    await Client.update({ _id }, { $set: { $set: { phone, defaultPlace: place, active: true } } });
-    return updatedItem;
+    await this.saveClient(req.body, item);
+    await this.updateGoodsCountOnUpdateOrder(item);
+    return item;
+  }
+
+  async preDeleteHandler(req, item) {
+    await this.updateGoodsCountOnUpdateOrder(item, true);
+    return item;
   }
 
   async preListHandler(req) {
@@ -66,7 +58,7 @@ class OrderController extends BasicController {
       })
       .then((clientIds) => {
         const $or = [];
-        if (!isNaN(q)) {
+        if (q && !isNaN(q)) {
           $or.push({ code: +q });
         }
         if (clientIds) {
@@ -80,6 +72,88 @@ class OrderController extends BasicController {
           return { $or };
         }
         return {};
+      });
+  }
+
+  /**
+   * Save/update client on save order
+   * @param {object} body
+   * @param {object} item
+   * @return {Promise}
+   */
+  async saveClient(body, item) {
+    const { place, client } = body;
+    client.defaultPlace = place;
+    const Client = this.mongoose.model('Client');
+    if (!client._id) {
+      const newClient = new Client(client);
+      await newClient.save();
+      item.client = newClient._id;
+    } else {
+      const { _id, phone } = client;
+      await Client.updateOne({ _id }, { $set: { $set: { phone, defaultPlace: place, active: true } } });
+      item.client = _id;
+    }
+    if (!item.extra) {
+      item.extra = 0;
+    }
+  }
+
+  /**
+   * Update good count on order save/delete
+   * @param {object} order
+   * @param {boolean} deleteOrder
+   * @return {Promise}
+   */
+  async updateGoodsCountOnUpdateOrder(order, deleteOrder = false) {
+    const Order = this.mongoose.model('Order');
+    const Good = this.mongoose.model('Good');
+
+    return Promise.resolve()
+      .then(() => {
+        if (deleteOrder || !order._id) {
+          return null;
+        }
+        return Order
+          .findById(order._id)
+          .populate('items.good');
+      })
+      .then((oldOrder) => {
+        const ids = order.items.map(item => item._id);
+        if (oldOrder && oldOrder.items) {
+          ids.push(...oldOrder.items.map(item => item._id));
+        }
+        const goods = Good.find({ _id: { $in: ids } });
+        return Promise.all([goods, oldOrder]);
+      })
+      .then((results) => {
+        let [goods, oldOrder = order] = results;
+        let newOrder = { items: [] };
+        if (oldOrder !== order) {
+          newOrder = order;
+        }
+        console.log('before promise: ', goods);
+        return Promise.all(goods.map((good) => {
+          console.log('cycle start');
+          const after = newOrder.items.find(item => item.good && item.good._id === good._id);
+          console.log('after: ', after);
+          const before = oldOrder.items.find(item => item.good && item.good._id === good._id);
+          console.log('before: ', before);
+          if (before && after) {
+            if (before.count === after.count) {
+              return null;
+            }
+            console.log('Extend good: ', good.name, ' for: ', (before.count - after.count));
+            good.count += (before.count - after.count)
+          } else if (!before) {
+            console.log('Extend good: ', good.name, ' for: -', after.count);
+            good.count -= after.count;
+          } else {
+            console.log('Extend good: ', good.name, ' for: ', before.count);
+            good.count += before.count;
+          }
+          return good.save();
+        }));
       });
   }
 }

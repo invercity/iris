@@ -127,6 +127,26 @@ describe('Test IRIS app', () => {
     assert.ok(response.body);
   });
 
+  it('should return list with one good on GET /api/goods', async() => {
+    const response = await request(appInstance)
+      .get('/api/goods')
+      .set('Cookie', cookies);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.body);
+    const goods = response.body.items;
+    assert.strictEqual(goods.length, 1);
+  });
+
+  it('should return list with one order on GET /api/orders', async() => {
+    const response = await request(appInstance)
+      .get('/api/orders')
+      .set('Cookie', cookies);
+    assert.strictEqual(response.status, 200);
+    assert.ok(response.body);
+    const orders = response.body.items;
+    assert.strictEqual(orders.length, 1);
+  });
+
   after(async () => {
     if (dbInstance.name === 'mean-test') {
       await dbInstance.dropDatabase();
