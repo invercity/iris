@@ -134,7 +134,7 @@ describe('Test IRIS app', () => {
     assert.strictEqual(response.status, 200);
     assert.ok(response.body);
     const goods = response.body.items;
-    assert.strictEqual(goods.length, 1);
+    assert.strictEqual(goods.length, 2);
   });
 
   it('should return list with one order on GET /api/orders', async() => {
@@ -151,6 +151,5 @@ describe('Test IRIS app', () => {
     if (dbInstance.name === 'mean-test') {
       await dbInstance.dropDatabase();
     }
-    process.exit(0);
   });
 });

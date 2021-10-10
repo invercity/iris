@@ -116,7 +116,7 @@ class BasicController {
       .sort('-created')
       .populate('user', 'displayName');
     if (this.options.populateFields) {
-      items = items.populate(...this.options.populateFields);
+      items = items.populate(this.options.populateFields.join(' '));
     }
     const count = this.model.countDocuments();
     return Promise.all([items, count])
@@ -146,7 +146,7 @@ class BasicController {
     let item = this.model.findById(id)
       .populate('user', 'displayName');
     if (this.options.populateFields) {
-      item = item.populate(...this.options.populateFields);
+      item.populate(this.options.populateFields.join(' '));
     }
     item.exec((err, item) => {
       if (err) {

@@ -132,7 +132,6 @@ class OrderController extends BasicController {
         if (oldOrder !== order) {
           newOrder = order;
         }
-        console.log('before promise: ', goods);
         return Promise.all(goods.map((good) => {
           console.log('cycle start');
           const after = newOrder.items.find(item => item.good && item.good._id === good._id);
@@ -144,7 +143,7 @@ class OrderController extends BasicController {
               return null;
             }
             console.log('Extend good: ', good.name, ' for: ', (before.count - after.count));
-            good.count += (before.count - after.count)
+            good.count += (before.count - after.count);
           } else if (!before) {
             console.log('Extend good: ', good.name, ' for: -', after.count);
             good.count -= after.count;
