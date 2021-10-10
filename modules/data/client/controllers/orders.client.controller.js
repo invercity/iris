@@ -70,7 +70,7 @@ angular.module('data').controller('OrdersController', [
         page: $scope.currentPage,
         limit: $scope.itemsPerPage,
         good: good,
-        q: $scope.search
+        q: encodeURIComponent($scope.search)
       }, function (data) {
         $scope.orders = data.orders;
         $scope.ordersCount = data.count;

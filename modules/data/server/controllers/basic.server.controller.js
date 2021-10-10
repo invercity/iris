@@ -67,10 +67,10 @@ class BasicController {
   async create(req, res) {
     const itemData = {};
     this.options.fieldNames.forEach(field => itemData[field] = req.body[field]);
-    const item = new this.model(itemData);
+    const updatedItemData = await this.preCreateHandler(req, itemData);
+    const item = new this.model(updatedItemData);
     item.user = req.user;
-    const updatedItem = await this.preCreateHandler(req, item);
-    return this[operation](OPERATION_TYPE.SAVE, updatedItem, res);
+    return this[operation](OPERATION_TYPE.SAVE, item, res);
   }
 
   /**
@@ -80,9 +80,11 @@ class BasicController {
    * @returns {Promise<void>}
    */
   async update(req, res) {
-    const item = req[this.modelNameAttr];
-    const updatedItem = await this.preUpdateHandler(req, item);
-    return this[operation](OPERATION_TYPE.SAVE, updatedItem, res);
+    const itemData = {};
+    this.options.fieldNames.forEach(field => itemData[field] = req.body[field]);
+    const updatedItemData = await this.preUpdateHandler(req, itemData);
+    const item = mergeDeep(req[this.modelNameAttr], updatedItemData);
+    return this[operation](OPERATION_TYPE.SAVE, item, res);
   }
 
   /**
@@ -148,17 +150,19 @@ class BasicController {
     if (this.options.populateFields) {
       item.populate(this.options.populateFields.join(' '));
     }
-    item.exec((err, item) => {
-      if (err) {
+    return item
+      .then(data => {
+        if (!data) {
+          return res.status(404).send({
+            message: 'No item with that identifier has been found'
+          });
+        }
+        req[this.modelNameAttr] = data;
+        next();
+      })
+      .catch(err => {
         return next(err);
-      } else if (!item) {
-        return res.status(404).send({
-          message: 'No item with that identifier has been found'
-        });
-      }
-      req[this.modelNameAttr] = item;
-      next();
-    });
+      });
   }
 
   /**
@@ -178,7 +182,6 @@ class BasicController {
    * @returns {Promise<*>}
    */
   async preUpdateHandler(req, item) {
-    this.options.fieldNames.forEach(field => item[field] = req.body[field]);
     return Promise.resolve(item);
   }
 
