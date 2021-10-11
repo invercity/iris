@@ -122,7 +122,7 @@ angular.module('data').controller('OrdersEditController', [
           $scope.calcArray = calcArray;
           $scope.savedOrder = _.cloneDeep(data);
           $scope.title = $scope.t.EDIT_ORDER_NUM + data.code;
-          $scope.order.link = 'https://vitaly.herokuapp.com/orders/' + data._id;
+          $scope.order.link = window.location.hostname + '/orders/' + data._id;
           if (!$scope.order.status) {
             $scope.order.status = $scope.statuses[0].value;
           }
