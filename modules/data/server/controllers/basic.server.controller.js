@@ -103,7 +103,7 @@ class BasicController {
     const itemData = {};
     this.options.fieldNames.forEach(field => itemData[field] = req.body[field]);
     const updatedItemData = await this.preUpdateHandler(req, itemData);
-    const item = mergeDeep(req[this.modelNameAttr], updatedItemData);
+    const item = Object.assign(req[this.modelNameAttr], updatedItemData);
     return this[operation](OPERATION_TYPE.SAVE, item, res);
   }
 
