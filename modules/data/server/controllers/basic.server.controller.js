@@ -24,10 +24,30 @@ const normalizeQuery = (query) => {
 };
 
 /**
+ * Prepare filter
+ * @param {object} query
+ * @param {string[]} filterNames
+ * @returns {string[]}
+ */
+const prepareFilter = (query, filterNames) => {
+  const andFilter = [];
+  filterNames.forEach(name => {
+    if (query[name] !== undefined) {
+      const value = mongoose.Types.ObjectId.isValid(query[name]) ?
+        mongoose.Types.ObjectId(query[name]) :
+        query[name];
+      andFilter.push({ [name ]: value});
+    }
+  });
+  return andFilter;
+};
+
+/**
  * @typedef ControllerOptions
  * @field {string[]} fieldNames
  * @field {string[]} [populateFields]
  * @field {string[]} [fieldNamesSearch]
+ * @field {string[]} [fieldNamesSearchFilter]
  * @field {string[]} [listExtraQueryFields]
  */
 
@@ -107,11 +127,12 @@ class BasicController {
    */
   async list(req, res) {
     const { limit = 20, page = 1, q = '' } = req.query;
-    const { fieldNamesSearch = [] } = this.options;
+    const { fieldNamesSearch = [], fieldNamesSearchFilter = [] } = this.options;
     const escaped = q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     const $or = fieldNamesSearch.map(field => ({ [field]: { $regex: new RegExp(escaped, 'i') } }));
+    const $and = prepareFilter(req.query, fieldNamesSearchFilter);
     const extraQuery = await this.preListHandler(req);
-    const query = mergeDeep({ $or }, extraQuery);
+    const query = mergeDeep({ $or, $and }, extraQuery);
     let items = this.model.find(normalizeQuery(query))
       .limit(+limit)
       .skip((page - 1) * limit)

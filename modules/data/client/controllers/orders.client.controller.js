@@ -63,6 +63,7 @@ angular.module('data').controller('OrdersController', [
       var status = $scope.selectedStatus ? $scope.selectedStatus.value : undefined;
       var payed = _.get($scope.selectedType, 'payed');
       var good = $scope.selectedGood ? $scope.selectedGood._id : undefined;
+      var search = $scope.search ? encodeURIComponent($scope.search) : undefined;
       $scope.ordersResolved = Orders.query({
         payed: payed,
         place: place,
@@ -70,9 +71,9 @@ angular.module('data').controller('OrdersController', [
         page: $scope.currentPage,
         limit: $scope.itemsPerPage,
         good: good,
-        q: encodeURIComponent($scope.search)
+        q: search
       }, function (data) {
-        $scope.orders = data.orders;
+        $scope.orders = data.items;
         $scope.ordersCount = data.count;
         $scope.figureOutItemsToDisplay();
       });

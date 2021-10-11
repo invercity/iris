@@ -14,6 +14,11 @@ class OrderController extends BasicController {
         'total',
         'extra'
       ],
+      fieldNamesSearchFilter: [
+        'client',
+        'place',
+        'payed'
+      ],
       populateFields: [
         'client',
         'items.good',
@@ -43,8 +48,6 @@ class OrderController extends BasicController {
       query: {
         q = '',
         good,
-        client,
-        place
       }
     } = req;
     const escaped = q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -65,6 +68,7 @@ class OrderController extends BasicController {
       .then((clientIds) => {
         const { Types } = this.mongoose;
         const $or = [];
+        const $and = [];
         if (q && !isNaN(q)) {
           $or.push({ code: +q });
         }
@@ -72,18 +76,9 @@ class OrderController extends BasicController {
           $or.push({ client: { $in: clientIds } });
         }
         if (good) {
-          $or.push({ 'items.good': { $in: [Types.ObjectId(good)] } });
+          $and.push({ 'items.good': { $in: [Types.ObjectId(good)] } });
         }
-        if (client) {
-          $or.push({ 'client': { $in: [Types.ObjectId(client)]}});
-        }
-        if (place) {
-          $or.push({ 'place' : { $in: [Types.ObjectId(place)]}});
-        }
-        if ($or.length) {
-          return { $or };
-        }
-        return {};
+        return { $or, $and };
       });
   }
 

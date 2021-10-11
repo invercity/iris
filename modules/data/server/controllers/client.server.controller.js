@@ -10,6 +10,11 @@ class ClientController extends BasicController {
         'defaultPlace',
         'active'
       ],
+      fieldNamesSearch: [
+        'phone',
+        'firstName',
+        'lastName'
+      ],
       populateFields: [
         'defaultPlace'
       ],
