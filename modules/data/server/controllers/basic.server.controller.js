@@ -36,7 +36,7 @@ const prepareFilter = (query, filterNames) => {
       const value = mongoose.Types.ObjectId.isValid(query[name]) ?
         mongoose.Types.ObjectId(query[name]) :
         query[name];
-      andFilter.push({ [name ]: value});
+      andFilter.push({ [name ]: value });
     }
   });
   return andFilter;

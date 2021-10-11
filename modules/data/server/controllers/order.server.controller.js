@@ -133,9 +133,9 @@ class OrderController extends BasicController {
         const emptyOrder = { items: [] };
         return Promise.all(goods.map((good) => {
           const after = (newOrder || emptyOrder).items.find(item =>
-              item.good && (good._id.equals(item.good) || (good._id.equals(item.good._id))));
+            item.good && (good._id.equals(item.good) || (good._id.equals(item.good._id))));
           const before = (existingOrder || emptyOrder).items.find(item =>
-              item.good && (good._id.equals(item.good) || (good._id.equals(item.good._id))));
+            item.good && (good._id.equals(item.good) || (good._id.equals(item.good._id))));
           if (before && after) {
             if (before.count === after.count) {
               return null;
