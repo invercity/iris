@@ -1,0 +1,65 @@
+{
+  "users": [
+    {
+      "firstName": "Test Name",
+      "lastName": "Test Last",
+      "username": "testuser",
+      "email": "testtest@example.com",
+      "password": "TESTmail11223344++"
+    }
+  ],
+  "goods": [
+    {
+      "name": "TEst good",
+      "details": "Brief information about good",
+      "count": 100,
+      "price": 45.50,
+      "country": "Panama",
+      "type": "sometype"
+    },
+    {
+      "name": "Good 2",
+      "details": "Brief information about good",
+      "count": 40,
+      "price": 100,
+      "country": "India",
+      "type": "othertype"
+    }
+  ],
+  "orders": [
+    {
+      "sale": 0,
+      "credit": 0
+    },
+    {
+      "sale": 10,
+      "credit": 0
+    }
+  ],
+  "clients": [
+    {
+      "firstName": "Client1",
+      "lastName": "Last1",
+      "phone": "+380990000000"
+    },
+    {
+      "firstName": "Client2",
+      "lastName": "Last2",
+      "phone": "+3809955555555"
+    }
+  ],
+  "places": [
+    {
+      "name": "Test place",
+      "address": "City, avenue 34"
+    }
+  ],
+  "orderOptions": [
+    {
+      "count": 10
+    },
+    {
+      "count": 20
+    }
+  ]
+}

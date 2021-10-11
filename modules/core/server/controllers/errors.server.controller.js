@@ -36,6 +36,9 @@ exports.getErrorMessage = (err) => {
         message = err.errors[errName].message;
       }
     }
+    if (message === '') {
+      message = err.stack;
+    }
   }
 
   return message;

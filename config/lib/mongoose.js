@@ -1,9 +1,7 @@
-const { db, files } = require('../config');
 const chalk = require('chalk');
 const path = require('path');
 const mongoose = require('mongoose');
-
-mongoose.Promise = require('bluebird');
+const { db, files } = require('../config');
 
 // Load the mongoose models
 module.exports.loadModels = (callback) => {
