@@ -18,6 +18,7 @@ angular.module('core').factory('t', [function () {
     MENU_PLACES: 'Місця',
     MENU_ORDERS: 'Замовлення',
     MENU_CLIENTS: 'Клієнти',
+    MENU_PRICES: 'Прайс лист',
     ENTER_COUNT: 'Введіть кількість',
     GOOD_EDIT: 'Редагувати товар',
     GOOD_NEW: 'Створити товар',
