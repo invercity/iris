@@ -51,7 +51,7 @@
     "passport-local": "^1.0.0",
     "serve-favicon": "^2.5.0",
     "swig-templates": "^2.0.3",
-    "validator": "^10.11.0"
+    "validator": "^13.7.0"
   },
   "devDependencies": {
     "grunt-concurrent": "^2.0.0",
