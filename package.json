@@ -19,7 +19,7 @@
     "bower": "bower install --config.interactive=false --allow-root",
     "postinstall": "npm run bower",
     "heroku-postbuild": "grunt build",
-    "test": "cross-env NODE_ENV=test mocha --timeout 5000 --exit",
+    "test": "cross-env NODE_ENV=test mocha --timeout 10000 --exit",
     "lint": "grunt lint",
     "build": "grunt build"
   },
