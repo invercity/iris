@@ -12,7 +12,7 @@
     "url": "https://github.com/invercity/iris.git"
   },
   "engines": {
-    "node": "^14.15.0"
+    "node": "^16.13.0"
   },
   "scripts": {
     "start": "node server",
@@ -73,8 +73,5 @@
     "run-sequence": "^2.2.1",
     "sass": "^1.43.4",
     "supertest": "^6.1.6"
-  },
-  "optionalDependencies": {
-    "fsevents": "^2.3.2"
   }
 }
