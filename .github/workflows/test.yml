@@ -1,6 +1,5 @@
 name: Test
 
-
 on:
   push:
     branches:
@@ -9,8 +8,6 @@ on:
     branches:
       - master
       - release/*
-
-  workflow_dispatch:
 
 jobs:
   test:
