@@ -44,6 +44,7 @@ module.exports.start = function start(callback) {
       console.log('--');
 
       if (callback) {
+        console.log('callback call');
         callback(app, db, config);
       }
     });
