@@ -20,7 +20,9 @@ let cookies;
 
 describe('Test IRIS app', () => {
   before((done) => {
+    console.log('before init...');
     initApp((instance, db) => {
+      console.log('app initialized');
       appInstance = instance;
       dbInstance = db;
       done();
