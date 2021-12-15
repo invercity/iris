@@ -12,7 +12,7 @@
     "url": "https://github.com/invercity/iris.git"
   },
   "engines": {
-    "node": "^16.13.0"
+    "node": "^12.22.0 || ^14.18.0 || ^16.13.0"
   },
   "scripts": {
     "start": "node server",
