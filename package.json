@@ -34,7 +34,7 @@
     "express-query-boolean": "^2.0.0",
     "express-session": "^1.16.2",
     "file-stream-rotator": "^0.4.1",
-    "generate-password": "^1.4.2",
+    "generate-password": "^1.7.0",
     "glob": "^7.1.4",
     "grunt": "^1.0.4",
     "grunt-cli": "^1.3.0",
