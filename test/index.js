@@ -1,4 +1,4 @@
-const assert = require('assert');
+const assert = require('assert').strict;
 const request = require('supertest');
 const { describe, it, before } = require('mocha');
 const app = require('../config/lib/app');
