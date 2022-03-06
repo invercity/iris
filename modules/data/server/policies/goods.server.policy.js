@@ -1,4 +1,3 @@
-const _ = require('lodash');
 const Acl = require('acl');
 
 // Using the memory backend
@@ -39,9 +38,9 @@ exports.invokeRolesPolicies = () => {
  * Check If Goods Policy Allows
  */
 exports.isAllowed = (req, res, next) => {
-  const roles = (req.user) ? req.user.roles : ['guest'];
+  const roles = req.user ? req.user.roles : ['guest'];
 
-  const id = _.get(req.good, 'user.id');
+  const id = req.good? req.good.user.id : '';
 
   if (req.good && req.user && id === req.user.id) {
     return next();

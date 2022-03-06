@@ -1,7 +1,7 @@
-const path = require('path'),
-  mongoose = require('mongoose'),
-  User = mongoose.model('User'),
-  errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
+const path = require('path');
+const mongoose = require('mongoose');
+const User = mongoose.model('User');
+const errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
 
 exports.read = (req, res) => {
   res.json(req.model);

@@ -1,7 +1,7 @@
-const adminPolicy = require('../policies/admin.server.policy'),
-  admin = require('../controllers/admin.server.controller');
+const adminPolicy = require('../policies/admin.server.policy');
+const admin = require('../controllers/admin.server.controller');
 
-module.exports = function (app) {
+module.exports = (app) => {
   // User route registration first. Ref: #713
   require('./users.server.routes.js')(app);
 

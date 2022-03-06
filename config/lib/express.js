@@ -4,7 +4,7 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const boolParser = require('express-query-boolean');
 const session = require('express-session');
-const MongoStore = require('connect-mongo')(session);
+const MongoStore = require('connect-mongo');
 const favicon = require('serve-favicon');
 const compress = require('compression');
 const methodOverride = require('method-override');
@@ -102,10 +102,6 @@ module.exports.initViewEngine = (app) => {
  * Configure Express session
  */
 
-console.log(' ----------------------------------------');
-console.log(' session cookie: ', config.sessionCookie);
-console.log(' ----------------------------------------');
-
 module.exports.initSession = (app, db) => {
   app.use(session({
     saveUninitialized: true,
@@ -118,9 +114,9 @@ module.exports.initSession = (app, db) => {
       secure: config.sessionCookie.secure && config.secure.ssl,
     },
     key: config.sessionKey,
-    store: new MongoStore({
-      mongooseConnection: db,
-      collection: config.sessionCollection
+    store: MongoStore.create({
+      collectionName: config.sessionCollection,
+      client: db.getClient()
     })
   }));
 };
@@ -166,7 +162,7 @@ module.exports.initModulesServerRoutes = (app) => {
 
 module.exports.initErrorRoutes = (app) => {
   app.use((err, req, res, next) => {
-    // If the error object doesn't exists
+    // If the error object doesn't exist
     if (!err) {
       return next();
     }
