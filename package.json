@@ -9,8 +9,7 @@
     "url": "https://github.com/invercity/iris.git"
   },
   "engines": {
-    "node": "~8",
-    "npm": "~6"
+    "node": "^18.3.0"
   },
   "scripts": {
     "start": "node server",
