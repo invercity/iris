@@ -14,7 +14,7 @@
   "scripts": {
     "start": "node server",
     "postinstall": "bower install --config.interactive=false",
-    "heroku-postbuild": "npm i sass && grunt build",
+    "heroku-postbuild": "npm i sass grunt && grunt build",
     "test": "grunt lint"
   },
   "dependencies": {
