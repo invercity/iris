@@ -19,12 +19,10 @@ let dbInstance;
 let cookies;
 
 describe('Test IRIS app', () => {
-  before((done) => {
-    initApp((instance, db) => {
-      appInstance = instance;
-      dbInstance = db;
-      done();
-    });
+  before(async () => {
+    const { app, db } = await initApp();
+    appInstance = app;
+    dbInstance = db;
   });
 
   it('should success on signup POST /api/auth/signup', async() => {

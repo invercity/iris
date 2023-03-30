@@ -33,7 +33,7 @@
     "describe": true,
     "it": true,
     "element": true,
-    "by: true",
+    "by": true,
     "browser": true,
     "inject": true,
     "register": true,

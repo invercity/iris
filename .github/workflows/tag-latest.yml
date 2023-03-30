@@ -1,4 +1,4 @@
-name: Tag latest release
+name: tag
 
 on:
   release:

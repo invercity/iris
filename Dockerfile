@@ -1,19 +1,19 @@
-FROM node:14.15.0
+FROM node:18.5.0
 
-WORKDIR /home/mean
+WORKDIR /home/iris
 
-# Install Mean.JS packages
-COPY package.json /home/mean/package.json
-COPY package-lock.json /home/mean/package-lock.json
+# Install iris packages
+COPY package.json /home/iris/package.json
+COPY package-lock.json /home/iris/package-lock.json
 RUN npm install
 
 # Manually trigger bower. Why doesnt this work via npm install?
-COPY .bowerrc /home/mean/.bowerrc
-COPY bower.json /home/mean/bower.json
+COPY .bowerrc /home/iris/.bowerrc
+COPY bower.json /home/iris/bower.json
 RUN npm run bower
 
 # Make everything available for start
-COPY . /home/mean
+COPY . /home/iris
 
 # Set development environment as default
 ENV NODE_ENV development

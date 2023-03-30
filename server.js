@@ -1,1 +1,1 @@
-require('./config/lib/app').start();
+require('./config/lib/app').start().then(() => {});

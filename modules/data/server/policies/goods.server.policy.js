@@ -1,10 +1,7 @@
-const Acl = require('acl');
+const hakki = require('hakki')();
 
-// Using the memory backend
-const acl = new Acl(new Acl.memoryBackend());
-
-exports.invokeRolesPolicies = () => {
-  acl.allow([{
+exports.invokeRolesPolicies = async () => {
+  return hakki.allow([{
     roles: ['admin'],
     allows: [{
       resources: '/api/goods',
@@ -37,29 +34,26 @@ exports.invokeRolesPolicies = () => {
 /**
  * Check If Goods Policy Allows
  */
-exports.isAllowed = (req, res, next) => {
+exports.isAllowed = async (req, res, next) => {
   const roles = req.user ? req.user.roles : ['guest'];
 
-  const id = req.good? req.good.user.id : '';
+  const id = req.good ? req.good.user.id : '';
 
   if (req.good && req.user && id === req.user.id) {
     return next();
   }
 
   // Check for user roles
-  acl.areAnyRolesAllowed(roles, req.route.path, req.method.toLowerCase(), (err, isAllowed) => {
-    if (err) {
-      // An authorization error occurred.
-      return res.status(500).send('Unexpected authorization error');
-    } else {
-      if (isAllowed) {
-        // Access granted! Invoke next middleware
-        return next();
-      } else {
-        return res.status(403).json({
-          message: 'User is not authorized'
-        });
-      }
-    }
-  });
+  return hakki.areAnyRolesAllowed(roles, req.route.path, [req.method.toLowerCase()])
+    .then((isAllowed) => {
+        if (isAllowed) {
+          // Access granted! Invoke next middleware
+          return next();
+        } else {
+          return res.status(403).json({
+            message: 'User is not authorized'
+          });
+        }
+    })
+    .catch(() => res.status(500).send('Unexpected authorization error'));
 };

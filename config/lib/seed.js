@@ -24,11 +24,11 @@ function removeUser (user) {
 function saveUser (user) {
   return () => {
     return new Promise((resolve, reject) => {
-      user.save((err, theuser) => {
+      user.save((err, savedUser) => {
         if (err) {
           reject(new Error('Failed to add local ' + user.username));
         } else {
-          resolve(theuser);
+          resolve(savedUser);
         }
       });
     });
@@ -98,7 +98,7 @@ function reportError (reject) {
   };
 }
 
-module.exports.start = function start(options) {
+module.exports.start = async(options) => {
   // Initialize the default seed options
   seedOptions = clone(config.seedDB.options);
   if (get(options, 'logResults')) {

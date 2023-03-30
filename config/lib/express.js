@@ -14,6 +14,7 @@ const consolidate = require('consolidate');
 
 const config = require('../config');
 const logger = require('./logger');
+const configureSocketIO = require('./socket.io');
 
 /**
  * Initialize local variables
@@ -152,12 +153,14 @@ module.exports.initModulesClientRoutes = (app) => {
   config.folders.client.forEach(staticPath => app.use(staticPath, express.static(path.resolve('./' + staticPath))));
 };
 
-module.exports.initModulesServerPolicies = () => {
-  config.files.server.policies.forEach(policyPath => require(path.resolve(policyPath)).invokeRolesPolicies());
+module.exports.initModulesServerPolicies = async () => {
+  return Promise.all(config.files.server.policies.map(policyPath => require(path.resolve(policyPath)).invokeRolesPolicies()));
 };
 
 module.exports.initModulesServerRoutes = (app) => {
-  config.files.server.routes.forEach(routePath => require(path.resolve(routePath))(app));
+  config.files.server.routes.forEach(routePath => {
+    require(path.resolve(routePath))(app);
+  });
 };
 
 module.exports.initErrorRoutes = (app) => {
@@ -175,44 +178,31 @@ module.exports.initErrorRoutes = (app) => {
   });
 };
 
-module.exports.configureSocketIO = (app, db) => require('./socket.io')(app, db);
+// module.exports.configureSocketIO = (app, db) => require('./socket.io')(app, db);
 
-module.exports.init = (db) => {
+module.exports.init = async (db) => {
   // Initialize express app
-  let app = express();
-
+  const app = express();
   // Initialize local variables
   this.initLocalVariables(app);
-
   // Initialize Express middleware
   this.initMiddleware(app);
-
   // Initialize Express view engine
   this.initViewEngine(app);
-
   // Initialize Express session
   this.initSession(app, db);
-
   // Initialize Modules configuration
   this.initModulesConfiguration(app);
-
   // Initialize Helmet security headers
   this.initHelmetHeaders(app);
-
   // Initialize modules static client routes
   this.initModulesClientRoutes(app);
-
   // Initialize modules server authorization policies
-  this.initModulesServerPolicies(app);
-
+  await this.initModulesServerPolicies(app);
   // Initialize modules server routes
   this.initModulesServerRoutes(app);
-
   // Initialize error routes
   this.initErrorRoutes(app);
-
   // Configure Socket.io
-  app = this.configureSocketIO(app, db);
-
-  return app;
+  return configureSocketIO(app, db);
 };

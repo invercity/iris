@@ -53,7 +53,7 @@ class OrderController extends BasicController {
     const escaped = q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     return Promise.resolve()
       .then(() => {
-        if (q) {
+        if (q && q.length > 2) {
           const fields = [
             'firstName',
             'phone',
