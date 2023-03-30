@@ -61,7 +61,7 @@ function getOptions () {
             verbose: options.stream.rotatingLogs.verbose
           });
         } else {
-          // throw a new error so we can catch and handle it gracefully
+          // throw a new error, so we can catch and handle it gracefully
           throw new Error('An invalid fileName or directoryPath was provided for the rotating logs option.');
         }
       } else {
@@ -73,7 +73,7 @@ function getOptions () {
           }
           options.stream = fs.createWriteStream(options.stream.directoryPath + '/' + config.log.options.stream.fileName, { flags: 'a' });
         } else {
-          // throw a new error so we can catch and handle it gracefully
+          // throw a new error, so we can catch and handle it gracefully
           throw new Error('An invalid fileName or directoryPath was provided for stream option.');
         }
       }

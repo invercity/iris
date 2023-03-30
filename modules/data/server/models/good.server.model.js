@@ -1,8 +1,7 @@
 const mongoose = require('mongoose');
-const autoIncrement = require('mongoose-auto-increment');
+const { AutoIncrementSimple } = require('@typegoose/auto-increment');
 
 const { Schema } = mongoose;
-autoIncrement.initialize(mongoose);
 
 const modelGood = 'Good';
 
@@ -54,11 +53,10 @@ const GoodSchema = new Schema({
   }
 });
 
-GoodSchema.plugin(autoIncrement.plugin, {
-  model: modelGood,
+GoodSchema.plugin(AutoIncrementSimple, [{
   field: 'code',
   startAt: 1,
   incrementBy: 1
-});
+}]);
 
 mongoose.model(modelGood, GoodSchema);

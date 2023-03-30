@@ -1,6 +1,6 @@
-const _ = require('lodash'),
-  mongoose = require('mongoose'),
-  User = mongoose.model('User');
+const mongoose = require('mongoose');
+
+const User = mongoose.model('User');
 
 /**
  * User middleware

@@ -1,6 +1,6 @@
-const passport = require('passport'),
-  LocalStrategy = require('passport-local').Strategy,
-  User = require('mongoose').model('User');
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+const User = require('mongoose').model('User');
 
 module.exports = () => {
   // Use local strategy

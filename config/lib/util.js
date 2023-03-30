@@ -20,6 +20,15 @@ const mergeDeep = (target, source) => {
   return target;
 };
 
+const isObjectLike = (value) => {
+  return value && typeof value === 'object';
+};
+
+const isString = (value) => {
+  return typeof value === 'string' ||
+    (!Array.isArray(value) && isObjectLike(value) && value.toString().call(value) === '[object String]');
+};
+
 module.exports = {
   union: (...args) => [...new Set([].concat(...args))],
   clone: obj => Object.assign({}, obj),
@@ -29,5 +38,6 @@ module.exports = {
       .reduce((res, key) => (res !== null && res !== undefined) ? res[key] : res, obj);
     return (result === undefined || result === obj) ? defaultValue : result;
   },
-  mergeDeep
+  mergeDeep,
+  isString
 };

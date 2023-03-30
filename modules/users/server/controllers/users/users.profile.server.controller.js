@@ -1,11 +1,8 @@
-const _ = require('lodash'),
-  fs = require('fs'),
-  path = require('path'),
-  errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
-  mongoose = require('mongoose'),
-  multer = require('multer'),
-  config = require(path.resolve('./config/config')),
-  User = mongoose.model('User');
+const path = require('path');
+const multer = require('multer');
+const errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
+const config = require(path.resolve('./config/config'));
+const util = require(path.resolve('./config/lib/util'));
 
 /**
  * Update user details
@@ -19,7 +16,7 @@ exports.update = (req, res) => {
 
   if (user) {
     // Merge existing user
-    user = _.extend(user, req.body);
+    user = util.mergeDeep(user, req.body);
     user.updated = Date.now();
     user.displayName = user.firstName + ' ' + user.lastName;
 
@@ -53,7 +50,7 @@ exports.changeProfilePicture = (req, res) => {
   let message = null;
   const upload = multer(config.uploads.profileUpload).single('newProfilePicture');
   const profileUploadFileFilter = require(path.resolve('./config/lib/multer')).profileUploadFileFilter;
-  
+
   // Filtering to upload only images
   upload.fileFilter = profileUploadFileFilter;
 

@@ -1,13 +1,10 @@
-let acl = require('acl');
-
-// Using the memory backend
-acl = new acl(new acl.memoryBackend());
+const hakki = require('hakki')();
 
 /**
  * Invoke Admin Permissions
  */
-exports.invokeRolesPolicies = function () {
-  acl.allow([{
+exports.invokeRolesPolicies = async () => {
+  return hakki.allow([{
     roles: ['admin'],
     allows: [{
       resources: '/api/users',
@@ -22,15 +19,12 @@ exports.invokeRolesPolicies = function () {
 /**
  * Check If Admin Policy Allows
  */
-exports.isAllowed = function (req, res, next) {
+exports.isAllowed = async (req, res, next) => {
   const roles = (req.user) ? req.user.roles : ['guest'];
 
   // Check for user roles
-  acl.areAnyRolesAllowed(roles, req.route.path, req.method.toLowerCase(), function (err, isAllowed) {
-    if (err) {
-      // An authorization error occurred.
-      return res.status(500).send('Unexpected authorization error');
-    } else {
+  return hakki.areAnyRolesAllowed(roles, req.route.path, [req.method.toLowerCase()])
+    .then((isAllowed) => {
       if (isAllowed) {
         // Access granted! Invoke next middleware
         return next();
@@ -39,6 +33,8 @@ exports.isAllowed = function (req, res, next) {
           message: 'User is not authorized'
         });
       }
-    }
-  });
+    })
+    .catch(() => {
+      return res.status(500).send('Unexpected authorization error');
+    });
 };

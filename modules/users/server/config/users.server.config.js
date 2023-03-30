@@ -1,7 +1,7 @@
-const passport = require('passport'),
-  User = require('mongoose').model('User'),
-  path = require('path'),
-  config = require(path.resolve('./config/config'));
+const path = require('path');
+const passport = require('passport');
+const User = require('mongoose').model('User');
+const config = require(path.resolve('./config/config'));
 
 module.exports = (app, db) => {
   // Serialize sessions

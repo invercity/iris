@@ -1,9 +1,10 @@
-const mongoose = require('mongoose'),
-  Schema = mongoose.Schema,
-  crypto = require('crypto'),
-  validator = require('validator'),
-  generatePassword = require('generate-password'),
-  owasp = require('owasp-password-strength-test');
+const crypto = require('crypto');
+const mongoose = require('mongoose');
+const validator = require('validator');
+const generatePassword = require('generate-password');
+const owasp = require('owasp-password-strength-test');
+
+const Schema = mongoose.Schema;
 
 /**
  * A Validation function for local strategy properties
@@ -98,7 +99,7 @@ const UserSchema = new Schema({
 /**
  * Hook a pre save method to hash the password
  */
-UserSchema.pre('save', function (next) {
+UserSchema.pre('save', (next) => {
   if (this.password && this.isModified('password')) {
     this.salt = crypto.randomBytes(16).toString('base64');
     this.password = this.hashPassword(this.password);
@@ -110,11 +111,11 @@ UserSchema.pre('save', function (next) {
 /**
  * Hook a pre validate method to test the local password
  */
-UserSchema.pre('validate', function (next) {
+UserSchema.pre('validate', (next) => {
   if (this.provider === 'local' && this.password && this.isModified('password')) {
-    var result = owasp.test(this.password);
+    const result = owasp.test(this.password);
     if (result.errors.length) {
-      var error = result.errors.join(' ');
+      const error = result.errors.join(' ');
       this.invalidate('password', error);
     }
   }
@@ -125,9 +126,9 @@ UserSchema.pre('validate', function (next) {
 /**
  * Create instance method for hashing a password
  */
-UserSchema.methods.hashPassword = function (password) {
+UserSchema.methods.hashPassword = (password) => {
   if (this.salt && password) {
-    return crypto.pbkdf2Sync(password, new Buffer(this.salt, 'base64'), 10000, 64, 'sha1').toString('base64');
+    return crypto.pbkdf2Sync(password, Buffer.from(this.salt, 'base64'), 10000, 64, 'sha1').toString('base64');
   } else {
     return password;
   }
@@ -136,19 +137,19 @@ UserSchema.methods.hashPassword = function (password) {
 /**
  * Create instance method for authenticating user
  */
-UserSchema.methods.authenticate = function (password) {
+UserSchema.methods.authenticate = (password) => {
   return this.password === this.hashPassword(password);
 };
 
 /**
  * Find possible not used username
  */
-UserSchema.statics.findUniqueUsername = function (username, suffix, callback) {
+UserSchema.statics.findUniqueUsername = (username, suffix, callback) => {
   const possibleUsername = username.toLowerCase() + (suffix || '');
 
   this.findOne({
     username: possibleUsername
-  }, function (err, user) {
+  }, (err, user) => {
     if (!err) {
       if (!user) {
         callback(possibleUsername);
@@ -166,8 +167,8 @@ UserSchema.statics.findUniqueUsername = function (username, suffix, callback) {
 * Returns a promise that resolves with the generated passphrase, or rejects with an error if something goes wrong.
 * NOTE: Passphrases are only tested against the required owasp strength tests, and not the optional tests.
 */
-UserSchema.statics.generateRandomPassphrase = function () {
-  return new Promise(function (resolve, reject) {
+UserSchema.statics.generateRandomPassphrase = () => {
+  return new Promise((resolve, reject) => {
     let password = '';
     const repeatingCharacters = new RegExp('(.)\\1{2,}', 'g');
 
