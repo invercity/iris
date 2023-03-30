@@ -1,4 +1,4 @@
-Copyright (c) 2017-2018 Andriy Ermolenko
+Copyright (c) 2017-2023 Andrii Yermolenko
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the

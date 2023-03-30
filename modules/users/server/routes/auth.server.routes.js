@@ -1,6 +1,4 @@
-const passport = require('passport');
-
-module.exports = function (app) {
+module.exports = (app) => {
   // User Routes
   const users = require('../controllers/users.server.controller');
 

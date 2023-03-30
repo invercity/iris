@@ -7,6 +7,9 @@ angular.module('data').factory('Places', ['$resource',
     }, {
       update: {
         method: 'PUT'
+      },
+      query: {
+        method: 'GET', isArray:false
       }
     });
   }

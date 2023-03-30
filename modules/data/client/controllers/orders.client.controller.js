@@ -63,6 +63,7 @@ angular.module('data').controller('OrdersController', [
       var status = $scope.selectedStatus ? $scope.selectedStatus.value : undefined;
       var payed = _.get($scope.selectedType, 'payed');
       var good = $scope.selectedGood ? $scope.selectedGood._id : undefined;
+      var search = $scope.search ? encodeURIComponent($scope.search) : undefined;
       $scope.ordersResolved = Orders.query({
         payed: payed,
         place: place,
@@ -70,9 +71,9 @@ angular.module('data').controller('OrdersController', [
         page: $scope.currentPage,
         limit: $scope.itemsPerPage,
         good: good,
-        q: $scope.search
+        q: search
       }, function (data) {
-        $scope.orders = data.orders;
+        $scope.orders = data.items;
         $scope.ordersCount = data.count;
         $scope.figureOutItemsToDisplay();
       });
@@ -103,12 +104,9 @@ angular.module('data').controller('OrdersController', [
 
     $scope.$watch('selectedGood', function (newV, oldV) {
       if (!($scope.selectedGood && $scope.selectedGood._id)) {
-        getGoods($scope.selectedGood)
-          .then(function(response) {
-            $scope.goods = response.items;
-          });
+        return null;
       }
-      else if (newV._id || oldV._id) {
+      if (newV._id || oldV._id) {
         $scope.onChangeType();
       }
     });
@@ -200,16 +198,24 @@ angular.module('data').controller('OrdersController', [
       });
     };
 
+    $scope.getGoods = function (query) {
+      return Goods.query({
+        q: query
+      }).$promise.then(function (data) { return data.items; });
+    };
+
+    $scope.getPlaces = function (query) {
+      return Places.query({
+        q: query
+      }).$promise.then(function (data) { return data.items; });
+    };
+
     /**
      * Get orders list
      */
     $scope.find = function () {
       $scope.onChangeType($scope.orderTypes[0]);
-      Places.query().$promise
-        .then(function (allPlaces) {
-          $scope.places = allPlaces;
-          $scope.selectedStatus = $scope.listStatuses[4];
-        });
+      $scope.selectedStatus = $scope.listStatuses[4];
     };
 
     var calcArray = function (good) {
@@ -239,7 +245,7 @@ angular.module('data').controller('OrdersController', [
           $scope.calcArray = calcArray;
           $scope.savedOrder = _.cloneDeep(data);
           $scope.title = $scope.t.EDIT_ORDER_NUM + data.code;
-          $scope.order.link = 'https://vitaly.herokuapp.com/orders/' + data._id;
+          $scope.order.link = window.location.hostname + '/orders/' + data._id;
           if (!$scope.order.status) {
             $scope.order.status = $scope.statuses[0].value;
           }
@@ -247,7 +253,7 @@ angular.module('data').controller('OrdersController', [
       }
       else {
         Clients.query(function (data) {
-          $scope.clients = data;
+          $scope.clients = data.items;
           $scope.order = new Orders();
           $scope.title = $scope.t.NEW_ORDER;
           $scope.order.status = $scope.statuses[0].value;
@@ -256,10 +262,10 @@ angular.module('data').controller('OrdersController', [
       }
 
       Goods.query(function (data) {
-        $scope.goods = data.goods;
+        $scope.goods = data.items;
       });
       Places.query(function (data) {
-        $scope.places = data;
+        $scope.places = data.items;
         $scope.places.unshift({
           name: $scope.t.EDIT_MANUALLY
         });

@@ -51,7 +51,7 @@ angular.module('data').controller('GoodsController', ['$scope', '$stateParams', 
     };
 
     $scope.find = function () {
-      Goods.query(function (data) {
+      Goods.query({ limit: 9999 }, function (data) {
         $scope.goods = data.items;
         $scope.buildPager();
       });

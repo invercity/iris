@@ -1,6 +1,4 @@
-const _ = require('lodash');
-
-module.exports = _.extend(
+module.exports = Object.assign(
   require('./users/users.authentication.server.controller'),
   require('./users/users.authorization.server.controller'),
   require('./users/users.password.server.controller'),

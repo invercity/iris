@@ -1,234 +1,156 @@
-const path = require('path');
-const mongoose = require('mongoose');
-const async = require('async');
-const _ = require('lodash');
-const Order = mongoose.model('Order');
-const Client = mongoose.model('Client');
-const { Types } = mongoose;
-const errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
+const BasicController = require('./basic.server.controller');
 
-exports.create = (req, res) => {
-  const {
-    items,
-    place,
-    placeDescription,
-    date,
-    status,
-    sale,
-    credit,
-    total,
-    extra = 0
-  } = req.body;
-  const orderData = {
-    items,
-    place,
-    placeDescription,
-    date,
-    status,
-    sale,
-    credit,
-    total,
-    extra
-  };
-  async.parallel([
-    (callback) => {
-      const clientData = req.body.client;
-      clientData.defaultPlace = place;
-      if (!clientData._id) {
-        const client = new Client(clientData);
-        client.save((err) => {
-          if (err) {
-            callback(err);
-          }
-          else {
-            callback(null, client._id);
-          }
-        });
-      }
-      else {
-        callback(null, clientData._id);
-      }
-    }
-  ], (err, [client]) => {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    }
-    else {
-      orderData.client = client;
-      const order = new Order(orderData);
-      order.user = req.user;
-
-      order.save((err) => {
-        if (err) {
-          return res.status(400).send({
-            message: errorHandler.getErrorMessage(err)
-          });
-        } else {
-          res.json(order);
-        }
-      });
-    }
-  });
-};
-
-exports.read = (req, res) => {
-  res.json(req.order);
-};
-
-exports.update = (req, res) => {
-  const { order } = req;
-  const {
-    items,
-    place,
-    placeDescription,
-    payed,
-    status,
-    sale,
-    credit,
-    total,
-    extra,
-    client: {
-      phone,
-      _id
-    }
-  } = req.body;
-
-  // TODO: replace with extend
-  order.items = items;
-  order.place = place;
-  order.placeDescription = placeDescription;
-  order.payed = payed;
-  order.status = status;
-  order.sale = sale;
-  order.credit = credit;
-  order.total = total;
-  order.extra = extra;
-
-  order.save((err) => {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      // update client phone when updating order
-      Client.update({ _id }, { $set: { phone, defaultPlace: place, active: true } }, (err) => {
-        if (err) {
-          return res.status(400).send({
-            message: errorHandler.getErrorMessage(err)
-          });
-        } else {
-          res.json(order);
-        }
-      });
-    }
-  });
-};
-
-exports.delete = (req, res) => {
-  const { order } = req;
-
-  order.remove(function (err) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      res.json(order);
-    }
-  });
-};
-
-exports.list = (req, res) => {
-  const {
-    q,
-    payed,
-    place,
-    status,
-    good,
-    page = 1,
-    limit = 20
-  } = req.query;
-  const search = {
-    payed,
-    place,
-    status
-  };
-  return Promise.resolve()
-    .then(() => {
-      if (q) {
-        const fields = [
-          'firstName',
-          'phone',
-        ];
-        const $or = _.map(fields, field => ({ [field]: { $regex: new RegExp(q, 'i') } }));
-        return Client.find({ $or })
-          .select('_id');
-      }
-      return null;
-    })
-    .then((clientIds) => {
-      const $or = [];
-      if (!isNaN(q) && q) {
-        $or.push({ code: +q });
-      }
-      if (clientIds) {
-        $or.push({ client: { $in: clientIds } });
-      }
-      if (good) {
-        $or.push({ 'items.good': { $in: [Types.ObjectId(good)] } });
-      }
-      if ($or.length) {
-        _.extend(search, { $or });
-      }
-      const params = _.pickBy(search, _.identity);
-      const orders = Order.find(params)
-        .limit(+limit)
-        .skip((page - 1) * limit)
-        .sort('-created')
-        .populate('user', 'displayName')
-        .populate('client')
-        .populate('items.good')
-        .populate('place');
-
-      const count = Order.count(params);
-      return Promise.props({
-        orders, count
-      });
-    })
-    .then(data => res.json(data))
-    .catch((err) => {
-      console.log(err);
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    });
-};
-
-exports.orderByID = (req, res, next, id) => {
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(400).send({
-      message: 'Order is invalid'
+class OrderController extends BasicController {
+  constructor() {
+    super('Order', {
+      fieldNames: [
+        'items',
+        'place',
+        'placeDescription',
+        'date',
+        'status',
+        'sale',
+        'credit',
+        'total',
+        'extra'
+      ],
+      fieldNamesSearchFilter: [
+        'client',
+        'place',
+        'payed'
+      ],
+      populateFields: [
+        'client',
+        'items.good',
+        'place'
+      ]
     });
   }
 
-  Order.findById(id)
-    .populate('user', 'displayName')
-    .populate('client')
-    .populate('items.good')
-    .populate('place')
-    .exec((err, order) => {
-      if (err) {
-        return next(err);
-      } else if (!order) {
-        return res.status(404).send({
-          message: 'No order with that identifier has been found'
-        });
+  async preCreateHandler(req, item) {
+    await this.saveClient(req.body, item);
+    await this.updateGoodsCountOnUpdateOrder(null, item);
+    return item;
+  }
+
+  async preUpdateHandler(req, item) {
+    const existingOrder = req[this.modelNameAttr];
+    const updatedOrder = await this.saveClient(req.body, item);
+    return this.updateGoodsCountOnUpdateOrder(existingOrder, updatedOrder);
+  }
+
+  async preDeleteHandler(req, item) {
+    return this.updateGoodsCountOnUpdateOrder(item, null, true);
+  }
+
+  async preListHandler(req) {
+    const {
+      query: {
+        q = '',
+        good,
       }
-      req.order = order;
-      next();
-    });
-};
+    } = req;
+    const escaped = q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    return Promise.resolve()
+      .then(() => {
+        if (q && q.length > 2) {
+          const fields = [
+            'firstName',
+            'phone',
+          ];
+          const $or = fields.map(field => ({ [field]: { $regex: new RegExp(escaped), $options: 'i' } }));
+          const Client = this.mongoose.model('Client');
+          return Client.find({ $or })
+            .select('_id');
+        }
+        return null;
+      })
+      .then((clientIds) => {
+        const { Types } = this.mongoose;
+        const $or = [];
+        const $and = [];
+        if (q && !isNaN(q)) {
+          $or.push({ code: +q });
+        }
+        if (clientIds) {
+          $or.push({ client: { $in: clientIds } });
+        }
+        if (good) {
+          $and.push({ 'items.good': { $in: [Types.ObjectId(good)] } });
+        }
+        return { $or, $and };
+      });
+  }
 
+  /**
+   * Save/update client on save order
+   * @param {object} body
+   * @param {object} item
+   * @return {Promise<object>}
+   */
+  async saveClient(body, item) {
+    const { place, client } = body;
+    client.defaultPlace = place;
+    const Client = this.mongoose.model('Client');
+    if (!client._id) {
+      const newClient = new Client(client);
+      await newClient.save();
+      item.client = newClient._id;
+    } else {
+      const { _id, phone } = client;
+      await Client.updateOne({ _id }, { $set: { $set: { phone, defaultPlace: place, active: true } } });
+      item.client = _id;
+    }
+    if (!item.extra) {
+      item.extra = 0;
+    }
+    return item;
+  }
 
+  /**
+   * Update good count on order save/delete
+   * @param {object} existingOrder
+   * @param {object} newOrder
+   * @param {boolean} deleteOrder
+   * @return {Promise<object>}
+   */
+  async updateGoodsCountOnUpdateOrder(existingOrder, newOrder, deleteOrder = false) {
+    const Good = this.mongoose.model('Good');
+
+    if (deleteOrder && existingOrder.payed) {
+      return existingOrder;
+    }
+
+    await Promise.resolve()
+      .then(() => {
+        const ids = newOrder.items.map(item => item.good._id);
+        if (existingOrder && existingOrder.items) {
+          ids.push(...existingOrder.items.map(item => item.good));
+        }
+        return Good.find({ _id: { $in: ids } });
+      })
+      .then((goods) => {
+        const emptyOrder = { items: [] };
+        return Promise.all(goods.map((good) => {
+          const after = (newOrder || emptyOrder).items.find(item =>
+            item.good && (good._id.equals(item.good) || (good._id.equals(item.good._id))));
+          const before = (existingOrder || emptyOrder).items.find(item =>
+            item.good && (good._id.equals(item.good) || (good._id.equals(item.good._id))));
+          if (before && after) {
+            if (before.count === after.count) {
+              return null;
+            }
+            good.count += (before.count - after.count);
+          } else if (!before) {
+            good.count -= after.count;
+          } else {
+            good.count += before.count;
+          }
+          return good.save();
+        }));
+      });
+    return newOrder || existingOrder;
+  }
+}
+
+module.exports = new OrderController();

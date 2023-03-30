@@ -4,17 +4,17 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const boolParser = require('express-query-boolean');
 const session = require('express-session');
-const MongoStore = require('connect-mongo')(session);
+const MongoStore = require('connect-mongo');
 const favicon = require('serve-favicon');
 const compress = require('compression');
 const methodOverride = require('method-override');
 const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
-const flash = require('connect-flash');
 const consolidate = require('consolidate');
 
 const config = require('../config');
 const logger = require('./logger');
+const configureSocketIO = require('./socket.io');
 
 /**
  * Initialize local variables
@@ -85,7 +85,6 @@ module.exports.initMiddleware = (app) => {
 
   // Add the cookie parser and flash middleware
   app.use(cookieParser());
-  app.use(flash());
 };
 
 /**
@@ -104,10 +103,6 @@ module.exports.initViewEngine = (app) => {
  * Configure Express session
  */
 
-console.log(' ----------------------------------------');
-console.log(' session cookie: ', config.sessionCookie);
-console.log(' ----------------------------------------');
-
 module.exports.initSession = (app, db) => {
   app.use(session({
     saveUninitialized: true,
@@ -120,9 +115,9 @@ module.exports.initSession = (app, db) => {
       secure: config.sessionCookie.secure && config.secure.ssl,
     },
     key: config.sessionKey,
-    store: new MongoStore({
-      mongooseConnection: db,
-      collection: config.sessionCollection
+    store: MongoStore.create({
+      collectionName: config.sessionCollection,
+      client: db.getClient()
     })
   }));
 };
@@ -146,7 +141,7 @@ module.exports.initHelmetHeaders = (app) => {
   app.use(helmet.ieNoOpen());
   app.use(helmet.hsts({
     maxAge: SIX_MONTHS,
-    includeSubdomains: true,
+    includeSubDomains: true,
     force: true
   }));
   app.disable('x-powered-by');
@@ -155,21 +150,22 @@ module.exports.initHelmetHeaders = (app) => {
 module.exports.initModulesClientRoutes = (app) => {
   // Setting the app router and static folder
   app.use('/', express.static(path.resolve('./public')));
-
   config.folders.client.forEach(staticPath => app.use(staticPath, express.static(path.resolve('./' + staticPath))));
 };
 
-module.exports.initModulesServerPolicies = (app) => {
-  config.files.server.policies.forEach(policyPath => require(path.resolve(policyPath)).invokeRolesPolicies());
+module.exports.initModulesServerPolicies = async () => {
+  return Promise.all(config.files.server.policies.map(policyPath => require(path.resolve(policyPath)).invokeRolesPolicies()));
 };
 
 module.exports.initModulesServerRoutes = (app) => {
-  config.files.server.routes.forEach(routePath => require(path.resolve(routePath))(app));
+  config.files.server.routes.forEach(routePath => {
+    require(path.resolve(routePath))(app);
+  });
 };
 
 module.exports.initErrorRoutes = (app) => {
   app.use((err, req, res, next) => {
-    // If the error object doesn't exists
+    // If the error object doesn't exist
     if (!err) {
       return next();
     }
@@ -182,44 +178,31 @@ module.exports.initErrorRoutes = (app) => {
   });
 };
 
-module.exports.configureSocketIO = (app, db) => require('./socket.io')(app, db);
+// module.exports.configureSocketIO = (app, db) => require('./socket.io')(app, db);
 
-module.exports.init = (db) => {
+module.exports.init = async (db) => {
   // Initialize express app
-  let app = express();
-
+  const app = express();
   // Initialize local variables
   this.initLocalVariables(app);
-
   // Initialize Express middleware
   this.initMiddleware(app);
-
   // Initialize Express view engine
   this.initViewEngine(app);
-
   // Initialize Express session
   this.initSession(app, db);
-
   // Initialize Modules configuration
   this.initModulesConfiguration(app);
-
   // Initialize Helmet security headers
   this.initHelmetHeaders(app);
-
   // Initialize modules static client routes
   this.initModulesClientRoutes(app);
-
   // Initialize modules server authorization policies
-  this.initModulesServerPolicies(app);
-
+  await this.initModulesServerPolicies(app);
   // Initialize modules server routes
   this.initModulesServerRoutes(app);
-
   // Initialize error routes
   this.initErrorRoutes(app);
-
   // Configure Socket.io
-  app = this.configureSocketIO(app, db);
-
-  return app;
+  return configureSocketIO(app, db);
 };

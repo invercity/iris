@@ -1,8 +1,9 @@
-const path = require('path'),
-  errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
-  mongoose = require('mongoose'),
-  passport = require('passport'),
-  User = mongoose.model('User');
+const path = require('path');
+const mongoose = require('mongoose');
+const passport = require('passport');
+
+const errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
+const User = mongoose.model('User');
 
 // URLs for which user can't be redirected on signin
 const noReturnUrls = [
@@ -50,7 +51,7 @@ exports.signup = (req, res) => {
  * Signin after passport authentication
  */
 exports.signin = (req, res, next) => {
-  passport.authenticate('local', (err, user, info) => {
+  passport.authenticate('local', {}, (err, user, info) => {
     if (err || !user) {
       res.status(400).send(info);
     } else {

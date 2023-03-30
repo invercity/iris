@@ -1,8 +1,8 @@
 const fs = require('fs');
 const path = require('path');
-const _ = require('lodash');
 const chalk = require('chalk');
 const glob = require('glob');
+const { isString, union, mergeDeep } = require(path.resolve('./config/lib/util'));
 
 /**
  * Get files by glob patterns
@@ -12,16 +12,16 @@ const getGlobbedPaths = (globPatterns, excludes) => {
   let output = [];
 
   // If glob pattern is array then we use each pattern in a recursive way, otherwise we use glob
-  if (_.isArray(globPatterns)) {
-    globPatterns.forEach(globPattern => output = _.union(output, getGlobbedPaths(globPattern, excludes)));
-  } else if (_.isString(globPatterns)) {
+  if (Array.isArray(globPatterns)) {
+    globPatterns.forEach(globPattern => output = union(output, getGlobbedPaths(globPattern, excludes)));
+  } else if (isString(globPatterns)) {
     if (urlRegex.test(globPatterns)) {
       output.push(globPatterns);
     } else {
       let files = glob.sync(globPatterns);
       if (excludes) {
         files = files.map((file) => {
-          if (_.isArray(excludes)) {
+          if (Array.isArray(excludes)) {
             for (const i in excludes) {
               file = file.replace(excludes[i], '');
             }
@@ -31,7 +31,7 @@ const getGlobbedPaths = (globPatterns, excludes) => {
           return file;
         });
       }
-      output = _.union(output, files);
+      output = union(output, files);
     }
   }
 
@@ -139,17 +139,17 @@ const initGlobalConfig = () => {
   validateEnvironmentVariable();
   const defaultAssets = require(path.join(process.cwd(), 'config/assets/default'));
   const environmentAssets = require(path.join(process.cwd(), 'config/assets/', process.env.NODE_ENV)) || {};
-  const assets = _.merge(defaultAssets, environmentAssets);
+  const assets = mergeDeep(defaultAssets, environmentAssets);
   const defaultConfig = require(path.join(process.cwd(), 'config/env/default'));
   const environmentConfig = require(path.join(process.cwd(), 'config/env/', process.env.NODE_ENV)) || {};
-  let config = _.merge(defaultConfig, environmentConfig);
+  let config = mergeDeep(defaultConfig, environmentConfig);
   config.meanjs = require(path.resolve('./package.json'));
 
   // We only extend the config object with the local.js custom/local environment if we are on
   // production or development environment. If test environment is used we don't merge it with local.js
   // to avoid running test suites on a prod/dev environment (which delete records and make modifications)
   if (process.env.NODE_ENV !== 'test') {
-    config = _.merge(config, (fs.existsSync(path.join(process.cwd(), 'config/env/local.js')) && require(path.join(process.cwd(), 'config/env/local.js'))) || {});
+    config = mergeDeep(config, (fs.existsSync(path.join(process.cwd(), 'config/env/local.js')) && require(path.join(process.cwd(), 'config/env/local.js'))) || {});
   }
 
   initGlobalConfigFiles(config, assets);

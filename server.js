@@ -1,4 +1,1 @@
-'use strict';
-global.Promise = require('bluebird');
-
-require('./config/lib/app').start();
+require('./config/lib/app').start().then(() => {});

@@ -1,7 +1,8 @@
-const _ = require('lodash');
-const config = require('../config');
 const mongoose = require('mongoose');
 const chalk = require('chalk');
+
+const config = require('../config');
+const { get, clone } = require('../lib/util');
 
 // global seed options object
 let seedOptions = {};
@@ -23,11 +24,11 @@ function removeUser (user) {
 function saveUser (user) {
   return () => {
     return new Promise((resolve, reject) => {
-      user.save((err, theuser) => {
+      user.save((err, savedUser) => {
         if (err) {
           reject(new Error('Failed to add local ' + user.username));
         } else {
-          resolve(theuser);
+          resolve(savedUser);
         }
       });
     });
@@ -97,18 +98,18 @@ function reportError (reject) {
   };
 }
 
-module.exports.start = function start(options) {
+module.exports.start = async(options) => {
   // Initialize the default seed options
-  seedOptions = _.clone(config.seedDB.options, true);
-  if (_.has(options, 'logResults')) {
+  seedOptions = clone(config.seedDB.options);
+  if (get(options, 'logResults')) {
     seedOptions.logResults = options.logResults;
   }
 
-  if (_.has(options, 'seedUser')) { 
-    seedOptions.seedUser = options.seedUser; 
+  if (get(options, 'seedUser')) {
+    seedOptions.seedUser = options.seedUser;
   }
 
-  if (_.has(options, 'seedAdmin')) {
+  if (get(options, 'seedAdmin')) {
     seedOptions.seedAdmin = options.seedAdmin;
   }
 
