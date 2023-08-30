@@ -41,7 +41,7 @@
     "hakki": "^2.2.1",
     "helmet": "^5.0.2",
     "method-override": "^3.0.0",
-    "mongodb": "^4.4.1",
+    "mongodb": "^4.17.1",
     "mongoose": "^6.2.4",
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
