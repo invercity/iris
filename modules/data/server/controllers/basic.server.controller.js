@@ -34,7 +34,7 @@ const prepareFilter = (query, filterNames) => {
   filterNames.forEach(name => {
     if (query[name] !== undefined) {
       const value = mongoose.Types.ObjectId.isValid(query[name]) ?
-        mongoose.Types.ObjectId(query[name]) :
+        new mongoose.Types.ObjectId(query[name]) :
         query[name];
       andFilter.push({ [name ]: value });
     }

@@ -76,7 +76,7 @@ class OrderController extends BasicController {
           $or.push({ client: { $in: clientIds } });
         }
         if (good) {
-          $and.push({ 'items.good': { $in: [Types.ObjectId(good)] } });
+          $and.push({ 'items.good': { $in: [new Types.ObjectId(good)] } });
         }
         return { $or, $and };
       });
