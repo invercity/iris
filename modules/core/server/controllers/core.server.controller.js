@@ -34,6 +34,6 @@ exports.renderNotFound = (req, res) => {
 
 exports.version = (req, res) => {
   const path = require('path');
-  const { version } = require(path.resolve(__dirname, '../../../../package'));
+  const { version } = require(path.resolve('./package'));
   res.send({ version });
 };

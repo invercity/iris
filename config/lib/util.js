@@ -29,6 +29,10 @@ const isString = (value) => {
     (!Array.isArray(value) && isObjectLike(value) && value.toString().call(value) === '[object String]');
 };
 
+const waterfallPromise = (promises, initialValue) => {
+  return promises.reduce((acc, promise) => acc.then(promise), Promise.resolve(initialValue));
+};
+
 module.exports = {
   union: (...args) => [...new Set([].concat(...args))],
   clone: obj => Object.assign({}, obj),
@@ -39,5 +43,6 @@ module.exports = {
     return (result === undefined || result === obj) ? defaultValue : result;
   },
   mergeDeep,
-  isString
+  isString,
+  waterfallPromise,
 };

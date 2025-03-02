@@ -14,37 +14,39 @@ const noReturnUrls = [
 /**
  * Signup
  */
-exports.signup = (req, res) => {
+exports.signup = async (req, res) => {
   // For security measurement we remove the roles from the req.body object
   delete req.body.roles;
 
   // Init Variables
-  const user = new User(req.body);
+  // const user = new User(req.body);
 
   // Add missing user fields
-  user.provider = 'local';
-  user.displayName = user.firstName + ' ' + user.lastName;
+  // user.provider = 'local';
+  // user.displayName = user.firstName + ' ' + user.lastName;
 
   // Then save the user
-  user.save((err) => {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      // Remove sensitive data before login
-      user.password = undefined;
-      user.salt = undefined;
+  return User
+      .create({ ...req.body, provider: 'local', displayName: req.body.firstName + ' ' + req.body.lastName })
+      .then((user) => {
+        // Remove sensitive data before login
+        user.password = undefined;
+        user.salt = undefined;
 
-      req.login(user, (err) => {
-        if (err) {
-          res.status(400).send(err);
-        } else {
-          res.json(user);
-        }
+        return req.login(user, (err) => {
+          if (err) {
+            res.status(400).send(err);
+          } else {
+            res.json(user);
+          }
+        });
+      })
+      .catch(err => {
+        console.log(err);
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
       });
-    }
-  });
 };
 
 /**
@@ -141,35 +143,33 @@ exports.saveOAuthUserProfile = (req, providerUserProfile, done) => {
       $or: [mainProviderSearchQuery, additionalProviderSearchQuery]
     };
 
-    User.findOne(searchQuery, (err, user) => {
-      if (err) {
-        return done(err);
-      } else {
-        if (!user) {
-          const possibleUsername = providerUserProfile.username || ((providerUserProfile.email) ? providerUserProfile.email.split('@')[0] : '');
+    User
+        .findOne(searchQuery)
+        .then (user => {
+          if (!user) {
+            const possibleUsername = providerUserProfile.username || ((providerUserProfile.email) ? providerUserProfile.email.split('@')[0] : '');
 
-          User.findUniqueUsername(possibleUsername, null, (availableUsername) => {
-            user = new User({
-              firstName: providerUserProfile.firstName,
-              lastName: providerUserProfile.lastName,
-              username: availableUsername,
-              displayName: providerUserProfile.displayName,
-              email: providerUserProfile.email,
-              profileImageURL: providerUserProfile.profileImageURL,
-              provider: providerUserProfile.provider,
-              providerData: providerUserProfile.providerData
-            });
+            return User.findUniqueUsername(possibleUsername, null, (availableUsername) => {
+              user = new User({
+                firstName: providerUserProfile.firstName,
+                lastName: providerUserProfile.lastName,
+                username: availableUsername,
+                displayName: providerUserProfile.displayName,
+                email: providerUserProfile.email,
+                profileImageURL: providerUserProfile.profileImageURL,
+                provider: providerUserProfile.provider,
+                providerData: providerUserProfile.providerData
+              });
 
-            // And save the user
-            user.save((err) => {
-              return done(err, user);
+              // And save the user
+              return user.save();
             });
-          });
-        } else {
-          return done(err, user);
-        }
-      }
-    });
+          } else {
+            return done(null, user);
+          }
+        })
+        .then((user) => done(null, user))
+        .catch(err => done(err, null));
   } else {
     // User is already logged in, join the provider data to the existing user
     const user = req.user;

@@ -10,7 +10,7 @@ const compress = require('compression');
 const methodOverride = require('method-override');
 const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
-const consolidate = require('consolidate');
+const consolidate = require('@ladjs/consolidate');
 
 const config = require('../config');
 const logger = require('./logger');

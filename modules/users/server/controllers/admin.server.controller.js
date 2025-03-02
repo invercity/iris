@@ -7,7 +7,7 @@ exports.read = (req, res) => {
   res.json(req.model);
 };
 
-exports.update = (req, res) => {
+exports.update = async (req, res) => {
   const user = req.model;
 
   //For security purposes only merge these parameters
@@ -16,64 +16,73 @@ exports.update = (req, res) => {
   user.displayName = user.firstName + ' ' + user.lastName;
   user.roles = req.body.roles;
 
-  user.save((err) => {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
+  return user
+      .save()
+      .exec()
+      .then(() => {
+        res.json(user);
+      })
+      .catch((err) => {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
       });
-    }
-
-    res.json(user);
-  });
 };
 
-exports.delete = (req, res) => {
+exports.delete = async (req, res) => {
   const user = req.model;
 
-  user.remove((err) => {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
+  return user
+      .remove()
+      .exec()
+      .then(() => {
+          return res.json(user);
+      })
+      .catch((err) => {
+        return res.status(400).send({
+          message: errorHandler.getErrorMessage(err)
+        });
       });
-    }
-
-    res.json(user);
-  });
 };
 
 /**
  * List of Users
  */
-exports.list = (req, res) => {
-  User.find({}, '-salt -password').sort('-created').populate('user', 'displayName').exec((err, users) => {
-    if (err) {
-      return res.status(400).send({
+exports.list = async (req, res) => {
+  return User
+      .find({}, '-salt -password')
+      .sort('-created')
+      .populate('user', 'displayName')
+      .exec()
+      .then((users) => {
+        return res.json(users);
+      })
+      .catch(err => res.status(400).send({
         message: errorHandler.getErrorMessage(err)
-      });
-    }
-
-    res.json(users);
-  });
+      }));
 };
 
 /**
  * User middleware
  */
-exports.userByID = (req, res, next, id) => {
+exports.userByID = async (req, res, next, id) => {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).send({
       message: 'User is invalid'
     });
   }
 
-  User.findById(id, '-salt -password').exec((err, user) => {
-    if (err) {
-      return next(err);
-    } else if (!user) {
-      return next(new Error('Failed to load user ' + id));
-    }
-
-    req.model = user;
-    next();
-  });
+  return User
+      .findById(id, '-salt -password')
+      .exec()
+      .then((user) => {
+        if (!user) {
+          return res.status(404).send({
+            message: 'User not found'
+          });
+        }
+        req.model = user;
+        next();
+      })
+      .catch(err => next(err));
 };

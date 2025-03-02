@@ -10,12 +10,15 @@ module.exports = (app, db) => {
   });
 
   // Deserialize sessions
-  passport.deserializeUser((id, done) => {
-    User.findOne({
-      _id: id
-    }, '-salt -password', (err, user) => {
-      done(err, user);
-    });
+  passport.deserializeUser(async (id, done) => {
+    try {
+      const user = await User.findOne({
+        _id: id
+      }, '-salt -password').exec();
+      return done(null, user);
+    } catch (err) {
+      return done(err, null);
+    }
   });
 
   // Initialize strategies
