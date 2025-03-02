@@ -24,13 +24,12 @@
     "build": "grunt build"
   },
   "dependencies": {
+    "@ladjs/consolidate": "^1.0.4",
     "@typegoose/auto-increment": "^4.8.0",
-    "async": "^3.2.2",
     "body-parser": "^1.20.3",
     "chalk": "^4.1.2",
     "compression": "^1.7.4",
     "connect-mongo": "^5.1.0",
-    "@ladjs/consolidate": "^1.0.4",
     "cookie-parser": "^1.4.5",
     "express": "^4.21.2",
     "express-query-boolean": "^2.0.0",
@@ -67,11 +66,11 @@
     "grunt-contrib-uglify": "^5.0.1",
     "grunt-contrib-watch": "^1.1.0",
     "grunt-env": "^1.0.1",
-    "grunt-eslint": "^24.0.0",
+    "grunt-eslint": "^25.0.0",
     "load-grunt-tasks": "^5.1.0",
-    "mocha": "^10.0.0",
+    "mocha": "^11.1.0",
     "run-sequence": "^2.2.1",
     "sass": "^1.43.4",
-    "supertest": "^6.1.6"
+    "supertest": "^7.0.0"
   }
 }
