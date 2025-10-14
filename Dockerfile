@@ -1,4 +1,6 @@
-FROM node:20.11.0-alpine
+FROM node:22.20.0-alpine
+
+RUN apk add --no-cache git
 
 WORKDIR /home/iris
 
