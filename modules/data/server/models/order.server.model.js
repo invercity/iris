@@ -71,6 +71,7 @@ const OrderSchema = new Schema({
 OrderSchema.plugin(AutoIncrementSimple, [{
   field: 'code',
   startAt: 1,
+  trackerCollection: 'identitycounters',
   incrementBy: 1
 }]);
 
