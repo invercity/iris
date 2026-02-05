@@ -7,11 +7,10 @@ WORKDIR /home/iris
 # Install iris packages
 COPY package.json /home/iris/package.json
 COPY package-lock.json /home/iris/package-lock.json
-RUN npm install
-
-# Manually trigger bower. Why doesnt this work via npm install?
 COPY .bowerrc /home/iris/.bowerrc
 COPY bower.json /home/iris/bower.json
+
+RUN npm install
 RUN npm run bower
 
 # Make everything available for start
