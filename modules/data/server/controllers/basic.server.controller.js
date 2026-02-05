@@ -69,7 +69,11 @@ class BasicController {
   }
 
   async getNextCode() {
-    const Counter = mongoose.model('Counter', new mongoose.Schema({}), 'identitycounters');
+    const Counter = mongoose.model('Counter', new mongoose.Schema({
+      model: String,
+      field: String,
+      count: Number,
+    }), 'identitycounters');
     const result = await Counter.findOneAndUpdate(
         { model: this.model.modelName, field: 'code' },
         { $inc: { count: 1 } },
