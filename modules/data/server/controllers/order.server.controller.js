@@ -127,7 +127,7 @@ class OrderController extends BasicController {
         if (existingOrder && existingOrder.items) {
           ids.push(...existingOrder.items.map(item => item.good));
         }
-        return Good.find({ _id: { $in: ids } });
+        return Good.find({ _id: { $in: ids } }).exec();
       })
       .then((goods) => {
         const emptyOrder = { items: [] };
@@ -146,7 +146,7 @@ class OrderController extends BasicController {
           } else {
             good.count += before.count;
           }
-          return good.save();
+          return Good.updateOne({ _id: good._id }, { $set: { count: good.count } }).exec();
         }));
       });
     return newOrder || existingOrder;
