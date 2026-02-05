@@ -123,7 +123,8 @@ class OrderController extends BasicController {
 
     await Promise.resolve()
       .then(() => {
-        const ids = newOrder.items.map(item => item.good._id);
+        const newOrderItems = newOrder ? newOrder.items : [];
+        const ids = newOrderItems.map(item => item.good._id);
         if (existingOrder && existingOrder.items) {
           ids.push(...existingOrder.items.map(item => item.good));
         }
