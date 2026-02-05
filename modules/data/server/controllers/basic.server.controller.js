@@ -88,9 +88,9 @@ class BasicController {
     const itemData = {};
     this.options.fieldNames.forEach(field => itemData[field] = req.body[field]);
     const updatedItemData = await this.preCreateHandler(req, itemData);
-    const item = new this.model(updatedItemData);
-    item.user = req.user;
-    return this[operation](OPERATION_TYPE.SAVE, item, res);
+    // const item = new this.model(updatedItemData);
+    updatedItemData.user = req.user;
+    return this[operation](OPERATION_TYPE.SAVE, updatedItemData, res);
   }
 
   /**
@@ -237,7 +237,8 @@ class BasicController {
     try {
       if (operationType === OPERATION_TYPE.SAVE) {
         if (!item._id) {
-          const response = await item.save();
+          console.log(item);
+          const response = await this.model.create(item);
           return res.json(response);
         } else {
           const response = await this.model.findByIdAndUpdate(item._id, item, { new: true });
