@@ -12,7 +12,7 @@ NODE_ENV = "production"
 PORT = "3000"
 
 [[services]]
-internal_port = 3000
+internal_port = 8443
 processes = ["app"]
 protocol = "tcp"
 
@@ -26,7 +26,7 @@ port = 80
 handlers = ["http"]
 
 [[services.ports]]
-port = 8443
+port = 443
 handlers = ["tls", "http"]
 
 [[services.tcp_checks]]
