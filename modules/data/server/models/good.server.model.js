@@ -56,7 +56,7 @@ const GoodSchema = new Schema({
 GoodSchema.plugin(AutoIncrementSimple, [{
   field: 'code',
   trackerCollection: 'identitycounters',
-  startAt: 1,
+  startAt: 4518,
   incrementBy: 1
 }]);
 
