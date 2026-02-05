@@ -172,7 +172,9 @@ class BasicController {
       item.populate(this.options.populateFields.join(' '));
     }
     return item
+      .exec()
       .then(data => {
+        console.log('Item: ', data)
         if (!data) {
           return res.status(404).send({
             message: 'No item with that identifier has been found'
