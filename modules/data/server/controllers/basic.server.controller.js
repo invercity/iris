@@ -174,7 +174,6 @@ class BasicController {
     return item
       .exec()
       .then(data => {
-        console.log('Item: ', data)
         if (!data) {
           return res.status(404).send({
             message: 'No item with that identifier has been found'
@@ -236,6 +235,8 @@ class BasicController {
    */
   async [operation](operationType, item, res) {
     try {
+      console.log(item)
+      console.log(operationType)
       const saveResponse = await item[operationType]();
       return res.json(saveResponse);
     } catch (e) {
