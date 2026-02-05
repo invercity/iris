@@ -235,10 +235,18 @@ class BasicController {
    */
   async [operation](operationType, item, res) {
     try {
-      console.log(item)
-      console.log(operationType)
-      const saveResponse = await item[operationType]();
-      return res.json(saveResponse);
+      if (operationType === OPERATION_TYPE.SAVE) {
+        if (!item._id) {
+          const response = await this.model.create(item);
+          return res.json(response);
+        } else {
+          const response = await this.model.findByIdAndUpdate(item._id, item, { new: true });
+          return res.json(response);
+        }
+      } else {
+        const response = await this.model.findByIdAndDelete(item._id);
+        return res.json(response);
+      }
     } catch (e) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(e)
