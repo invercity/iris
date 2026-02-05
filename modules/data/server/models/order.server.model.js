@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const { AutoIncrementSimple } = require('@typegoose/auto-increment');
 
 const { Schema } = mongoose;
 
