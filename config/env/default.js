@@ -10,7 +10,7 @@ module.exports = {
     options: {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-      poolSize: 5,
+      maxPoolSize: 5,
       minPoolSize: 1,
       maxIdleTimeMS: 30000,
       serverSelectionTimeoutMS: 5000,
