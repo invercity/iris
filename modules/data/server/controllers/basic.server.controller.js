@@ -237,7 +237,7 @@ class BasicController {
     try {
       if (operationType === OPERATION_TYPE.SAVE) {
         if (!item._id) {
-          const response = await this.model.create(item);
+          const response = await item.save();
           return res.json(response);
         } else {
           const response = await this.model.findByIdAndUpdate(item._id, item, { new: true });
