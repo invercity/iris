@@ -70,7 +70,7 @@ const OrderSchema = new Schema({
 
 OrderSchema.plugin(AutoIncrementSimple, [{
   field: 'code',
-  startAt: 102574,
+  startAt: 1,
   incrementBy: 1
 }]);
 
