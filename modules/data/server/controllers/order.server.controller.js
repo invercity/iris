@@ -30,6 +30,7 @@ class OrderController extends BasicController {
   async preCreateHandler(req, item) {
     await this.saveClient(req.body, item);
     await this.updateGoodsCountOnUpdateOrder(null, item);
+    item.code = await this.getNextCode();
     return item;
   }
 

@@ -53,10 +53,4 @@ const GoodSchema = new Schema({
   }
 });
 
-GoodSchema.plugin(AutoIncrementSimple, [{
-  field: 'code',
-  startAt: 4518,
-  incrementBy: 1
-}]);
-
 mongoose.model(modelGood, GoodSchema);

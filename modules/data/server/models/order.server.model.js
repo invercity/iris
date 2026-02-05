@@ -68,10 +68,4 @@ const OrderSchema = new Schema({
   }
 });
 
-OrderSchema.plugin(AutoIncrementSimple, [{
-  field: 'code',
-  startAt: 1,
-  incrementBy: 1
-}]);
-
 mongoose.model(modelOrder, OrderSchema);

@@ -17,6 +17,11 @@ class GoodsController extends BasicController {
     });
   }
 
+  async preCreateHandler(req, item) {
+    item.code = await this.getNextCode();
+    return item;
+  }
+
   async preListHandler(req) {
     const filters = super.preListHandler(req);
     if (req.query.excludeEmpty) {
