@@ -13,10 +13,10 @@ COPY gruntfile.js /home/iris/gruntfile.js
 
 RUN npm install
 RUN npm run bower
-RUN npm run build
 
 # Make everything available for start
 COPY . /home/iris
+RUN npm run build
 
 # Set development environment as default
 ENV NODE_ENV development
