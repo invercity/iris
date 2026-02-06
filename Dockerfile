@@ -9,6 +9,7 @@ COPY package.json /home/iris/package.json
 COPY package-lock.json /home/iris/package-lock.json
 COPY .bowerrc /home/iris/.bowerrc
 COPY bower.json /home/iris/bower.json
+COPY gruntfile.js /home/iris/gruntfile.js
 
 RUN npm install
 RUN npm run bower
