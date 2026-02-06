@@ -123,6 +123,7 @@ angular.module('data').controller('OrdersEditController', [
           $scope.savedOrder = _.cloneDeep(data);
           $scope.title = $scope.t.EDIT_ORDER_NUM + data.code;
           $scope.order.link = '/orders/' + data._id;
+          $scope.order.fullLink = window.location.host + $scope.order.link;
           if (!$scope.order.status) {
             $scope.order.status = $scope.statuses[0].value;
           }
