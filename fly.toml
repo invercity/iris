@@ -16,11 +16,6 @@ internal_port = 3000
 force_https = true
 processes = ["app"]
 
-[services.concurrency]
-hard_limit = 25
-soft_limit = 20
-type = "requests"
-
 [[services.ports]]
 port = 80
 handlers = ["http"]
