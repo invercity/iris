@@ -141,8 +141,8 @@ class BasicController {
     const $or = fieldNamesSearch.map(field => ({ [field]: { $regex: new RegExp(escaped, 'i') } }));
     const $and = prepareFilter(req.query, fieldNamesSearchFilter);
     const extraQuery = await this.preListHandler(req);
-    const query = mergeDeep({ $or, $and }, extraQuery);
-    let items = this.model.find(normalizeQuery(query))
+    const query = normalizeQuery(mergeDeep({ $or, $and }, extraQuery));
+    let items = this.model.find(query)
       .limit(+limit)
       .skip((page - 1) * limit)
       .sort('-created')
@@ -150,7 +150,7 @@ class BasicController {
     if (this.options.populateFields) {
       items = items.populate(this.options.populateFields.join(' '));
     }
-    const count = this.model.countDocuments();
+    const count = this.model.countDocuments(query);
     return Promise.all([items, count])
       .then(([items, count]) => res.json({ items, count }))
       .catch((err) => {
