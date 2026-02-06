@@ -51,7 +51,7 @@ class OrderController extends BasicController {
         good,
       }
     } = req;
-    const escaped = q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const escaped = decodeURIComponent(q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
     return Promise.resolve()
       .then(() => {
         if (q && q.length > 2) {
