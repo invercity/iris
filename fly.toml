@@ -13,8 +13,8 @@ PORT = "3000"
 
 [[services]]
 internal_port = 3000
+force_https = true
 processes = ["app"]
-protocol = "tcp"
 
 [services.concurrency]
 hard_limit = 25
