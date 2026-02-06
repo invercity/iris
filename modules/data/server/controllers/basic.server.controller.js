@@ -232,7 +232,7 @@ class BasicController {
    * @returns {Promise<*>}
    */
   async preListHandler(req) {
-    return {};
+    return Promise.resolve({});
   }
 
   /**

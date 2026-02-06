@@ -23,7 +23,7 @@ class GoodsController extends BasicController {
   }
 
   async preListHandler(req) {
-    const filters = super.preListHandler(req);
+    const filters = await super.preListHandler(req);
     if (req.query.excludeEmpty) {
       filters.count = {
         $gt: 0
