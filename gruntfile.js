@@ -72,7 +72,7 @@ module.exports = (grunt) => {
       }
     },
     concurrent: {
-      debug: ['node-inspect', 'watch'],
+      debug: ['nodemon', 'watch'],
       options: {
         logConcurrentOutput: true
       }
@@ -138,6 +138,40 @@ module.exports = (grunt) => {
         }
       }
     },
+    nodemon: {
+      dev: {
+        script: 'server.js',
+        options: {
+          nodeArgs: ['--inspect', '--env-file=.env.local'],
+          env: {
+            PORT: '3000'
+          },
+          // omit this property if you aren't serving HTML files and
+          // don't want to open a browser tab on start
+          callback: function (nodemon) {
+            nodemon.on('log', function (event) {
+              console.log(event.colour);
+            });
+
+            // opens browser on initial server start
+            nodemon.on('config:update', function () {
+              // Delay before server listens on port
+              setTimeout(function() {
+                require('open')('http://localhost:3000');
+              }, 1000);
+            });
+
+            // refreshes browser when server reboots
+            nodemon.on('restart', function () {
+              // Delay before server listens on port
+              setTimeout(function() {
+                require('fs').writeFileSync('.rebooted', 'rebooted');
+              }, 1000);
+            });
+          }
+        }
+      }
+    },
   });
 
   // Load NPM tasks
@@ -145,7 +179,7 @@ module.exports = (grunt) => {
   // grunt.loadNpmTasks('grunt-protractor-coverage');
 
   // Make sure upload directory exists
-  grunt.task.registerTask('mkdir:upload', 'Task that makes sure upload directory exists.', () => {
+  grunt.task.registerTask('mkdir:upload', 'Task that makes sure upload directory exists.', function() {
     // Get the callback
     const done = this.async();
     grunt.file.mkdir(path.normalize(__dirname + '/modules/users/client/img/profile/uploads'));
@@ -194,9 +228,9 @@ module.exports = (grunt) => {
   // Lint project files and minify them into two production files.
   grunt.registerTask('build', ['env:dev', 'uglify', 'cssmin']);
   // Run the project in development mode
-  grunt.registerTask('default', ['env:dev', 'lint', 'mkdir:upload', 'copy:localConfig', 'server']);
+  grunt.registerTask('default', ['env:dev', 'mkdir:upload', 'copy:localConfig', 'server']);
   // Run the project in debug mode
-  grunt.registerTask('debug', ['env:dev', 'lint', 'mkdir:upload', 'copy:localConfig', 'concurrent:debug']);
+  grunt.registerTask('debug', ['env:dev', 'mkdir:upload', 'copy:localConfig', 'concurrent:debug']);
   // Run the project in production mode
   grunt.registerTask('prod', ['build', 'env:prod', 'mkdir:upload', 'copy:localConfig', 'server']);
 };
