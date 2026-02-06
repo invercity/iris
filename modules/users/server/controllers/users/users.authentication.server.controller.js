@@ -75,9 +75,14 @@ exports.signin = (req, res, next) => {
 /**
  * Signout
  */
-exports.signout = (req, res) => {
-  req.logout();
-  res.redirect('/');
+exports.signout = (req, res, next) => {
+  req.logout((err) => {
+    if (err) {
+      return next(err);
+    }
+
+    res.redirect('/');
+  });
 };
 
 /**
