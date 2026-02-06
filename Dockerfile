@@ -12,6 +12,7 @@ COPY bower.json /home/iris/bower.json
 
 RUN npm install
 RUN npm run bower
+RUN npm run build
 
 # Make everything available for start
 COPY . /home/iris
