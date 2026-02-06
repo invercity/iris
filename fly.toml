@@ -13,8 +13,6 @@ PORT = "3000"
 
 [[services]]
 internal_port = 3000
-force_https = true
-processes = ["app"]
 
 [[services.ports]]
 port = 80
