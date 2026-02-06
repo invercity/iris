@@ -20,7 +20,7 @@ module.exports = {
     debug: process.env.MONGODB_DEBUG || false
   },
   port: process.env.PORT || 3000,
-  templateEngine: 'swig',
+  templateEngine: 'pug',
   // Session Cookie settings
   sessionCookie: {
     // session expiration is set by default to 24 hours

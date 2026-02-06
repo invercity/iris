@@ -10,7 +10,6 @@ const compress = require('compression');
 const methodOverride = require('method-override');
 const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
-const consolidate = require('@ladjs/consolidate');
 
 const config = require('../config');
 const logger = require('./logger');
@@ -91,11 +90,11 @@ module.exports.initMiddleware = (app) => {
  * Configure view engine
  */
 module.exports.initViewEngine = (app) => {
-  // Set swig as the template engine
-  app.engine('server.view.html', consolidate[config.templateEngine]);
+  // Set Pug as the template engine
+  app.engine('server.view.pug', require('pug').__express);
 
   // Set views path and view engine
-  app.set('view engine', 'server.view.html');
+  app.set('view engine', 'server.view.pug');
   app.set('views', './');
 };
 
