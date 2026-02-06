@@ -91,10 +91,10 @@ module.exports.initMiddleware = (app) => {
  */
 module.exports.initViewEngine = (app) => {
   // Set Pug as the template engine
-  app.engine('server.view.pug', require('pug').__express);
+  app.engine('pug', require('pug').__express);
 
   // Set views path and view engine
-  app.set('view engine', 'server.view.pug');
+  app.set('view engine', 'pug');
   app.set('views', './');
 };
 
