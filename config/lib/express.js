@@ -14,6 +14,7 @@ const helmet = require('helmet');
 const config = require('../config');
 const logger = require('./logger');
 const configureSocketIO = require('./socket.io');
+const { version } = require('../../package');
 
 /**
  * Initialize local variables
@@ -33,6 +34,7 @@ module.exports.initLocalVariables = (app) => {
   app.locals.livereload = config.livereload;
   app.locals.logo = config.logo;
   app.locals.favicon = config.favicon;
+  app.locals.version = version;
 
   // Passing the request url to environment locals
   app.use((req, res, next) => {

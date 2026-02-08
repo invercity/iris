@@ -37,9 +37,13 @@ html(lang="en")
 
   body(class="ng-cloak")
     header.navbar.navbar-fixed-top.navbar-inverse(ng-include="'/modules/core/client/views/header.client.view.html'")
-    section.content
+    section.content.content-footer
       section.container
         block content
+
+    footer.footer
+      .footer-version IRIS v#{version}, developed by
+          a(href="mailto:andriy.ermolenko@gmail.com") Andrii Yermolenko
 
     // Embedding The User Object
     script(type="text/javascript").
