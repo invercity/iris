@@ -14,9 +14,14 @@
           </label>
           <input name="link"
                  ng-model="order.fullLink"
+                 ng-click="copyToClipboard($event)"
                  id="link"
                  class="form-control"
                  readonly>
+          <div class="alert"
+               ng-show="copied">
+            Дані скопійовано ✔
+          </div>
         </div>
 
         <div class="form-group" ng-if="!order._id">
