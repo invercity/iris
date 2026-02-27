@@ -51,7 +51,7 @@ class OrderController extends BasicController {
         good,
       }
     } = req;
-    const escaped = decodeURIComponent(q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+    const $regex = this.normalizeQuery(q);
     return Promise.resolve()
       .then(() => {
         if (q && q.length > 2) {
@@ -59,7 +59,7 @@ class OrderController extends BasicController {
             'firstName',
             'phone',
           ];
-          const $or = fields.map(field => ({ [field]: { $regex: escaped, $options: 'i' } }));
+          const $or = fields.map(field => ({ [field]: { $regex, $options: 'i' } }));
           const Client = this.mongoose.model('Client');
           return Client.find({ $or })
             .select('_id');

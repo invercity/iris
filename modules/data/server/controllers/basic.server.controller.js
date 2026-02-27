@@ -68,6 +68,10 @@ class BasicController {
     this.options = options;
   }
 
+  normalizeQuery(q) {
+    return decodeURIComponent(q).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+
   async getNextCode() {
     const result = await mongoose.model('Counter').findOneAndUpdate(
         { model: this.model.modelName, field: 'code' },
@@ -137,8 +141,8 @@ class BasicController {
   async list(req, res) {
     const { limit = 20, page = 1, q = '' } = req.query;
     const { fieldNamesSearch = [], fieldNamesSearchFilter = [] } = this.options;
-    const escaped = decodeURIComponent(q).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    const $or = fieldNamesSearch.map(field => ({ [field]: { $regex: escaped, $options: 'i' } }));
+    const $regex = this.normalizeQuery(q);
+    const $or = fieldNamesSearch.map(field => ({ [field]: { $regex, $options: 'i' } }));
     const $and = prepareFilter(req.query, fieldNamesSearchFilter);
     const extraQuery = await this.preListHandler(req);
     const query = normalizeQuery(mergeDeep({ $or, $and }, extraQuery));
