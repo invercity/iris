@@ -59,7 +59,7 @@ class OrderController extends BasicController {
             'firstName',
             'phone',
           ];
-          const $or = fields.map(field => ({ [field]: { $regex: new RegExp(escaped), $options: 'i' } }));
+          const $or = fields.map(field => ({ [field]: { $regex: escaped, $options: 'i' } }));
           const Client = this.mongoose.model('Client');
           return Client.find({ $or })
             .select('_id');
