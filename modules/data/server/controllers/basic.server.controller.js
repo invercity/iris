@@ -138,7 +138,7 @@ class BasicController {
     const { limit = 20, page = 1, q = '' } = req.query;
     const { fieldNamesSearch = [], fieldNamesSearchFilter = [] } = this.options;
     const escaped = decodeURIComponent(q).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    const $or = fieldNamesSearch.map(field => ({ [field]: { $regex: new RegExp(escaped, 'i') } }));
+    const $or = fieldNamesSearch.map(field => ({ [field]: { $regex: escaped, $options: 'i' } }));
     const $and = prepareFilter(req.query, fieldNamesSearchFilter);
     const extraQuery = await this.preListHandler(req);
     const query = normalizeQuery(mergeDeep({ $or, $and }, extraQuery));
