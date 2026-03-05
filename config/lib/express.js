@@ -10,11 +10,11 @@ const compress = require('compression');
 const methodOverride = require('method-override');
 const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
-const consolidate = require('@ladjs/consolidate');
 
 const config = require('../config');
 const logger = require('./logger');
 const configureSocketIO = require('./socket.io');
+const { version } = require('../../package');
 
 /**
  * Initialize local variables
@@ -34,6 +34,7 @@ module.exports.initLocalVariables = (app) => {
   app.locals.livereload = config.livereload;
   app.locals.logo = config.logo;
   app.locals.favicon = config.favicon;
+  app.locals.version = version;
 
   // Passing the request url to environment locals
   app.use((req, res, next) => {
@@ -91,11 +92,11 @@ module.exports.initMiddleware = (app) => {
  * Configure view engine
  */
 module.exports.initViewEngine = (app) => {
-  // Set swig as the template engine
-  app.engine('server.view.html', consolidate[config.templateEngine]);
+  // Set Pug as the template engine
+  app.engine('pug', require('pug').__express);
 
   // Set views path and view engine
-  app.set('view engine', 'server.view.html');
+  app.set('view engine', 'pug');
   app.set('views', './');
 };
 

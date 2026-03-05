@@ -21,7 +21,7 @@ module.exports.loadModels = mongoose.loadModels;
 module.exports.start = async function start() {
   const db = await mongoose.connect();
   const app = await express.init(db);
-  app.listen(config.port, () => {
+  app.listen(config.port, '0.0.0.0', () => {
     // Logging initialization
     console.log('--');
     console.log(chalk.green(config.app.title));

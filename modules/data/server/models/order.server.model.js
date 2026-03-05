@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const { AutoIncrementSimple } = require('@typegoose/auto-increment');
 
 const { Schema } = mongoose;
 
@@ -67,11 +66,5 @@ const OrderSchema = new Schema({
     default: 0
   }
 });
-
-OrderSchema.plugin(AutoIncrementSimple, [{
-  field: 'code',
-  startAt: 1,
-  incrementBy: 1
-}]);
 
 mongoose.model(modelOrder, OrderSchema);

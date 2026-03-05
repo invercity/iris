@@ -13,7 +13,7 @@ const OPERATION_TYPE = {
  * @param {object} query
  * @return {object}
  */
-const normalizeQuery = (query) => {
+const normalizeMongoQuery = (query) => {
   let { $or, $and, ...rest } = query;
   Object.keys({ $or, $and }).forEach(key => {
     if (query[key] && query[key].length) {
@@ -69,6 +69,24 @@ class BasicController {
   }
 
   /**
+   * Escape string for Regexp
+   * @param q
+   * @returns {*}
+   */
+  escapeRegexQuery(q) {
+    return q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+
+  async getNextCode() {
+    const result = await mongoose.model('Counter').findOneAndUpdate(
+        { model: this.model.modelName, field: 'code' },
+        { $inc: { count: 1 } },
+        { new: true, upsert: true }
+    );
+    return result.count;
+  }
+
+  /**
    * Read item
    * @param req
    * @param res
@@ -88,9 +106,9 @@ class BasicController {
     const itemData = {};
     this.options.fieldNames.forEach(field => itemData[field] = req.body[field]);
     const updatedItemData = await this.preCreateHandler(req, itemData);
-    const item = new this.model(updatedItemData);
-    item.user = req.user;
-    return this[operation](OPERATION_TYPE.SAVE, item, res);
+    // const item = new this.model(updatedItemData);
+    updatedItemData.user = req.user;
+    return this[operation](OPERATION_TYPE.SAVE, updatedItemData, res);
   }
 
   /**
@@ -128,12 +146,12 @@ class BasicController {
   async list(req, res) {
     const { limit = 20, page = 1, q = '' } = req.query;
     const { fieldNamesSearch = [], fieldNamesSearchFilter = [] } = this.options;
-    const escaped = q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    const $or = fieldNamesSearch.map(field => ({ [field]: { $regex: new RegExp(escaped, 'i') } }));
+    const $regex = this.escapeRegexQuery(q);
+    const $or = fieldNamesSearch.map(field => ({ [field]: { $regex, $options: 'i' } }));
     const $and = prepareFilter(req.query, fieldNamesSearchFilter);
     const extraQuery = await this.preListHandler(req);
-    const query = mergeDeep({ $or, $and }, extraQuery);
-    let items = this.model.find(normalizeQuery(query))
+    const query = normalizeMongoQuery(mergeDeep({ $or, $and }, extraQuery));
+    let items = this.model.find(query)
       .limit(+limit)
       .skip((page - 1) * limit)
       .sort('-created')
@@ -141,7 +159,7 @@ class BasicController {
     if (this.options.populateFields) {
       items = items.populate(this.options.populateFields.join(' '));
     }
-    const count = this.model.countDocuments();
+    const count = this.model.countDocuments(query);
     return Promise.all([items, count])
       .then(([items, count]) => res.json({ items, count }))
       .catch((err) => {
@@ -172,6 +190,7 @@ class BasicController {
       item.populate(this.options.populateFields.join(' '));
     }
     return item
+      .exec()
       .then(data => {
         if (!data) {
           return res.status(404).send({
@@ -222,7 +241,7 @@ class BasicController {
    * @returns {Promise<*>}
    */
   async preListHandler(req) {
-    return {};
+    return Promise.resolve({});
   }
 
   /**
@@ -234,8 +253,18 @@ class BasicController {
    */
   async [operation](operationType, item, res) {
     try {
-      const saveResponse = await item[operationType]();
-      return res.json(saveResponse);
+      if (operationType === OPERATION_TYPE.SAVE) {
+        if (!item._id) {
+          const response = await this.model.create(item);
+          return res.json(response);
+        } else {
+          const response = await this.model.findByIdAndUpdate(item._id, item, { new: true });
+          return res.json(response);
+        }
+      } else {
+        const response = await this.model.findByIdAndDelete(item._id);
+        return res.json(response);
+      }
     } catch (e) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(e)

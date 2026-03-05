@@ -3,8 +3,8 @@
 // Order controller
 angular.module('data').controller('OrdersEditController', [
   '$scope', '$stateParams', '$location', '$q',
-  'Authentication', 'Orders', 'Goods', 'Clients', 'Places', 'ConfirmService', 't',
-  function ($scope, $stateParams, $location, $q, Authentication, Orders, Goods, Clients, Places, Confirm, t) {
+  'Authentication', 'Orders', 'Goods', 'Clients', 'Places', 'ConfirmService', 't', '$timeout',
+  function ($scope, $stateParams, $location, $q, Authentication, Orders, Goods, Clients, Places, Confirm, t, $timeout) {
     $scope.t = t;
     $scope.authentication = Authentication;
     $scope.currency = $scope.t.UAH;
@@ -122,7 +122,8 @@ angular.module('data').controller('OrdersEditController', [
           $scope.calcArray = calcArray;
           $scope.savedOrder = _.cloneDeep(data);
           $scope.title = $scope.t.EDIT_ORDER_NUM + data.code;
-          $scope.order.link = window.location.hostname + '/orders/' + data._id;
+          $scope.order.link = '/orders/' + data._id;
+          $scope.order.fullLink = window.location.protocol + '//' + window.location.host + $scope.order.link;
           if (!$scope.order.status) {
             $scope.order.status = $scope.statuses[0].value;
           }
@@ -279,6 +280,20 @@ angular.module('data').controller('OrdersEditController', [
         value: 'done'
       },
     ];
+
+    $scope.copyToClipboard = function (event) {
+      if (!$scope.order._id) return;
+      var input = event.target;
+
+      input.select();
+      document.execCommand('copy');
+
+      $scope.copied = true;
+
+      $timeout(function () {
+        $scope.copied = false;
+      }, 1000);
+    };
 
     function toZero(val) {
       return Math.max(0, val);

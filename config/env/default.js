@@ -1,13 +1,18 @@
 module.exports = {
   app: {
-    title: 'IRIS',
-    description: 'Full-Stack JavaScript with MongoDB, Express, AngularJS, and Node.js',
+    title: 'Homio',
+    description: 'Grocery store',
     keywords: 'mongodb, express, angularjs, node.js, mongoose, passport',
     googleAnalyticsTrackingID: process.env.GOOGLE_ANALYTICS_TRACKING_ID || 'GOOGLE_ANALYTICS_TRACKING_ID'
   },
   db: {
     uri: process.env.MONGOHQ_URL || process.env.MONGOLAB_URI || 'mongodb://' + (process.env.DB_1_PORT_27017_TCP_ADDR || 'localhost') + '/mean',
     options: {
+      maxPoolSize: 5,
+      minPoolSize: 1,
+      maxIdleTimeMS: 30000,
+      serverSelectionTimeoutMS: 5000,
+      socketTimeoutMS: 45000,
       // user: '',
       // pass: '',
     },
@@ -15,7 +20,7 @@ module.exports = {
     debug: process.env.MONGODB_DEBUG || false
   },
   port: process.env.PORT || 3000,
-  templateEngine: 'swig',
+  templateEngine: 'pug',
   // Session Cookie settings
   sessionCookie: {
     // session expiration is set by default to 24 hours

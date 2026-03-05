@@ -30,6 +30,7 @@ class OrderController extends BasicController {
   async preCreateHandler(req, item) {
     await this.saveClient(req.body, item);
     await this.updateGoodsCountOnUpdateOrder(null, item);
+    item.code = await this.getNextCode();
     return item;
   }
 
@@ -50,7 +51,7 @@ class OrderController extends BasicController {
         good,
       }
     } = req;
-    const escaped = q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const $regex = this.escapeRegexQuery(q);
     return Promise.resolve()
       .then(() => {
         if (q && q.length > 2) {
@@ -58,7 +59,7 @@ class OrderController extends BasicController {
             'firstName',
             'phone',
           ];
-          const $or = fields.map(field => ({ [field]: { $regex: new RegExp(escaped), $options: 'i' } }));
+          const $or = fields.map(field => ({ [field]: { $regex, $options: 'i' } }));
           const Client = this.mongoose.model('Client');
           return Client.find({ $or })
             .select('_id');
@@ -123,11 +124,12 @@ class OrderController extends BasicController {
 
     await Promise.resolve()
       .then(() => {
-        const ids = newOrder.items.map(item => item.good._id);
+        const newOrderItems = newOrder ? newOrder.items : [];
+        const ids = newOrderItems.map(item => item.good._id);
         if (existingOrder && existingOrder.items) {
           ids.push(...existingOrder.items.map(item => item.good));
         }
-        return Good.find({ _id: { $in: ids } });
+        return Good.find({ _id: { $in: ids } }).exec();
       })
       .then((goods) => {
         const emptyOrder = { items: [] };
@@ -146,7 +148,7 @@ class OrderController extends BasicController {
           } else {
             good.count += before.count;
           }
-          return good.save();
+          return Good.updateOne({ _id: good._id }, { $set: { count: good.count } }).exec();
         }));
       });
     return newOrder || existingOrder;
