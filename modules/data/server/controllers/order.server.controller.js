@@ -51,7 +51,7 @@ class OrderController extends BasicController {
         good,
       }
     } = req;
-    const $regex = this.normalizeQuery(q);
+    const $regex = this.escapeRegexQuery(q);
     return Promise.resolve()
       .then(() => {
         if (q && q.length > 2) {

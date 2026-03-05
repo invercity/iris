@@ -13,7 +13,7 @@ const OPERATION_TYPE = {
  * @param {object} query
  * @return {object}
  */
-const normalizeQuery = (query) => {
+const normalizeMongoQuery = (query) => {
   let { $or, $and, ...rest } = query;
   Object.keys({ $or, $and }).forEach(key => {
     if (query[key] && query[key].length) {
@@ -68,8 +68,13 @@ class BasicController {
     this.options = options;
   }
 
-  normalizeQuery(q) {
-    return decodeURIComponent(q).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  /**
+   * Escape string for Regexp
+   * @param q
+   * @returns {*}
+   */
+  escapeRegexQuery(q) {
+    return q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   }
 
   async getNextCode() {
@@ -141,11 +146,11 @@ class BasicController {
   async list(req, res) {
     const { limit = 20, page = 1, q = '' } = req.query;
     const { fieldNamesSearch = [], fieldNamesSearchFilter = [] } = this.options;
-    const $regex = this.normalizeQuery(q);
+    const $regex = this.escapeRegexQuery(q);
     const $or = fieldNamesSearch.map(field => ({ [field]: { $regex, $options: 'i' } }));
     const $and = prepareFilter(req.query, fieldNamesSearchFilter);
     const extraQuery = await this.preListHandler(req);
-    const query = normalizeQuery(mergeDeep({ $or, $and }, extraQuery));
+    const query = normalizeMongoQuery(mergeDeep({ $or, $and }, extraQuery));
     let items = this.model.find(query)
       .limit(+limit)
       .skip((page - 1) * limit)
@@ -250,7 +255,6 @@ class BasicController {
     try {
       if (operationType === OPERATION_TYPE.SAVE) {
         if (!item._id) {
-          console.log(item);
           const response = await this.model.create(item);
           return res.json(response);
         } else {
