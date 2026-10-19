@@ -1,46 +1,120 @@
-# iris
-[![GitHub Release](https://img.shields.io/github/v/release/invercity/iris)](https://github.com/invercity/iris/releases)
-[![Tests](https://github.com/invercity/iris/actions/workflows/test.yml/badge.svg)](https://github.com/invercity/iris/actions/workflows/test.yml)
-[![Dependencies](https://badges.depfu.com/badges/a266632c416c41de678053f6613a83f7/count.svg)](https://depfu.com/github/invercity/iris?project_id=12849)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/8a4e1f8bbff64518acffcf93ec092a7e)](https://www.codacy.com/manual/andriy.ermolenko/iris?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=invercity/iris&amp;utm_campaign=Badge_Grade)
-[![Commits](https://img.shields.io/github/commit-activity/m/invercity/iris)](https://github.com/invercity/iris/commits/master)
-[![License](https://img.shields.io/github/license/invercity/iris)](https://github.com/invercity/iris/blob/master/LICENSE.md)
+# Iris / Homio 2.0 — Multi-Tenant E-Commerce Platform
 
-## Prerequisites
-Make sure you have installed all the following prerequisites on your development machine:
-* Node.js [Download & Install Node.js](https://nodejs.org/en/download/) and the npm package manager.
-* MongoDB [Download & Install MongoDB](https://www.mongodb.com/try/download/community), and make sure it's running on the default port (27017).
+A modern, high-performance multi-tenant e-commerce platform and inventory management system built with **NPM Workspaces**:
 
-## Quick Install
-To install Node.js dependencies you're going to use npm again. In the application folder run this in the command-line:
+- **[`apps/iris-admin`](file:///Users/invercity/projects/iris/apps/iris-admin)** — Headless CMS & Admin Portal built on **PayloadCMS v3** (Next.js 15 App Router + MongoDB + S3/Cloudflare R2 adapter for product media storage). Features custom **Bootstrap 5** design and bilingual **EN / UA** localization.
+- **[`apps/iris-api`](file:///Users/invercity/projects/iris/apps/iris-api)** — Fast, lightweight backend service built with **NestJS & Mongoose**, providing multi-tenant REST APIs and automated migration scripts.
+- **[`apps/iris-app`](file:///Users/invercity/projects/iris/apps/iris-app)** — Storefront and point-of-sale customer application built with **React 19 + Vite + TypeScript**, supporting dynamic store subdomains (`*.homee.ua`), cart management, and instant EN / UA language switching.
+- **[`packages/shared`](file:///Users/invercity/projects/iris/packages/shared)** — Shared domain models, TypeScript types, DTOs, order calculation logic (`calculateOrderTotal`), phone masking (`maskClientPhone`), and DNS subdomain resolution utilities (`resolveTenantSlugFromHostname`).
 
+---
+
+## Architecture: Multi-Tenancy & Subdomains (`*.homee.ua`)
+
+Every store on the platform is represented by a document in the `tenants` collection:
+- `slug` — Unique store identifier and DNS subdomain prefix (e.g., `vitaly` for `vitaly.homee.ua`).
+- `domain` — Canonical domain name for the store (`vitaly.homee.ua`).
+- All business collections (`goods`, `orders`, `clients`, `places`, `media`) maintain an indexed `tenant` reference (`ObjectId -> tenants`).
+- **Storefront (`iris-app`)** automatically detects the active store from the hostname (`vitaly.homee.ua` or `vitaly.localhost:5173`), or via `?tenant=vitaly` parameter, and attaches the `x-tenant-slug` header to API requests.
+- **API (`iris-api`)** uses `TenantMiddleware` to resolve the tenant from `x-tenant-slug`, `x-tenant-id`, query parameters, or `Host`/`Origin` headers.
+- **Admin Panel (`iris-admin`)** uses `@payloadcms/plugin-multi-tenant`:
+  - **Super-Administrators** (`admin`) have global system visibility and can switch between tenant store scopes via the Tenant Selector.
+  - **Store Owners & Managers** are strictly scoped to their assigned store: they manage only their own goods, orders, clients, and media, while system-level collections (`Tenants` and `Users`) are hidden.
+
+---
+
+## Product Media Storage (S3 / Cloudflare R2)
+
+The `media` collection in `iris-admin` utilizes `@payloadcms/storage-s3` and `sharp`:
+- Automatically generates responsive **WebP** image variants: `thumbnail` (300×300), `card` (640×640), and `large` (1200×1200).
+- Supports **Cloudflare R2** (zero egress fees) or **AWS S3** in production via environment variables: `S3_BUCKET`, `S3_ENDPOINT`, `S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY`.
+- In local development (when S3 credentials are not configured), uploaded files are stored safely on local disk in `apps/iris-admin/media`.
+
+---
+
+## Bilingual Support (EN & UA)
+
+The entire user interface supports both **English** and **Ukrainian**:
+1. **Admin Panel (`iris-admin`)**:
+   - Integrates native `@payloadcms/translations` for `en` and `uk`.
+   - All collection labels and fields support bilingual `{ en: '...', uk: '...' }` definitions.
+   - Users can switch their preferred language in their admin user profile or account settings.
+2. **Storefront (`iris-app`)**:
+   - Live language toggle pill (`EN` | `UA`) located in the header.
+   - Saves language preference in `localStorage` (`iris_locale`) with automatic browser language detection fallback.
+
+---
+
+## Bootstrap 5 Customization
+
+The admin panel features a clean, professional Bootstrap 5 aesthetic:
+- Modern system font stack (`system-ui, -apple-system, "Segoe UI", Roboto...`).
+- Authentic Bootstrap color system (`#0d6efd` primary blue, `#198754` success green, `#dc3545` danger red).
+- Bootstrap `0.375rem` (6px) rounded corners on inputs, cards, and buttons.
+- Distinctive Bootstrap focus outlines (`box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25)`).
+
+---
+
+## Quick Start
+
+### 1. Install Dependencies
 ```bash
-$ npm install
+npm install
 ```
 
-## Running Your Application
-After the end of install process, you'll be able to run your application using Grunt, just run grunt default task:
-
-```
-$ npm start
-```
-
-Your application should run on port 3000 with the *development* environment configuration, so in your browser just go to [http://localhost:3000](http://localhost:3000)
-
-### Running in Production mode
-To run your application with *production* environment configuration, execute grunt as follows:
-
+### 2. Configure Environment
+Copy `.env.example` to `.env`:
 ```bash
-$ NODE_ENV=production npm start
+cp .env.example .env
 ```
 
-* explore `config/env/production.js` for production environment configuration options
-
-### Running with User Seed
-To have default account(s) seeded at runtime:
-
+### 3. Run Migrations & Seed Demo Stores
 ```bash
-MONGO_SEED=true npm start
+# Migrate existing legacy MongoDB data to multi-tenant structure
+npm run migrate
+
+# Seed demo super-admin and store accounts (vitaly.homee.ua and olena.homee.ua)
+npm run seed
 ```
-## License
-**MIT**
+
+Default credentials created by `npm run seed`:
+- **Super-Admin**: `admin@homee.ua` / `admin12345` (global admin access)
+- **Store Owner (Vitaly)**: `vitaly@homee.ua` / `admin12345` (vitaly.homee.ua)
+- **Store Owner (Olena)**: `olena@homee.ua` / `admin12345` (olena.homee.ua)
+
+### 4. Start Development Servers
+```bash
+# Run all 3 services concurrently (API + Storefront App + Admin Panel)
+npm run dev
+
+# Or run services individually:
+npm run dev:api    # NestJS API (Port 3000)
+npm run dev:app    # Vite React Storefront (Port 5173)
+npm run dev:admin  # Next.js PayloadCMS Admin (Port 3001)
+```
+
+### 5. Build & Test
+```bash
+# Typecheck all workspaces
+npm run typecheck
+
+# Build shared library, API, storefront, and admin panel
+npm run build
+
+# Run unit and domain tests
+npm test
+```
+
+---
+
+## Continuous Integration (CI)
+
+GitHub Actions workflow [.github/workflows/test.yml](file:///.github/workflows/test.yml) validates all pull requests and pushes across Node.js 20 and 22 LTS with an automated MongoDB 7.0 container:
+1. `npm run typecheck`
+2. `npm run build:shared`
+3. `npm run build:api`
+4. `npm run build:app`
+5. `npm run build:admin`
+6. `npm run migrate`
+7. `npm run seed`
+8. `npm test`
