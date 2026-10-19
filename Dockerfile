@@ -1,27 +1,21 @@
-FROM node:22.20.0-alpine
+FROM node:22-alpine
 
-RUN apk add --no-cache git
+WORKDIR /app
 
-WORKDIR /home/iris
-
-# Install iris packages
-COPY package.json /home/iris/package.json
-COPY package-lock.json /home/iris/package-lock.json
-COPY .bowerrc /home/iris/.bowerrc
-COPY bower.json /home/iris/bower.json
-COPY gruntfile.js /home/iris/gruntfile.js
+COPY package.json ./
+COPY tsconfig.base.json ./
+COPY packages/shared/package.json ./packages/shared/
+COPY apps/iris-api/package.json ./apps/iris-api/
+COPY apps/iris-app/package.json ./apps/iris-app/
+COPY apps/iris-admin/package.json ./apps/iris-admin/
 
 RUN npm install
-RUN npm run bower
 
-# Make everything available for start
-COPY . /home/iris
-RUN npm run build
+COPY . .
 
-# Set development environment as default
-ENV NODE_ENV development
+RUN npm run build:shared && npm run build:api && npm run build:app
 
-# Port 3000 for server
-# Port 35729 for livereload
-EXPOSE 3000 35729
-CMD ["node", "server"]
+ENV NODE_ENV=production
+EXPOSE 3000
+
+CMD ["npm", "run", "start", "--workspace=iris-api"]

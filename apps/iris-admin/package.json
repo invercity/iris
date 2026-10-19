@@ -1,0 +1,38 @@
+{
+  "name": "iris-admin",
+  "version": "2.0.0",
+  "private": true,
+  "description": "PayloadCMS Admin & Multi-Tenant Content Management for Iris / Homio",
+  "type": "module",
+  "scripts": {
+    "dev": "npm run generate:importmap && next dev -p 3001",
+    "build": "npm run generate:importmap && next build",
+    "start": "next start -p 3001",
+    "payload": "payload",
+    "generate:importmap": "payload generate:importmap",
+    "generate:types": "payload generate:types",
+    "migrate": "payload migrate",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@iris/shared": "*",
+    "@payloadcms/db-mongodb": "^3.24.0",
+    "@payloadcms/next": "^3.24.0",
+    "@payloadcms/plugin-multi-tenant": "^3.91.0",
+    "@payloadcms/richtext-lexical": "^3.24.0",
+    "@payloadcms/storage-s3": "^3.24.0",
+    "@payloadcms/ui": "^3.24.0",
+    "graphql": "^16.10.0",
+    "next": "~15.4.11",
+    "payload": "^3.91.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "sharp": "^0.33.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "typescript": "^5.7.3"
+  }
+}
